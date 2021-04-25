@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        // "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "amd",
+        "target": "es5",
+        "lib": ["es2015", "es2017", "dom"],
+        "removeComments": true,
+        // "allowSyntheticDefaultImports": false,
+        "jsx": "react",
+        "moduleResolution": "node",
+        "allowJs": true,
+        "baseUrl": "./"
+    },
+
+    "include": ["./src/js/**/*.ts", "./src/**/*.ts", "./src/**/*.tsx", "/src/js/**/*.tsx", "/src/**/*.tsx  "],
+    "exclude": [
+        "./node_modules",
+        "./src/requireJSconfig/requireConfig.js",
+        "./dist/app.js",
+        "/webpack.config.js",
+        "./server.js"
+    ]
+}
