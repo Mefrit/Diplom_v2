@@ -148,7 +148,7 @@ export class DefaultMethodsStrategey {
         let res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
         switch (type) {
             case "archer":
-                // console.log("archer =>>> ", a, b, Math.abs(a.x - b.x));
+
                 if (Math.abs(a.x - b.x) < 4) {
                     res += 10;
                     if (Math.abs(a.x - b.x) < 3) {
@@ -179,12 +179,9 @@ export class DefaultMethodsStrategey {
                 res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
                 // if ()
                 enemies_near_3.forEach(elem => {
-                    // if (b.x == 10 && b.y == 4) {
-                    //     console.log("+res", b, Math.abs(elem.y - b.y), Math.abs(elem.x - b.x), this.unit, elem);
-                    // }
-                    // if (elem.x != this.unit.x && elem.y != this.unit.y) {
+
                     if (Math.abs(elem.y - b.y) < 2 && Math.abs(elem.x - b.x) < 2) {
-                        // console.log("res += ", b, res, elem);
+
                         res += 1;
                     }
                     // }
@@ -241,7 +238,7 @@ export class DefaultMethodsStrategey {
         // хранит путь до точки
 
         let pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
-        console.log("obj2go \n", obj2go);
+        // console.log("obj2go \n", obj2go);
         let current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {},
             frontier: any = [],//граница
             cost_so_far = [],
@@ -289,7 +286,7 @@ export class DefaultMethodsStrategey {
             }
         });
         if (frontier.length > 0) {
-            console.log(" this.moveTo(unit, bestPoint.next);", bestPoint);
+
             this.moveTo(unit, bestPoint.next);
         }
         // console.log("\n frontier", frontier);
@@ -306,7 +303,7 @@ export class DefaultMethodsStrategey {
     }
     moveCarefully = (unit, obj2go, type, cache) => {
 
-        console.log("obj2go \n", obj2go);
+
         var pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
         var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {},
             frontier: any = [],//граница
@@ -341,7 +338,7 @@ export class DefaultMethodsStrategey {
         });
 
         bestPoint = frontier[0];
-        console.log("frontier", frontier)
+
         // frontier = this.shuffle(frontier);
         frontier.forEach(element => {
 

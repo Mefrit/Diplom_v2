@@ -63,7 +63,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             var _this = this;
             return new Promise(function (resolve, reject) {
                 var nearEnemie, coord, res, attakedEnemie, checkArcherPosition;
-                console.log("start cahce", cache);
                 if (cache.hasOwnProperty("most_damaged_person_3")) {
                     if (cache.most_damaged_person_3.length > 0) {
                         nearEnemie = cache.most_damaged_person_3;
@@ -83,7 +82,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     _this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, _this.unit.person.damage);
                     checkArcherPosition = _this.checkArcherPosition(res.enemie);
                     if (checkArcherPosition.result && !_this.unit.moveAction) {
-                        console.log("checkArcherPosition", checkArcherPosition);
                         _this.moveCarefully(_this.unit, checkArcherPosition.point, "fighter", cache);
                     }
                 }

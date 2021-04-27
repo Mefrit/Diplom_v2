@@ -58,7 +58,7 @@ export class FightIfYouCan extends DefaultMethodsStrategey {
         // если с переди стоят лучники то выбирать более агрессивную стратегию
         return new Promise((resolve, reject) => {
             let nearEnemie, coord, res, attakedEnemie, checkArcherPosition;
-            console.log("start cahce", cache);
+
             if (cache.hasOwnProperty("most_damaged_person_3")) {
                 if (cache.most_damaged_person_3.length > 0) {
                     nearEnemie = cache.most_damaged_person_3;
@@ -80,7 +80,7 @@ export class FightIfYouCan extends DefaultMethodsStrategey {
                 checkArcherPosition = this.checkArcherPosition(res.enemie);
                 // только если олучник стреляет сделать то бишь на позиции
                 if (checkArcherPosition.result && !this.unit.moveAction) {
-                    console.log("checkArcherPosition", checkArcherPosition)
+
                     this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache);
                 }
             }

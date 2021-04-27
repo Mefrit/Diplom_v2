@@ -15,7 +15,6 @@ define(["require", "exports"], function (require, exports) {
             this.moveAutoStepStupid = function (unit, obj2go, type) {
                 if (type === void 0) { type = "fighter"; }
                 var pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
-                console.log("obj2go \n", obj2go);
                 var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {}, frontier = [], cost_so_far = [], new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
                 came_from[0] = NaN;
                 cost_so_far[0] = 0;
@@ -49,7 +48,6 @@ define(["require", "exports"], function (require, exports) {
                     }
                 });
                 if (frontier.length > 0) {
-                    console.log(" this.moveTo(unit, bestPoint.next);", bestPoint);
                     _this.moveTo(unit, bestPoint.next);
                 }
                 current = { id: 0, x: unit.person.x, y: unit.person.y };
@@ -60,7 +58,6 @@ define(["require", "exports"], function (require, exports) {
                 return res;
             };
             this.moveCarefully = function (unit, obj2go, type, cache) {
-                console.log("obj2go \n", obj2go);
                 var pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
                 var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {}, frontier = [], cost_so_far = [], new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
                 came_from[0] = NaN;
@@ -91,7 +88,6 @@ define(["require", "exports"], function (require, exports) {
                     }
                 });
                 bestPoint = frontier[0];
-                console.log("frontier", frontier);
                 frontier.forEach(function (element) {
                     if (element.priority <= bestPoint.priority) {
                         bestPoint = element;

@@ -24,11 +24,13 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
             alert("connction");
         };
         DefaultGlobalMethodsStrategey.prototype.getStrategyByName = function (cache_ai, name) {
-            return cache_ai.map(function (elem) {
-                if (elem.getInfo(0 == name)) {
-                    return elem;
+            var result = {};
+            for (var key in cache_ai) {
+                if (key == name) {
+                    result = cache_ai[key];
                 }
-            });
+            }
+            return result;
         };
         DefaultGlobalMethodsStrategey.prototype.sortArchersFirst = function (cacheAi) {
             return cacheAi.sort(function (prev, next) {

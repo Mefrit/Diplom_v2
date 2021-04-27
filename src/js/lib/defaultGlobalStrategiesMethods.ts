@@ -7,11 +7,20 @@ export class DefaultGlobalMethodsStrategey extends DefaultMethodsStrategey {
         alert("connction");
     }
     getStrategyByName(cache_ai, name) {
-        return cache_ai.map(elem => {
-            if (elem.getInfo(0 == name)) {
-                return elem;
+
+        let result = {};
+        for (let key in cache_ai) {
+            if (key == name) {
+                result = cache_ai[key];
             }
-        })
+        }
+        return result;
+        // return cache_ai.map(elem => {
+        //     // console.log(elem);
+        //     if (elem.getInfo() == name) {
+        //         return elem;
+        //     }
+        // })
     }
     sortArchersFirst(cacheAi) {
         return cacheAi.sort((prev, next) => {

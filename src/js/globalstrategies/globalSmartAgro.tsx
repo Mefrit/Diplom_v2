@@ -50,41 +50,63 @@ export class SmartAgro extends DefaultGlobalMethodsStrategey {
         // return { total: Math.round(result), cache: cache };
         return { total: Math.round(1000), cache: cache };
     }
-
-    start(cache) {
-        console.log("SmartAgro start", cache);
-        this.ai_units = this.sortArchersFirst(this.ai_units); \
-        var cache_enemies = [], best_enemie = {}, distance_best = 0;
-        // console.log(this.ai_units);
-        this.ai_units.map(unit => {
-            // console.log("findNearestArchers ", this.getEnemyInField({
-            //     x: unit.person.x,
-            //     y: unit.person.y
-            // }, 4));
-            console.log(unit);
-            cache_enemies = this.getEnemyInField({
-                x: unit.person.x,
-                y: unit.person.y
-            }, 4);
-            // сделать так , что бы двигались в сторону ближайших игроков
-            best_enemie = cache_enemies[0];
-            cache_enemies.forEach(elem => {
-                distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
-                if (Math.sqrt(elem.x * unit.x + elem.y * unit.y) < distance_best) {
-                    best_enemie = elem;
-                }
-            });
-
-
-            var FightIfYouCan = this.getStrategyByName(cacheFighterAI, FightIfYouCan);
-            var ai = new FightIfYouCan({
-                scene: this.scene,
-                view: this.view,
-                unit_collection: this.unit_collection
-            });
-            ai.atackeChosenUnit(cache, best_enemie);
-            console.log("\cacheFighterAI", FightIfYouCan);
+    getBestEnemie(cache_enemies, unit) {
+        var best_enemie = cache_enemies[0], distance_best = 0;
+        cache_enemies.forEach(elem => {
+            distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
+            if (Math.sqrt(elem.x * unit.x + elem.y * unit.y) < distance_best) {
+                best_enemie = elem;
+            }
         });
+        return best_enemie;
+    }
+    startMove(cache_unit, index) {
+
+        let unit = cache_unit[index];
+        let cache_enemies = [], best_enemie = {};
+
+        cache_enemies = this.getEnemyInField({
+            x: unit.person.x,
+            y: unit.person.y
+        }, 4);
+        console.log("cache_enemies", cache_enemies);
+
+        if (cache_enemies.length > 0) {
+            best_enemie = this.getBestEnemie(cache_enemies, unit);
+        } else {
+            best_enemie = this.findNearestEnemies(unit);
+        }
+        // сделать так , что бы двигались в сторону ближайших игроков
+
+
+
+
+        const FightIfYouCan = this.getStrategyByName(cacheFighterAI, "FightIfYouCan");
+        var ai = new FightIfYouCan({
+            scene: this.scene,
+            view: this.view,
+            unit_collection: this.unit_collection,
+            unit: unit
+        });
+
+        ai.atackeChosenUnit(cache_unit, best_enemie).then(() => {
+            if (index < cache_unit.length - 1) {
+                this.startMove(cache_unit, index + 1);
+            }
+
+        });
+    }
+    start(cache) {
+        // console.log("SmartAgro start", cache, cacheFighterAI);
+        this.ai_units = this.sortArchersFirst(this.ai_units);
+        // var cache_enemies = [], best_enemie = {}, distance_best = 0;
+        this.startMove(this.ai_units, 0);
+        // console.log(this.ai_units);
+        // this.ai_units.map(unit => {
+
+
+        //     // console.log("\cacheFighterAI", FightIfYouCan);
+        // });
 
         // this.checkConnection();
         // var unit = cacheAi[index];

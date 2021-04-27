@@ -30,33 +30,47 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         SmartAgro.prototype.assessment = function (cache) {
             return { total: Math.round(1000), cache: cache };
         };
-        SmartAgro.prototype.start = function (cache) {
-            var _this = this;
-            console.log("SmartAgro start", cache);
-            this.ai_units = this.sortArchersFirst(this.ai_units);
-            var cache_enemies = [], best_enemie = {}, distance_best = 0;
-            this.ai_units.map(function (unit) {
-                console.log(unit);
-                cache_enemies = _this.getEnemyInField({
-                    x: unit.person.x,
-                    y: unit.person.y
-                }, 4);
-                best_enemie = cache_enemies[0];
-                cache_enemies.forEach(function (elem) {
-                    distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
-                    if (Math.sqrt(elem.x * unit.x + elem.y * unit.y) < distance_best) {
-                        best_enemie = elem;
-                    }
-                });
-                var FightIfYouCan = _this.getStrategyByName(cacheFighterStrategy_1.cacheFighterAI, FightIfYouCan);
-                var ai = new FightIfYouCan({
-                    scene: _this.scene,
-                    view: _this.view,
-                    unit_collection: _this.unit_collection
-                });
-                ai.atackeChosenUnit(cache, best_enemie);
-                console.log("\cacheFighterAI", FightIfYouCan);
+        SmartAgro.prototype.getBestEnemie = function (cache_enemies, unit) {
+            var best_enemie = cache_enemies[0], distance_best = 0;
+            cache_enemies.forEach(function (elem) {
+                distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
+                if (Math.sqrt(elem.x * unit.x + elem.y * unit.y) < distance_best) {
+                    best_enemie = elem;
+                }
             });
+            return best_enemie;
+        };
+        SmartAgro.prototype.startMove = function (cache_unit, index) {
+            var _this = this;
+            var unit = cache_unit[index];
+            var cache_enemies = [], best_enemie = {};
+            cache_enemies = this.getEnemyInField({
+                x: unit.person.x,
+                y: unit.person.y
+            }, 4);
+            console.log("cache_enemies", cache_enemies);
+            if (cache_enemies.length > 0) {
+                best_enemie = this.getBestEnemie(cache_enemies, unit);
+            }
+            else {
+                best_enemie = this.findNearestEnemies(unit);
+            }
+            var FightIfYouCan = this.getStrategyByName(cacheFighterStrategy_1.cacheFighterAI, "FightIfYouCan");
+            var ai = new FightIfYouCan({
+                scene: this.scene,
+                view: this.view,
+                unit_collection: this.unit_collection,
+                unit: unit
+            });
+            ai.atackeChosenUnit(cache_unit, best_enemie).then(function () {
+                if (index < cache_unit.length - 1) {
+                    _this.startMove(cache_unit, index + 1);
+                }
+            });
+        };
+        SmartAgro.prototype.start = function (cache) {
+            this.ai_units = this.sortArchersFirst(this.ai_units);
+            this.startMove(this.ai_units, 0);
         };
         return SmartAgro;
     }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategey));
