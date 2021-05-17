@@ -1,5 +1,5 @@
 import { DefaultGlobalMethodsStrategey } from "../lib/defaultGlobalStrategiesMethods";
-import { cacheFighterAI } from "../strategies/cacheFighterStrategy"
+import { cacheFighterAI, cacheArcherAI } from "../strategies/cacheUnitSingleStrategy"
 // import { } from "../strategies/"
 //идея стратегия перегруппировки юнитов, юниты становятся ближе друг к другу и если это возможно - то атакуют
 export class SmartAgro extends DefaultGlobalMethodsStrategey {
@@ -7,21 +7,38 @@ export class SmartAgro extends DefaultGlobalMethodsStrategey {
     scene;
     view;
     constructor(props: any) {
-        console.log("SmartAgro", props);
         super(props);
+        this.unit_collection = props.unit_collection;
         this.ai_units = props.ai_units;
         this.scene = props.scene;
         this.view = props.view;
     }
-    assessment(cache) {
-        // FIX ME возможно стоит завести 2 поля, самый слабый по здорровью юнит или вдруг, самый отдаленный от корешей
-        // var result = 1000, enemies, damaged_person = {}, min_health = 200;
-        // if (this.unit.health < 30) {
-        //     result -= 400;
-        // }
-        // if (this.unit.health < 20) {
-        //     result -= 700;
-        // }
+    assessment(cache = {}) {
+        var result = 1000, enemies, damaged_person = {}, min_health = 200;
+        console.log("assessment SmartAgro", this.ai_units, cache)
+        this.ai_units.forEach(elem => {
+            if (elem.person.health < 30) {
+                result -= 400;
+            }
+            if (elem.person.health < 20) {
+                result -= 700;
+            }
+        });
+        enemies = this.unit_collection.getUserCollection();
+        enemies.forEach(elem => {
+            if (elem.person.health > 30) {
+                result -= 200;
+            }
+            if (elem.person.health < 30) {
+                result += 400;
+            }
+            if (elem.person.health < 20) {
+                result += 700;
+            }
+            // if (elem.person.health > 20 && elem.person.health < 30) {
+            //     result += 100;
+            // }
+        });
         // if (!cache.enemies_near_3) {
         //     enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 3);
         //     cache.enemies_near_3 = enemies
@@ -47,8 +64,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategey {
         // });
         // cache.most_damaged_person_3 = damaged_person;
         // console.log("!!!!!!!!!!\n\n\n enemies in fields FightIfYouCan", enemies, "damaged", damaged_person);
-        // return { total: Math.round(result), cache: cache };
-        return { total: Math.round(1000), cache: cache };
+        return { total: Math.round(result), cache: cache };
     }
     getBestEnemie(cache_enemies, unit) {
         var best_enemie = cache_enemies[0], distance_best = 0;
@@ -69,7 +85,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategey {
             x: unit.person.x,
             y: unit.person.y
         }, 4);
-        console.log("cache_enemies", cache_enemies);
+        console.log("cache_enemies", cache_enemies, cache_unit[index]);
 
         if (cache_enemies.length > 0) {
             best_enemie = this.getBestEnemie(cache_enemies, unit);
@@ -78,11 +94,16 @@ export class SmartAgro extends DefaultGlobalMethodsStrategey {
         }
         // сделать так , что бы двигались в сторону ближайших игроков
 
+        // alert(cache_unit[index].person.type);
 
 
+        if (cache_unit[index].person.class == "fighter") {
+            const ChoosenStrategy = this.getStrategyByName(cacheFighterAI, "FightIfYouCan");
+        } else {
+            const ChoosenStrategy = this.getStrategyByName(cacheArcherAI, "AtackTheArcher");
 
-        const FightIfYouCan = this.getStrategyByName(cacheFighterAI, "FightIfYouCan");
-        var ai = new FightIfYouCan({
+        }
+        var ai = new ChoosenStrategy({
             scene: this.scene,
             view: this.view,
             unit_collection: this.unit_collection,

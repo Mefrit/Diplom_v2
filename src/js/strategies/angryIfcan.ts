@@ -89,9 +89,9 @@ export class FightIfYouCan extends DefaultMethodsStrategey {
         });
     }
 
-    atackeChosenUnit(cache, unit) {
+    atackeChosenUnit(cache, enemie) {
         return new Promise((resolve, reject) => {
-            let nearEnemie = unit, coord, res, attakedEnemie, checkArcherPosition;
+            let nearEnemie = enemie, coord, res, attakedEnemie, checkArcherPosition;
             console.log("start cahce", cache);
             // if (cache.hasOwnProperty("most_damaged_person_3")) {
             //     if (cache.most_damaged_person_3.length > 0) {

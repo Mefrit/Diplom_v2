@@ -58,6 +58,7 @@ define(["require", "exports"], function (require, exports) {
                 return res;
             };
             this.moveCarefully = function (unit, obj2go, type, cache) {
+                if (cache === void 0) { cache = {}; }
                 var pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
                 var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {}, frontier = [], cost_so_far = [], new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
                 came_from[0] = NaN;
@@ -82,7 +83,17 @@ define(["require", "exports"], function (require, exports) {
                     new_cost = cost_so_far[current.id] + 1;
                     if (cost_so_far.indexOf(next.id) == -1 || new_cost < cost_so_far[next.id]) {
                         cost_so_far[next.id] = new_cost;
-                        priority = _this.heuristicCarefully({ x: obj2go.x, y: obj2go.y }, next, type, enemies_near_3);
+                        switch (type) {
+                            case "fighter":
+                                priority = _this.heuristic({ x: obj2go.x, y: obj2go.y }, next, type, enemies_near_3);
+                                break;
+                            case "securityArcher":
+                                priority = _this.heuristicSecurityArcher({ x: obj2go.x, y: obj2go.y }, next, type, obj2go.near_archer);
+                                break;
+                            default:
+                                priority = _this.heuristicCarefully({ x: obj2go.x, y: obj2go.y }, next, type, enemies_near_3);
+                                break;
+                        }
                         frontier.push({ next: next, priority: priority });
                         came_from[next.id] = current;
                     }
@@ -94,7 +105,6 @@ define(["require", "exports"], function (require, exports) {
                     }
                 });
                 if (frontier.length > 0) {
-                    console.log(" this.moveTo(unit, bestPoint.next);", bestPoint);
                     _this.moveTo(unit, bestPoint.next);
                 }
                 current = { id: 0, x: unit.person.x, y: unit.person.y };
@@ -128,13 +138,17 @@ define(["require", "exports"], function (require, exports) {
             });
             return nearArcher;
         };
+        DefaultMethodsStrategey.prototype.getDistanceBetweenUnits = function (unit1, unit2) {
+            var tmp_x = unit1.person.x - unit2.person.x;
+            var tmp_y = unit1.person.y - unit2.person.y;
+            return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+        };
         DefaultMethodsStrategey.prototype.findNearestEnemies = function (unit) {
-            var min = 1000, nearEnemies = undefined, tmp_x, tmp_y, tmp_min = 1000;
+            var _this = this;
+            var min = 1000, nearEnemies = undefined, tmp_min = 1000;
             this.unit_collection.getCollection().forEach(function (element) {
                 if (!element.person.evil && !element.isNotDied()) {
-                    tmp_x = unit.person.x - element.person.x;
-                    tmp_y = unit.person.y - element.person.y;
-                    tmp_min = Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+                    tmp_min = _this.getDistanceBetweenUnits(unit, element);
                     if (min > tmp_min) {
                         min = tmp_min;
                         nearEnemies = element;
@@ -205,6 +219,20 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
+        DefaultMethodsStrategey.prototype.heuristicSecurityArcher = function (a, b, type, near_archer) {
+            var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+            res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+            if (b.x == near_archer.x) {
+                res += 20;
+            }
+            if (b.y == near_archer.y) {
+                res += 20;
+            }
+            if (b.x == a.x && b.y == a.y) {
+                res -= 60;
+            }
+            return res;
+        };
         DefaultMethodsStrategey.prototype.heuristicCarefully = function (a, b, type, enemies_near_3) {
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             switch (type) {
@@ -225,6 +253,21 @@ define(["require", "exports"], function (require, exports) {
                     }
                     if (Math.abs(a.x - b.x) < 1) {
                         res += 0.5;
+                    }
+                    if (a.x == b.x) {
+                        res -= 10;
+                    }
+                    if (a.y == b.y) {
+                        res -= 10;
+                    }
+                    if (a.x == b.x && Math.abs(a.y - b.y) > 3) {
+                        res -= 10;
+                    }
+                    if (a.x == b.x && Math.abs(a.y - b.y) > 2) {
+                        res -= 20;
+                    }
+                    if (a.x == b.x && Math.abs(a.y - b.y) > 1) {
+                        res -= 40;
                     }
                     if (Math.abs(a.y - b.y) < 2) {
                         res += Math.abs(a.y - b.y);
@@ -284,8 +327,9 @@ define(["require", "exports"], function (require, exports) {
             return Math.abs(current.x - enemie.x) < coefProximity && Math.abs(current.y - enemie.y) < coefProximity;
         };
         DefaultMethodsStrategey.prototype.checkFreePointsArcher = function (points, type) {
+            var _this = this;
             if (type === void 0) { type = "fighter"; }
-            var res = { free: true, deleteLastPoint: false };
+            var res = { free: true, deleteLastPoint: false, runAway: false };
             this.unit_collection.getCollection().forEach(function (unit) {
                 for (var i = 0; i < points.length; i++) {
                     if (points[i].x < 0 || points[i].x > 11) {
@@ -295,7 +339,10 @@ define(["require", "exports"], function (require, exports) {
                         res.free = false;
                     }
                     if (unit.x == points[i].x && points[i].y == unit.y) {
-                        if (!(type == "archer" && i == points.length - 1)) {
+                        if (_this.unit.person.id != unit.person.id) {
+                            if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
+                                res.runAway = true;
+                            }
                             res.free = false;
                         }
                         else {

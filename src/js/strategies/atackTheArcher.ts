@@ -6,7 +6,7 @@ export class AtackTheArcher extends DefaultMethodsStrategey {
     constructor(props: any) {
         super(props);
         this.unit = props.unit;
-
+        this.last_enemie;
     }
     getInfo() {
         return "AtackTheArcher";
@@ -33,33 +33,25 @@ export class AtackTheArcher extends DefaultMethodsStrategey {
         return { total: result, cache: cache_assessment };
     }
     checkFreeWay2Atack(enemie, direction) {
-        let arrayPoit = [], sgn = enemie[direction] < this.unit[direction] ? -1 : 1, tmp, res = { free: false, arrayPoit: [], direction: direction, runAway: false }, coefI;
+        // показывает свободен ли путь для атаки из далека
+        // direction - направление по которому будем атаковать
+        let arrayPoit = [], sgn = enemie[direction] < this.unit[direction] ? -1 : 1, tmp,
+            res = { free: false, arrayPoit: [], direction: direction, runAway: false }, coefI;
         tmp = Math.abs(enemie[direction] - this.unit[direction]);
+
         if (tmp <= 4) {
             coefI = tmp;
         } else {
-            // coefI = 4;
             return res;
-            // coefI = Math.abs(enemie[direction] + 4);
         }
-        // console.log("coefI", coefI, "direction", direction, enemie[direction], "-", this.unit[direction]);
-        for (let i = 1; i <= coefI; i++) {
-            if (arrayPoit.length < 6) {
-                tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
-
-                if (tmp.x >= 0 && tmp.y >= 0) {
-                    if (tmp.x != this.unit.x && tmp.y != this.unit.y) {
-
-                        arrayPoit.push(tmp);
-                    }
-                }
-
-            } else {
-                break;
-            }
+        for (let i = 1; i <= coefI - 1; i++) {
+            tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
+            arrayPoit.push(tmp);
         }
         tmp = this.checkFreePointsArcher(arrayPoit, "archer");
-        res.free = tmp.free
+
+        res.free = tmp.free;
+        res.runAway = tmp.runAway;
         if (tmp.deleteLastPoint) {
             arrayPoit.splice(arrayPoit.length - 1, 1);
         }
@@ -83,21 +75,28 @@ export class AtackTheArcher extends DefaultMethodsStrategey {
             yLineCondition = false;
         }
         if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
-            // console.log("Math.abs(this.unit.x - enemie.x)", Math.abs(this.unit.x - enemie.x), Math.abs(this.unit.x - enemie.x) < 5);
-            if (Math.abs(this.unit.x - enemie.x) < 6) {
+            if (Math.abs(this.unit.x - enemie.x) > Math.abs(this.unit.y - enemie.y)) {
+                // поиск атаки по горизонтале
                 if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
-
                     this.moveAutoStepStupid(this.unit, enemie, "archer");
-                } else
+                } else {
                     if (Math.abs(this.unit.y - enemie.y) < 2 && this.unit.y != enemie.y && !this.unit.moveAction) {
                         this.moveAutoStepStupid(this.unit, enemie, "archer");
                     }
+                }
                 this.atakeArcher(enemie);
             } else {
-                console.log("\n\n FIX ME!!! moveAutoStepStupid pointPosition", pointPosition)
-                // this.moveAutoStepStupid(this.unit, pointPosition, "archer");
+                // поиск атаки по вертикали
+                let new_x, new_y;
+                if (!this.unit.moveAction) {
+                    if (enemie.person.y < 3) {
+                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 6 }, "fighter", {});
+                    } else {
+                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
+                    }
+                }
+                this.atakeArcher(enemie);
             }
-
             // проверка на тикать от сюда
 
         } else { res.result = false }
@@ -111,32 +110,32 @@ export class AtackTheArcher extends DefaultMethodsStrategey {
         }
     }
     got2AttackePosition(enemie) {
-        // console.log(" moveAutoStepStupid got2AttackePosition", enemie);
         this.moveAutoStepStupid(this.unit, { x: enemie.x, y: enemie.y }, "archer");
     }
     findPointAtackArcher(enemie) {
         let maxX = Math.abs(enemie.person.x - this.unit.person.x),
             maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;
-
         if (maxY > maxX) {
             resCheck = this.checkFreeWay2Atack(enemie, "y");
-            if (!resCheck.free) {
-                // resCheck = this.checkFreeWay2Atack(enemie, "x");
-            }
         } else {
             resCheck = this.checkFreeWay2Atack(enemie, "x");
-            if (!resCheck.free) {
-                // resCheck = this.checkFreeWay2Atack(enemie, "y");
-            }
         }
-        // console.log(resCheck.free);
+        // console.log("resCheck.free => ", resCheck);
         if (resCheck.free) {
-
             res = this.tryAtakeArcher(resCheck, enemie);
             if (!res.result) {
+                this.moveCarefully(this.unit, enemie, "archer", {});
+                maxX = Math.abs(enemie.person.x - this.unit.person.x);
+                maxY = Math.abs(enemie.person.y - this.unit.person.y);
 
-                this.moveAutoStepStupid(this.unit, enemie, "archer");
-                this.tryAtakeArcher(resCheck, enemie);
+                if (maxY > maxX) {
+                    resCheck = this.checkFreeWay2Atack(enemie, "y");
+                } else {
+                    resCheck = this.checkFreeWay2Atack(enemie, "x");
+                }
+                if (resCheck.free) {
+                    this.tryAtakeArcher(resCheck, enemie);
+                }
             }
         } else {
             this.got2AttackePosition(enemie);
@@ -146,10 +145,19 @@ export class AtackTheArcher extends DefaultMethodsStrategey {
         return new Promise((resolve, reject) => {
 
             let enemie = this.findNearestEnemies(this.unit);
+            // if (e)
+            this.last_enemie = enemie;
+
             this.findPointAtackArcher(enemie);
 
-            setTimeout(() => { resolve("Promise") }, 320);
+            setTimeout(() => { resolve("Promise") }, 520);
 
+        });
+    }
+    atackeChosenUnit(cache, enemie) {
+        return new Promise((resolve, reject) => {
+            this.findPointAtackArcher(enemie);
+            setTimeout(() => { resolve("Promise5") }, 520);
         });
     }
 }

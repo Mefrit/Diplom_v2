@@ -14,10 +14,10 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SmartAgro = void 0;
-    var SmartAgro = (function (_super) {
-        __extends(SmartAgro, _super);
-        function SmartAgro(props) {
+    exports.DistanceAgro = void 0;
+    var DistanceAgro = (function (_super) {
+        __extends(DistanceAgro, _super);
+        function DistanceAgro(props) {
             var _this = _super.call(this, props) || this;
             _this.ai_units = [];
             _this.unit_collection = props.unit_collection;
@@ -26,33 +26,25 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             _this.view = props.view;
             return _this;
         }
-        SmartAgro.prototype.assessment = function (cache) {
-            if (cache === void 0) { cache = {}; }
-            var result = 1000, enemies, damaged_person = {}, min_health = 200;
-            console.log("assessment SmartAgro", this.ai_units, cache);
+        DistanceAgro.prototype.assessment = function (cache) {
+            var result = 1100, enemies;
             this.ai_units.forEach(function (elem) {
-                if (elem.person.health < 30) {
-                    result -= 400;
+                if (elem.person.health > 30) {
+                    result += 300;
                 }
-                if (elem.person.health < 20) {
-                    result -= 700;
+                if (elem.person.health > 20 && elem.person.health < 30) {
+                    result += 100;
                 }
             });
             enemies = this.unit_collection.getUserCollection();
             enemies.forEach(function (elem) {
-                if (elem.person.health > 30) {
-                    result -= 200;
-                }
                 if (elem.person.health < 30) {
-                    result += 400;
-                }
-                if (elem.person.health < 20) {
-                    result += 700;
+                    result += 300;
                 }
             });
             return { total: Math.round(result), cache: cache };
         };
-        SmartAgro.prototype.getBestEnemie = function (cache_enemies, unit) {
+        DistanceAgro.prototype.getBestEnemie = function (cache_enemies, unit) {
             var best_enemie = cache_enemies[0], distance_best = 0;
             cache_enemies.forEach(function (elem) {
                 distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
@@ -62,7 +54,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             });
             return best_enemie;
         };
-        SmartAgro.prototype.startMove = function (cache_unit, index) {
+        DistanceAgro.prototype.startMove = function (cache_unit, index) {
             var _this = this;
             var unit = cache_unit[index];
             var cache_enemies = [], best_enemie = {};
@@ -70,18 +62,18 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 x: unit.person.x,
                 y: unit.person.y
             }, 4);
-            console.log("cache_enemies", cache_enemies, cache_unit[index]);
             if (cache_enemies.length > 0) {
                 best_enemie = this.getBestEnemie(cache_enemies, unit);
             }
             else {
                 best_enemie = this.findNearestEnemies(unit);
             }
+            var ChoosenStrategy;
             if (cache_unit[index].person.class == "fighter") {
-                var ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "FightIfYouCan");
+                ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "SecurityArcher");
             }
             else {
-                var ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheArcherAI, "AtackTheArcher");
+                ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheArcherAI, "AtackTheArcher");
             }
             var ai = new ChoosenStrategy({
                 scene: this.scene,
@@ -89,17 +81,25 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 unit_collection: this.unit_collection,
                 unit: unit
             });
-            ai.atackeChosenUnit(cache_unit, best_enemie).then(function () {
-                if (index < cache_unit.length - 1) {
-                    _this.startMove(cache_unit, index + 1);
-                }
-            });
+            if (cache_unit[index].person.class == "fighter") {
+                ai.start(cache_unit).then(function () {
+                    if (index < cache_unit.length - 1) {
+                        _this.startMove(cache_unit, index + 1);
+                    }
+                });
+            }
+            else {
+                ai.atackeChosenUnit(cache_unit, best_enemie).then(function (data) {
+                    if (index < cache_unit.length - 1) {
+                        _this.startMove(cache_unit, index + 1);
+                    }
+                });
+            }
         };
-        SmartAgro.prototype.start = function (cache) {
-            this.ai_units = this.sortArchersFirst(this.ai_units);
+        DistanceAgro.prototype.start = function (cache) {
             this.startMove(this.ai_units, 0);
         };
-        return SmartAgro;
+        return DistanceAgro;
     }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategey));
-    exports.SmartAgro = SmartAgro;
+    exports.DistanceAgro = DistanceAgro;
 });

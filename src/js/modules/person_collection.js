@@ -34,13 +34,6 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
             });
             return res;
         };
-        Collection.prototype.getAiCollection = function () {
-            return this.collection.filter(function (elem) {
-                if (elem.person.evil) {
-                    return elem;
-                }
-            });
-        };
         Collection.prototype.getUserCollection = function () {
             return this.collection.filter(function (elem) {
                 if (!elem.person.evil) {

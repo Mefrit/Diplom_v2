@@ -15,57 +15,39 @@ export class SecurityArcher extends DefaultMethodsStrategey {
     getInfo() {
         return "SecurityArcher";
     }
-    assessment(cache) {
 
-        var result = 1000, enemies;
-        if (this.unit.health < 30) {
-            result += 200;
-        }
-        if (this.unit.health < 20) {
-            result += 300;
-        }
-        if (!cache.enemies_near_3) {
-            enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 3);
-
-            cache.enemies_near_3 = enemies;
-        } else {
-            enemies = cache.enemies_near_3;
-        }
-
-        if (enemies.length == 0) {
-            result += 300;
-        } else {
-            result -= 1000 / enemies.length;
-        }
-        // console.log("!!!!!!!!!!\n\n\n enemies in fields AtackTheArcher", enemies);
-        // enemies.forEach(elem => {
-        //     result -= elem.health * 5
-        // });
-        // console.log("!!!!!!!!!!\n\n\n enemies in fields", enemies);
-        // чем больше. тем лучше будет считаьься стратегия
-        return { total: Math.round(result), cache: cache };
-        // return Math.floor(Math.random() * Math.floor(100));
-    }
 
 
     start(cache) {
         return new Promise((resolve, reject) => {
-            var near_archers = this.unit_collection.getAiArchers(),
+            var
                 near_enemy = this.findNearestEnemies(this.unit);
             var near_archer = this.findNearestArchers(this.unit);
             var pos_security = {};
+            var near_enemies = [];
             // if (near_enemy.y >= this.unit.y) {
             // if (this.unit.y + 1 < 5 ) {
             pos_security.y = near_archer.y;
 
             if (Math.abs(this.unit.x - near_archer.x) != 0 || Math.abs(this.unit.y - near_archer.y) != 0) {
-                // console.log("near_archer=> ", near_archer, Math.abs(this.unit.x - near_archer.x) != 0, "||", Math.abs(this.unit.y - near_archer.y) != 0);
+                near_enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 6);
 
-                // if (this.unit.x + 1 < 11) {
-                //     pos_security.x = near_archer.x + 1;
-                // } else {
-                pos_security.x = near_archer.x - 1;
-                // }
+                if (near_enemies.length == 0) {
+                    pos_security.x = near_archer.x - 1;
+                } else {
+                    near_enemies.forEach(elem => {
+
+                        //FIX ME  как то это нужно пооптимизировать
+                        if (elem.x < near_archer.x) {
+                            pos_security.x = near_archer.x + 1;
+                        } else {
+                            pos_security.x = near_archer.x - 1;
+                        }
+                    });
+                }
+
+                //
+
                 if (this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y })) {
                     pos_security.y = near_archer.y;
                 } else {
@@ -80,14 +62,13 @@ export class SecurityArcher extends DefaultMethodsStrategey {
                         }
                     }
                 }
-
-                // }
-                console.log("pos_security => ", pos_security);
-                var res = this.moveAutoStepStupid(this.unit, pos_security, "fighter");
+                // console.log("pos_security => ", pos_security);
+                pos_security.near_archer = near_archer;
+                var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
                 if (res.findEnime == true) {
                     //атака , если лучник не далеко
 
-                    // console.log("\n\n", Math.abs(this.unit.x - near_archer.x), this.unit);
+
                     if (Math.abs(this.unit.x - near_enemy.x) == 1) {
                         // запуск анимации атаки   
                         this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
@@ -96,7 +77,7 @@ export class SecurityArcher extends DefaultMethodsStrategey {
                         // только если олучник стреляет сделать то бишь на позиции
                         if (checkArcherPosition.result && !this.unit.moveAction) {
                             // console.log("checkArcherPosition", checkArcherPosition);
-                            this.moveAutoStepStupid(this.unit, checkArcherPosition.point, "fighter");
+                            this.moveAutoStepStupid(this.unit, checkArcherPosition.point, "securityArcher");
                         }
                     } else {
                         // догоняем лучника
@@ -106,7 +87,7 @@ export class SecurityArcher extends DefaultMethodsStrategey {
                 }
             }
 
-            setTimeout(() => { resolve("Promise2") }, 320);
+            setTimeout(() => { resolve("Promise2") }, 220);
 
         });
         // this.findNearestEnemies(this.unit)

@@ -41,27 +41,31 @@ export class DefaultMethodsStrategey {
         // console.log("findNearestEnemies=>", unit, nearEnemies);
         return nearArcher;
     }
+    getDistanceBetweenUnits(unit1, unit2) {
+        let tmp_x = unit1.person.x - unit2.person.x;
+        let tmp_y = unit1.person.y - unit2.person.y;
+
+        return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+    }
     findNearestEnemies(unit) {
         let min = 1000,
             nearEnemies = undefined,
-            tmp_x,
-            tmp_y,
+
             tmp_min = 1000;
         this.unit_collection.getCollection().forEach((element) => {
             if (!element.person.evil && !element.isNotDied()) {
                 // console.log();
 
-                tmp_x = unit.person.x - element.person.x;
-                tmp_y = unit.person.y - element.person.y;
+                // tmp_x = unit.person.x - element.person.x;
+                // tmp_y = unit.person.y - element.person.y;
 
-                tmp_min = Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+                tmp_min = this.getDistanceBetweenUnits(unit, element)
                 if (min > tmp_min) {
                     min = tmp_min;
                     nearEnemies = element;
                 }
             }
         });
-        // console.log("findNearestEnemies=>", unit, nearEnemies);
         return nearEnemies;
     }
     //указывает на лучшую  точку
@@ -82,7 +86,9 @@ export class DefaultMethodsStrategey {
     }
     getNeighbors = (coord, type = "figter") => {
         let res = [];
+
         res = this.getPointsField(coord, 2);
+
         res.push({ x: this.unit.x, y: this.unit.y });
         return res;
     }
@@ -144,6 +150,26 @@ export class DefaultMethodsStrategey {
         // }
         return res;
     }
+    heuristicSecurityArcher(a, b, type, near_archer) {
+        //a - куда нужно, b - возможные варианты
+        let res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+        res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+        // if()
+        // console.log("heuristicSecurityArcher", a, b, near_archer);
+        if (b.x == near_archer.x) {
+            res += 20;
+        }
+
+        if (b.y == near_archer.y) {
+            res += 20;
+        }
+        if (b.x == a.x && b.y == a.y) {
+            res -= 60;
+        }
+
+
+        return res;
+    }
     heuristicCarefully(a, b, type, enemies_near_3) {
         let res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
         switch (type) {
@@ -165,6 +191,26 @@ export class DefaultMethodsStrategey {
                 if (Math.abs(a.x - b.x) < 1) {
                     res += 0.5;
                 }
+
+                // if (Math.abs(a.y - b.y) < 3) {
+                //     res += 10;
+                // }
+                if (a.x == b.x) {
+                    res -= 10;
+                }
+                if (a.y == b.y) {
+                    res -= 10;
+                }
+                if (a.x == b.x && Math.abs(a.y - b.y) > 3) {
+                    res -= 10;
+                }
+                if (a.x == b.x && Math.abs(a.y - b.y) > 2) {
+                    res -= 20;
+                }
+                if (a.x == b.x && Math.abs(a.y - b.y) > 1) {
+                    res -= 40;
+                }
+
                 if (Math.abs(a.y - b.y) < 2) {
                     res += Math.abs(a.y - b.y);
                 }
@@ -234,7 +280,7 @@ export class DefaultMethodsStrategey {
     // автоматический путь к задангным координатам без учета возможных опасностей
     moveAutoStepStupid = (unit, obj2go, type = "fighter") => {
         // нужн окак то придумать, что бы можно было обходить препятствия и строить оптимальный путь
-        // console.log("moveAutoStepStupid enemie ", enemie);
+
         // хранит путь до точки
 
         let pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
@@ -246,6 +292,7 @@ export class DefaultMethodsStrategey {
 
         came_from[0] = NaN;
         cost_so_far[0] = 0;
+        // console.log("unit =======>>>>  ", unit);
         pointsNear = this.getNeighbors({ x: unit.person.x, y: unit.person.y }, type);
         pointsNear = this.deleteExcessCoord(pointsNear);
         if (!obj2go.hasOwnProperty("domPerson")) {
@@ -278,15 +325,12 @@ export class DefaultMethodsStrategey {
                     bestPoint = element;
                 } else {
                     // написать по нормальному!!!!!
-                    // if (unit.coordPrevPoint.x != element.next.x && unit.coordPrevPoint.y != element.next.y) {
-                    // console.log("unit.coordPrevPoint,", unit.coordPrevPoint, element.next);
+
                     bestPoint = element;
-                    // }
                 }
             }
         });
         if (frontier.length > 0) {
-
             this.moveTo(unit, bestPoint.next);
         }
         // console.log("\n frontier", frontier);
@@ -301,9 +345,9 @@ export class DefaultMethodsStrategey {
         return res;
 
     }
-    moveCarefully = (unit, obj2go, type, cache) => {
+    moveCarefully = (unit, obj2go, type, cache = {}) => {
 
-
+        // console.log("moveCarefully unit", unit);
         var pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
         var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {},
             frontier: any = [],//граница
@@ -320,6 +364,7 @@ export class DefaultMethodsStrategey {
             });
         }
         var enemies_near_3;
+
         if (cache.hasOwnProperty("enemies_near_3")) {
             enemies_near_3 = cache.enemies_near_3;
         } else {
@@ -331,7 +376,19 @@ export class DefaultMethodsStrategey {
 
             if (cost_so_far.indexOf(next.id) == -1 || new_cost < cost_so_far[next.id]) {
                 cost_so_far[next.id] = new_cost;
-                priority = this.heuristicCarefully({ x: obj2go.x, y: obj2go.y }, next, type, enemies_near_3);
+                switch (type) {
+                    case "fighter":
+                        priority = this.heuristic({ x: obj2go.x, y: obj2go.y }, next, type, enemies_near_3);
+                        break;
+                    case "securityArcher":
+                        priority = this.heuristicSecurityArcher({ x: obj2go.x, y: obj2go.y }, next, type, obj2go.near_archer);
+                        break;
+                    default:
+                        priority = this.heuristicCarefully({ x: obj2go.x, y: obj2go.y }, next, type, enemies_near_3);
+                        break;
+                }
+
+
                 frontier.push({ next: next, priority: priority });
                 came_from[next.id] = current;
             }
@@ -347,15 +404,11 @@ export class DefaultMethodsStrategey {
 
             }
         });
+        // console.log("frontier, bestPoint", frontier, bestPoint);
         if (frontier.length > 0) {
-            console.log(" this.moveTo(unit, bestPoint.next);", bestPoint);
             this.moveTo(unit, bestPoint.next);
         }
-        // console.log("\n frontier", frontier);
         current = { id: 0, x: unit.person.x, y: unit.person.y };
-
-        // console.log("After MOve moveAutoStepStupid=>>>>>>>>>>>>in !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", current, bestPoint, coefProximity, this.checkEnemieNear(current, enemie, coefProximity), frontier);
-
         res.findEnime = this.checkEnemieNear(current, obj2go, coefProximity);
         if (res.findEnime) {
             unit.removePrevPoint();
@@ -373,10 +426,11 @@ export class DefaultMethodsStrategey {
     }
     // проверяет  обстановку вокруг лучника, если враг рядом, то передается координаты врага
     checkFreePointsArcher(points, type = "fighter") {
-        let res = { free: true, deleteLastPoint: false };
+        let res = { free: true, deleteLastPoint: false, runAway: false };
 
         this.unit_collection.getCollection().forEach((unit) => {
             for (let i = 0; i < points.length; i++) {
+
                 if (points[i].x < 0 || points[i].x > 11) {
                     res.free = false;
                 }
@@ -384,13 +438,15 @@ export class DefaultMethodsStrategey {
                     res.free = false;
                 }
                 if (unit.x == points[i].x && points[i].y == unit.y) {
+                    //FIX ME удалил, хрен знает зачем это было сделанно
+                    // if (!(type == "archer" && i == points.length - 1)) {\c
+                    // console.log("!!!!!!!!!!!!!!!!!!!", unit, this.unit, this.unit.x != unit.x, this.unit.y != unit.y);
+                    if (this.unit.person.id != unit.person.id) {
+                        if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
 
-                    if (!(type == "archer" && i == points.length - 1)) {
-                        // if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
-                        //     console.log();
-                        //     res.runAway = true;
-                        // }
-                        // console.log("\n type", type, "points", points, unit);
+                            res.runAway = true;
+                        }
+
                         res.free = false;
 
                     } else {

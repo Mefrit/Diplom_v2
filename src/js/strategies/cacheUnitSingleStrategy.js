@@ -1,4 +1,4 @@
-define(["require", "exports", "../strategies/angryIfcan", "./securityArcher", "./goAvayIfManyEnemies"], function (require, exports, angryIfcan_1, securityArcher_1, goAvayIfManyEnemies_1) {
+define(["require", "exports", "./angryIfcan", "./securityArcher", "./goAvayIfManyEnemies", "./atackTheArcher"], function (require, exports, angryIfcan_1, securityArcher_1, goAvayIfManyEnemies_1, atackTheArcher_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.cacheArcherAI = exports.cacheFighterAI = void 0;
@@ -8,8 +8,6 @@ define(["require", "exports", "../strategies/angryIfcan", "./securityArcher", ".
         "GoAwayIfManyEnemies": goAvayIfManyEnemies_1.GoAwayIfManyEnemies
     };
     exports.cacheArcherAI = {
-        "AtackTheArcher": securityArcher_1.SecurityArcher,
-        "FightIfYouCan": angryIfcan_1.FightIfYouCan,
-        "GoAwayIfManyEnemies": goAvayIfManyEnemies_1.GoAwayIfManyEnemies
+        "AtackTheArcher": atackTheArcher_1.AtackTheArcher
     };
 });

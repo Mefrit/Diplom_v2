@@ -85,7 +85,6 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategey {
 
             if (element.priority <= best_point.priority) {
                 // что бы искал пути, конечно это не панацея в более сложных ситуация фигурка будет тупить
-
                 // написать по нормальному!!!!!
                 // if (unit.coordPrevPoint.x != element.next.x && unit.coordPrevPoint.y != element.next.y) {
                 // console.log("unit.coordPrevPoint,", unit.coordPrevPoint, element.next);

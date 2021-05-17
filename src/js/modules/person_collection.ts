@@ -32,13 +32,13 @@ export class Collection {
         });
         return res;
     }
-    getAiCollection() {
-        return this.collection.filter((elem) => {
-            if (elem.person.evil) {
-                return elem;
-            }
-        });
-    }
+    // getAiCollection() {
+    //     return this.collection.filter((elem) => {
+    //         if (elem.person.evil) {
+    //             return elem;
+    //         }
+    //     });
+    // }
     getUserCollection() {
         return this.collection.filter((elem) => {
             if (!elem.person.evil) {

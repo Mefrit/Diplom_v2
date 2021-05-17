@@ -88,10 +88,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 setTimeout(function () { resolve("Promise3"); }, 320);
             });
         };
-        FightIfYouCan.prototype.atackeChosenUnit = function (cache, unit) {
+        FightIfYouCan.prototype.atackeChosenUnit = function (cache, enemie) {
             var _this = this;
             return new Promise(function (resolve, reject) {
-                var nearEnemie = unit, coord, res, attakedEnemie, checkArcherPosition;
+                var nearEnemie = enemie, coord, res, attakedEnemie, checkArcherPosition;
                 console.log("start cahce", cache);
                 console.log("start ", cache);
                 coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
