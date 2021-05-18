@@ -1,5 +1,5 @@
 
-export class DefaultMethodsStrategey {
+export class DefaultMethodsStrategy {
     scene: any;
     view: any;
     unit_collection: any;
@@ -16,6 +16,7 @@ export class DefaultMethodsStrategey {
         this.scene.renderElement(person);
         //
     }
+
     // получить ближайшего союзника лучника
     findNearestArchers(unit) {
         //плохо, нужно это объединить и оптимизировать
@@ -50,21 +51,25 @@ export class DefaultMethodsStrategey {
     findNearestEnemies(unit) {
         let min = 1000,
             nearEnemies = undefined,
-
             tmp_min = 1000;
-        this.unit_collection.getCollection().forEach((element) => {
-            if (!element.person.evil && !element.isNotDied()) {
-                // console.log();
 
-                // tmp_x = unit.person.x - element.person.x;
-                // tmp_y = unit.person.y - element.person.y;
+        // this.unit_collection.getCollection().forEach((element) => {
+        //     if (!element.person.evil && !element.isNotDied()) {
+        //         tmp_min = this.getDistanceBetweenUnits(unit, element)
+        //         if (min > tmp_min) {
+        //             min = tmp_min;
+        //             nearEnemies = element;
+        //         }
+        //     }
+        // });
+        this.unit_collection.getUserCollection().forEach((element) => {
 
-                tmp_min = this.getDistanceBetweenUnits(unit, element)
-                if (min > tmp_min) {
-                    min = tmp_min;
-                    nearEnemies = element;
-                }
+            tmp_min = this.getDistanceBetweenUnits(unit, element)
+            if (min > tmp_min) {
+                min = tmp_min;
+                nearEnemies = element;
             }
+
         });
         return nearEnemies;
     }

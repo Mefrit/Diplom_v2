@@ -120,7 +120,7 @@ export class ViewScene {
         block.classList.add("sence__block");
         block.style.left = posX + "px";
         block.style.top = posY + "px";
-        block.src = "src/images/block.png";
+        block.src = "src/images/block2.png";
         return block;
     }
     showCurentUnit(domPerson) {

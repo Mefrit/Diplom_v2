@@ -121,6 +121,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             return cacheEnimies;
         };
         return FightIfYouCan;
-    }(defaultMethods_1.DefaultMethodsStrategey));
+    }(defaultMethods_1.DefaultMethodsStrategy));
     exports.FightIfYouCan = FightIfYouCan;
 });

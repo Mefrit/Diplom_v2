@@ -6,7 +6,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
     var loader = new loader_1.ImageDownloader();
     var arrPersons = [
         {
-            url: "./src/images/hola.png",
+            url: "./src/images/kind_archer.png",
             x: 7,
             y: 2,
             evil: false,
@@ -16,7 +16,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             id: 0,
         },
         {
-            url: "./src/images/vinny.png",
+            url: "./src/images/kind_archer2.png",
             x: 5,
             y: 3,
             evil: false,
@@ -26,7 +26,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             id: 1,
         },
         {
-            url: "./src/images/person3.jpg",
+            url: "./src/images/person2_2.png",
             x: 0,
             y: 0,
             evil: true,
@@ -46,7 +46,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             id: 5,
         },
         {
-            url: "./src/images/person.jpg",
+            url: "./src/images/person2_1.png",
             x: 0,
             y: 4,
             evil: true,
@@ -56,7 +56,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             id: 8,
         },
         {
-            url: "./src/images/person3.png",
+            url: "./src/images/vinny2.png",
             x: 3,
             y: 2,
             evil: true,
@@ -66,7 +66,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             id: 6,
         },
         {
-            url: "./src/images/person.jpg",
+            url: "./src/images/person2.png",
             x: 3,
             y: 3,
             evil: true,

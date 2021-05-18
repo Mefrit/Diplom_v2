@@ -24,6 +24,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             _this.ai_units = props.ai_units;
             _this.scene = props.scene;
             _this.view = props.view;
+            _this.global_cache = {};
             return _this;
         }
         DistanceAgro.prototype.assessment = function (cache) {
@@ -36,6 +37,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     result += 100;
                 }
             });
+            this.global_cache = cache;
             enemies = this.unit_collection.getUserCollection();
             enemies.forEach(function (elem) {
                 if (elem.person.health < 30) {
@@ -62,12 +64,15 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 x: unit.person.x,
                 y: unit.person.y
             }, 4);
+            cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.archers_purpose);
             if (cache_enemies.length > 0) {
                 best_enemie = this.getBestEnemie(cache_enemies, unit);
             }
             else {
                 best_enemie = this.findNearestEnemies(unit);
             }
+            console.log("cache_unit", this.global_cache, unit);
+            this.global_cache.archers_purpose[unit.person.id] = best_enemie;
             var ChoosenStrategy;
             if (cache_unit[index].person.class == "fighter") {
                 ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "SecurityArcher");
@@ -97,9 +102,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             }
         };
         DistanceAgro.prototype.start = function (cache) {
+            this.global_cache = cache;
             this.startMove(this.ai_units, 0);
         };
         return DistanceAgro;
-    }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategey));
+    }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategy));
     exports.DistanceAgro = DistanceAgro;
 });

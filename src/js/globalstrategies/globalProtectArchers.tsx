@@ -1,8 +1,8 @@
-import { DefaultGlobalMethodsStrategey } from "../lib/defaultGlobalStrategiesMethods";
+import { DefaultGlobalMethodsStrategy } from "../lib/defaultGlobalStrategiesMethods";
 import { cacheFighterAI, cacheArcherAI } from "../strategies/cacheUnitSingleStrategy"
 // import { } from "../strategies/"
 //идея стратегия перегруппировки юнитов, юниты становятся ближе друг к другу и если это возможно - то атакуют
-export class ProtectArchers extends DefaultGlobalMethodsStrategey {
+export class ProtectArchers extends DefaultGlobalMethodsStrategy {
     ai_units = []; // пулл оставшейся команды
     scene;
     view;
@@ -29,8 +29,6 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategey {
                 x: elem.person.x,
                 y: elem.person.y
             }, 3);
-            console.log(enemies_near_archers);
-            // if (enemies_near_archers.length > 0) {
             result += enemies_near_archers.length * 1000;
             result += elem.person.health * 5;
             // }

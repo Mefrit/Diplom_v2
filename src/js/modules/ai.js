@@ -19,13 +19,18 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
                 _this.CACHE = {};
                 _this.syncUnit(_this.unit_collection);
             };
-            this.CACHE = {};
+            this.CACHE = this.initEmptyGlobalCache();
             this.scene = {};
             this.cache_coord_bots = [];
             this.syncUnit = function () {
                 console.log("default");
             };
         }
+        Ai.prototype.initEmptyGlobalCache = function () {
+            return {
+                archers_purpose: []
+            };
+        };
         Ai.prototype.initView = function (view) {
             this.view = view;
         };

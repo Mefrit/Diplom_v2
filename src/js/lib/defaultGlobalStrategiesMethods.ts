@@ -1,10 +1,26 @@
-import { DefaultMethodsStrategey } from "./defaultMethods";
-export class DefaultGlobalMethodsStrategey extends DefaultMethodsStrategey {
+import { DefaultMethodsStrategy } from "./defaultMethods";
+export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     constructor(props) {
         super(props);
     }
     checkConnection() {
         alert("connction");
+    }
+    deleteBusyEnemies(cache_enemies, archers_purpose) {
+        let find = false;
+        return cache_enemies.filter(enemies => {
+
+            archers_purpose.forEach(archers_enemies => {
+                if (archers_enemies.person.id == enemies.person.id) {
+                    find = true;
+                }
+            });
+            if (find) {
+                find = false;
+                return false;
+            }
+            return true;
+        });
     }
     getStrategyByName(cache_ai, name) {
 

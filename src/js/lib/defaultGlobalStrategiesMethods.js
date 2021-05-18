@@ -14,16 +14,31 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "./defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultGlobalMethodsStrategey = void 0;
-    var DefaultGlobalMethodsStrategey = (function (_super) {
-        __extends(DefaultGlobalMethodsStrategey, _super);
-        function DefaultGlobalMethodsStrategey(props) {
+    exports.DefaultGlobalMethodsStrategy = void 0;
+    var DefaultGlobalMethodsStrategy = (function (_super) {
+        __extends(DefaultGlobalMethodsStrategy, _super);
+        function DefaultGlobalMethodsStrategy(props) {
             return _super.call(this, props) || this;
         }
-        DefaultGlobalMethodsStrategey.prototype.checkConnection = function () {
+        DefaultGlobalMethodsStrategy.prototype.checkConnection = function () {
             alert("connction");
         };
-        DefaultGlobalMethodsStrategey.prototype.getStrategyByName = function (cache_ai, name) {
+        DefaultGlobalMethodsStrategy.prototype.deleteBusyEnemies = function (cache_enemies, archers_purpose) {
+            var find = false;
+            return cache_enemies.filter(function (enemies) {
+                archers_purpose.forEach(function (archers_enemies) {
+                    if (archers_enemies.person.id == enemies.person.id) {
+                        find = true;
+                    }
+                });
+                if (find) {
+                    find = false;
+                    return false;
+                }
+                return true;
+            });
+        };
+        DefaultGlobalMethodsStrategy.prototype.getStrategyByName = function (cache_ai, name) {
             var result = {};
             for (var key in cache_ai) {
                 if (key == name) {
@@ -32,7 +47,7 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
             }
             return result;
         };
-        DefaultGlobalMethodsStrategey.prototype.sortArchersFirst = function (cacheAi) {
+        DefaultGlobalMethodsStrategy.prototype.sortArchersFirst = function (cacheAi) {
             return cacheAi.sort(function (prev, next) {
                 if (prev.person.class == "archer") {
                     return -1;
@@ -42,7 +57,7 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                 }
             });
         };
-        return DefaultGlobalMethodsStrategey;
-    }(defaultMethods_1.DefaultMethodsStrategey));
-    exports.DefaultGlobalMethodsStrategey = DefaultGlobalMethodsStrategey;
+        return DefaultGlobalMethodsStrategy;
+    }(defaultMethods_1.DefaultMethodsStrategy));
+    exports.DefaultGlobalMethodsStrategy = DefaultGlobalMethodsStrategy;
 });

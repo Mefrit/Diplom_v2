@@ -1,6 +1,6 @@
-import { DefaultMethodsStrategey } from "../lib/defaultMethods";
+import { DefaultMethodsStrategy } from "../lib/defaultMethods";
 
-export class FightIfYouCan extends DefaultMethodsStrategey {
+export class FightIfYouCan extends DefaultMethodsStrategy {
     unit: any;
     coordsEvil: any;
     view: any

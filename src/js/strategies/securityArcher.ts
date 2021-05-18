@@ -1,7 +1,7 @@
 
-import { DefaultMethodsStrategey } from "../lib/defaultMethods";
+import { DefaultMethodsStrategy } from "../lib/defaultMethods";
 
-export class SecurityArcher extends DefaultMethodsStrategey {
+export class SecurityArcher extends DefaultMethodsStrategy {
     constructor(props: any) {
         super(props);
         // console.log("\n angry", props);
@@ -20,8 +20,7 @@ export class SecurityArcher extends DefaultMethodsStrategey {
 
     start(cache) {
         return new Promise((resolve, reject) => {
-            var
-                near_enemy = this.findNearestEnemies(this.unit);
+            var near_enemy = this.findNearestEnemies(this.unit);
             var near_archer = this.findNearestArchers(this.unit);
             var pos_security = {};
             var near_enemies = [];

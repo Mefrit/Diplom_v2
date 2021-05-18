@@ -36,7 +36,7 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
         };
         Collection.prototype.getUserCollection = function () {
             return this.collection.filter(function (elem) {
-                if (!elem.person.evil) {
+                if (!elem.person.evil && !element.isNotDied()) {
                     return elem;
                 }
             });

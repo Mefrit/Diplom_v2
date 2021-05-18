@@ -41,7 +41,7 @@ export class Collection {
     // }
     getUserCollection() {
         return this.collection.filter((elem) => {
-            if (!elem.person.evil) {
+            if (!elem.person.evil && !element.isNotDied()) {
                 return elem;
             }
         });

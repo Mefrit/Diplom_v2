@@ -18,7 +18,7 @@ let arrPersons = [
     // { url: './src/images/person3.png', x: 3, y: 1, evil: true, class: 'fighter', damage: 14, health: 50, id: 1 },
     // { url: './src/images/hola2.png', x: 3, y: essssssssssssssses4, evil: false, class: 'fighter', damage: 12, health: 50, id: 2 },
     {
-        url: "./src/images/hola.png",
+        url: "./src/images/kind_archer.png",
         x: 7,
         y: 2,
         evil: false,
@@ -28,7 +28,7 @@ let arrPersons = [
         id: 0,
     },
     {
-        url: "./src/images/vinny.png",
+        url: "./src/images/kind_archer2.png",
         x: 5,
         y: 3,
         evil: false,
@@ -68,7 +68,7 @@ let arrPersons = [
     //     id: 33,
     // },
     {
-        url: "./src/images/person3.jpg",
+        url: "./src/images/person2_2.png",
         x: 0,
         y: 0,
         evil: true,
@@ -88,7 +88,7 @@ let arrPersons = [
         id: 5,
     },
     {
-        url: "./src/images/person.jpg",
+        url: "./src/images/person2_1.png",
         x: 0,
         y: 4,
         evil: true,
@@ -99,7 +99,7 @@ let arrPersons = [
     },
 
     {
-        url: "./src/images/person3.png",
+        url: "./src/images/vinny2.png",
         x: 3,
         y: 2,
         evil: true,
@@ -109,7 +109,7 @@ let arrPersons = [
         id: 6,
     },
     {
-        url: "./src/images/person.jpg",
+        url: "./src/images/person2.png",
         x: 3,
         y: 3,
         evil: true,

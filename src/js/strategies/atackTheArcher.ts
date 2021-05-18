@@ -1,5 +1,5 @@
-import { DefaultMethodsStrategey } from "../lib/defaultMethods";
-export class AtackTheArcher extends DefaultMethodsStrategey {
+import { DefaultMethodsStrategy } from "../lib/defaultMethods";
+export class AtackTheArcher extends DefaultMethodsStrategy {
     unit: any;
     coordsEvil: any;
     view: any

@@ -106,7 +106,7 @@ define(["require", "exports"], function (require, exports) {
             block.classList.add("sence__block");
             block.style.left = posX + "px";
             block.style.top = posY + "px";
-            block.src = "src/images/block.png";
+            block.src = "src/images/block2.png";
             return block;
         };
         ViewScene.prototype.showCurentUnit = function (domPerson) {

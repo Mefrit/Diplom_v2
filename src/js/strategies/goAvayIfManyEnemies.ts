@@ -1,7 +1,7 @@
 // -если персонаж  остался 1, а по близости много врагов
 
-import { DefaultMethodsStrategey } from "../lib/defaultMethods";
-export class GoAwayIfManyEnemies extends DefaultMethodsStrategey {
+import { DefaultMethodsStrategy } from "../lib/defaultMethods";
+export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
     constructor(props: any) {
         super(props);
         // console.log("\n angry", props);

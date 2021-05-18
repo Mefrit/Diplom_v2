@@ -15,13 +15,18 @@ export class Ai {
     // обьект для рендера элементов
     scene: any;
     constructor(arrAllPersons) {
-        this.CACHE = {};
+        this.CACHE = this.initEmptyGlobalCache();
         this.scene = {};
         //тут храняться занятые координаты( то бишь, что бы не на 1 клетку ходили )\
         this.cache_coord_bots = [];
         this.syncUnit = function () {
             console.log("default");
         };
+    }
+    initEmptyGlobalCache() {
+        return {
+            archers_purpose: []
+        }
     }
     initPersons = (unit_collection, syncUnit) => {
         this.unit_collection = unit_collection;

@@ -164,6 +164,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             });
         };
         return AtackTheArcher;
-    }(defaultMethods_1.DefaultMethodsStrategey));
+    }(defaultMethods_1.DefaultMethodsStrategy));
     exports.AtackTheArcher = AtackTheArcher;
 });

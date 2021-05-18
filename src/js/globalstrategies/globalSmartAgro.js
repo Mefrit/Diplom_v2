@@ -29,7 +29,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         SmartAgro.prototype.assessment = function (cache) {
             if (cache === void 0) { cache = {}; }
             var result = 1000, enemies, damaged_person = {}, min_health = 200;
-            console.log("assessment SmartAgro", this.ai_units, cache);
             this.ai_units.forEach(function (elem) {
                 if (elem.person.health < 30) {
                     result -= 400;
@@ -100,6 +99,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             this.startMove(this.ai_units, 0);
         };
         return SmartAgro;
-    }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategey));
+    }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategy));
     exports.SmartAgro = SmartAgro;
 });

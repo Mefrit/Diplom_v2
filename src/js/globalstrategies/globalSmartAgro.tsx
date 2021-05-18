@@ -1,8 +1,8 @@
-import { DefaultGlobalMethodsStrategey } from "../lib/defaultGlobalStrategiesMethods";
+import { DefaultGlobalMethodsStrategy } from "../lib/defaultGlobalStrategiesMethods";
 import { cacheFighterAI, cacheArcherAI } from "../strategies/cacheUnitSingleStrategy"
 // import { } from "../strategies/"
 //идея стратегия перегруппировки юнитов, юниты становятся ближе друг к другу и если это возможно - то атакуют
-export class SmartAgro extends DefaultGlobalMethodsStrategey {
+export class SmartAgro extends DefaultGlobalMethodsStrategy {
     ai_units = []; // пулл оставшейся команды
     scene;
     view;
@@ -15,7 +15,6 @@ export class SmartAgro extends DefaultGlobalMethodsStrategey {
     }
     assessment(cache = {}) {
         var result = 1000, enemies, damaged_person = {}, min_health = 200;
-        console.log("assessment SmartAgro", this.ai_units, cache)
         this.ai_units.forEach(elem => {
             if (elem.person.health < 30) {
                 result -= 400;

@@ -38,7 +38,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     x: elem.person.x,
                     y: elem.person.y
                 }, 3);
-                console.log(enemies_near_archers);
                 result += enemies_near_archers.length * 1000;
                 result += elem.person.health * 5;
             });
@@ -126,6 +125,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             this.startMove(this.ai_units, 0);
         };
         return ProtectArchers;
-    }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategey));
+    }(defaultGlobalStrategiesMethods_1.DefaultGlobalMethodsStrategy));
     exports.ProtectArchers = ProtectArchers;
 });

@@ -1,9 +1,9 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultMethodsStrategey = void 0;
-    var DefaultMethodsStrategey = (function () {
-        function DefaultMethodsStrategey(props) {
+    exports.DefaultMethodsStrategy = void 0;
+    var DefaultMethodsStrategy = (function () {
+        function DefaultMethodsStrategy(props) {
             var _this = this;
             this.getNeighbors = function (coord, type) {
                 if (type === void 0) { type = "figter"; }
@@ -118,12 +118,12 @@ define(["require", "exports"], function (require, exports) {
             this.view = props.view;
             this.unit_collection = props.unit_collection;
         }
-        DefaultMethodsStrategey.prototype.moveTo = function (person, coord) {
+        DefaultMethodsStrategy.prototype.moveTo = function (person, coord) {
             person.setCoord(coord.x, coord.y);
             this.unit_collection.updateElement(person);
             this.scene.renderElement(person);
         };
-        DefaultMethodsStrategey.prototype.findNearestArchers = function (unit) {
+        DefaultMethodsStrategy.prototype.findNearestArchers = function (unit) {
             var min = 1000, nearArcher = undefined, tmp_x, tmp_y, tmp_min = 1000;
             this.unit_collection.getCollection().forEach(function (element) {
                 if (element.person.evil && !element.isNotDied() && element.person.class == 'archer') {
@@ -138,26 +138,24 @@ define(["require", "exports"], function (require, exports) {
             });
             return nearArcher;
         };
-        DefaultMethodsStrategey.prototype.getDistanceBetweenUnits = function (unit1, unit2) {
+        DefaultMethodsStrategy.prototype.getDistanceBetweenUnits = function (unit1, unit2) {
             var tmp_x = unit1.person.x - unit2.person.x;
             var tmp_y = unit1.person.y - unit2.person.y;
             return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
         };
-        DefaultMethodsStrategey.prototype.findNearestEnemies = function (unit) {
+        DefaultMethodsStrategy.prototype.findNearestEnemies = function (unit) {
             var _this = this;
             var min = 1000, nearEnemies = undefined, tmp_min = 1000;
-            this.unit_collection.getCollection().forEach(function (element) {
-                if (!element.person.evil && !element.isNotDied()) {
-                    tmp_min = _this.getDistanceBetweenUnits(unit, element);
-                    if (min > tmp_min) {
-                        min = tmp_min;
-                        nearEnemies = element;
-                    }
+            this.unit_collection.getUserCollection().forEach(function (element) {
+                tmp_min = _this.getDistanceBetweenUnits(unit, element);
+                if (min > tmp_min) {
+                    min = tmp_min;
+                    nearEnemies = element;
                 }
             });
             return nearEnemies;
         };
-        DefaultMethodsStrategey.prototype.deleteExcessCoord = function (cahceCoord) {
+        DefaultMethodsStrategy.prototype.deleteExcessCoord = function (cahceCoord) {
             var _this = this;
             if (cahceCoord === void 0) { cahceCoord = []; }
             return cahceCoord.filter(function (elem) {
@@ -173,7 +171,7 @@ define(["require", "exports"], function (require, exports) {
                 }
             });
         };
-        DefaultMethodsStrategey.prototype.checkCameFromEmpty = function (cameFrom, point) {
+        DefaultMethodsStrategy.prototype.checkCameFromEmpty = function (cameFrom, point) {
             var res = true;
             cameFrom.forEach(function (element) {
                 if (element.x == point.x && element.y == point.y) {
@@ -182,7 +180,7 @@ define(["require", "exports"], function (require, exports) {
             });
             return res;
         };
-        DefaultMethodsStrategey.prototype.heuristic = function (a, b, type) {
+        DefaultMethodsStrategy.prototype.heuristic = function (a, b, type) {
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             switch (type) {
                 case "archer":
@@ -219,7 +217,7 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
-        DefaultMethodsStrategey.prototype.heuristicSecurityArcher = function (a, b, type, near_archer) {
+        DefaultMethodsStrategy.prototype.heuristicSecurityArcher = function (a, b, type, near_archer) {
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             if (b.x == near_archer.x) {
@@ -233,7 +231,7 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
-        DefaultMethodsStrategey.prototype.heuristicCarefully = function (a, b, type, enemies_near_3) {
+        DefaultMethodsStrategy.prototype.heuristicCarefully = function (a, b, type, enemies_near_3) {
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             switch (type) {
                 case "archer":
@@ -290,7 +288,7 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
-        DefaultMethodsStrategey.prototype.checkArcherPosition = function (enemie) {
+        DefaultMethodsStrategy.prototype.checkArcherPosition = function (enemie) {
             var res = { point: {}, result: false };
             if (Math.abs(enemie.x - this.unit.x) < 2) {
                 if (this.checkFreePointsArcher({ x: enemie.x, y: enemie.y - 1 })) {
@@ -320,13 +318,13 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
-        DefaultMethodsStrategey.prototype.shuffle = function (array) {
+        DefaultMethodsStrategy.prototype.shuffle = function (array) {
             return array.sort(function () { return Math.random() - 0.5; });
         };
-        DefaultMethodsStrategey.prototype.checkEnemieNear = function (current, enemie, coefProximity) {
+        DefaultMethodsStrategy.prototype.checkEnemieNear = function (current, enemie, coefProximity) {
             return Math.abs(current.x - enemie.x) < coefProximity && Math.abs(current.y - enemie.y) < coefProximity;
         };
-        DefaultMethodsStrategey.prototype.checkFreePointsArcher = function (points, type) {
+        DefaultMethodsStrategy.prototype.checkFreePointsArcher = function (points, type) {
             var _this = this;
             if (type === void 0) { type = "fighter"; }
             var res = { free: true, deleteLastPoint: false, runAway: false };
@@ -353,7 +351,7 @@ define(["require", "exports"], function (require, exports) {
             });
             return res;
         };
-        DefaultMethodsStrategey.prototype.getPointsField = function (coord_unit, field_step) {
+        DefaultMethodsStrategy.prototype.getPointsField = function (coord_unit, field_step) {
             var cache_points = [];
             for (var i = -field_step; i < field_step + 1; i++) {
                 for (var j = -field_step; j < field_step + 1; j++) {
@@ -363,7 +361,7 @@ define(["require", "exports"], function (require, exports) {
             cache_points = this.deleteExcessCoord(cache_points);
             return cache_points;
         };
-        DefaultMethodsStrategey.prototype.getEnemyInField = function (coord_unit, field_step) {
+        DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {
             var _this = this;
             return this.unit_collection.getUserCollection().filter(function (elem) {
                 if (_this.checkEnemieNear(coord_unit, elem, field_step) && elem.person.health > 10) {
@@ -371,11 +369,11 @@ define(["require", "exports"], function (require, exports) {
                 }
             });
         };
-        DefaultMethodsStrategey.prototype.randomInteger = function (min, max) {
+        DefaultMethodsStrategy.prototype.randomInteger = function (min, max) {
             var rand = min - 0.5 + Math.random() * (max - min + 1);
             return Math.round(rand);
         };
-        DefaultMethodsStrategey.prototype.getNearFriendsUnit = function (unit, cacheUnits) {
+        DefaultMethodsStrategy.prototype.getNearFriendsUnit = function (unit, cacheUnits) {
             var coord_min = {
                 x: cacheUnits[0].x,
                 y: cacheUnits[0].y
@@ -392,7 +390,7 @@ define(["require", "exports"], function (require, exports) {
             });
             return coord_min;
         };
-        return DefaultMethodsStrategey;
+        return DefaultMethodsStrategy;
     }());
-    exports.DefaultMethodsStrategey = DefaultMethodsStrategey;
+    exports.DefaultMethodsStrategy = DefaultMethodsStrategy;
 });

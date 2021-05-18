@@ -108,6 +108,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             });
         };
         return GoAwayIfManyEnemies;
-    }(defaultMethods_1.DefaultMethodsStrategey));
+    }(defaultMethods_1.DefaultMethodsStrategy));
     exports.GoAwayIfManyEnemies = GoAwayIfManyEnemies;
 });
