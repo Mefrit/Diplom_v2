@@ -64,15 +64,22 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 x: unit.person.x,
                 y: unit.person.y
             }, 4);
+            console.log("tcache_enemies", this.global_cache.archers_purpose);
             cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.archers_purpose);
             if (cache_enemies.length > 0) {
                 best_enemie = this.getBestEnemie(cache_enemies, unit);
             }
             else {
-                best_enemie = this.findNearestEnemies(unit);
+                best_enemie = this.findNearestEnemies(unit, this.global_cache.archers_purpose);
             }
-            console.log("cache_unit", this.global_cache, unit);
-            this.global_cache.archers_purpose[unit.person.id] = best_enemie;
+            if (this.unit_collection.getUserCollection().length > 1) {
+                if (this.getArchersInField(unit, 2).length > 1 && this.isArchers(unit)) {
+                    console.log("global_cache", this.global_cache, this.getArchersInField(unit, 2), unit, this.isArchers(unit));
+                    this.global_cache.archers_purpose.push({ enemie: best_enemie, id_archer: unit.person.id });
+                }
+            }
+            else {
+            }
             var ChoosenStrategy;
             if (cache_unit[index].person.class == "fighter") {
                 ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "SecurityArcher");

@@ -34,9 +34,9 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
             });
             return res;
         };
-        Collection.prototype.getUserCollection = function () {
+        Collection.prototype.getPersonById = function (id) {
             return this.collection.filter(function (elem) {
-                if (!elem.person.evil && !element.isNotDied()) {
+                if (!elem.isNotDied() && elem.perosn.id == id) {
                     return elem;
                 }
             });

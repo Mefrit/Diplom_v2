@@ -51,7 +51,7 @@ define(["require", "exports"], function (require, exports) {
                     _this.moveTo(unit, bestPoint.next);
                 }
                 current = { id: 0, x: unit.person.x, y: unit.person.y };
-                res.findEnime = _this.checkEnemieNear(current, obj2go, coefProximity);
+                res.findEnime = _this.checkPersonNear(current, obj2go, coefProximity);
                 if (res.findEnime) {
                     unit.removePrevPoint();
                 }
@@ -108,7 +108,7 @@ define(["require", "exports"], function (require, exports) {
                     _this.moveTo(unit, bestPoint.next);
                 }
                 current = { id: 0, x: unit.person.x, y: unit.person.y };
-                res.findEnime = _this.checkEnemieNear(current, obj2go, coefProximity);
+                res.findEnime = _this.checkPersonNear(current, obj2go, coefProximity);
                 if (res.findEnime) {
                     unit.removePrevPoint();
                 }
@@ -143,10 +143,16 @@ define(["require", "exports"], function (require, exports) {
             var tmp_y = unit1.person.y - unit2.person.y;
             return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
         };
-        DefaultMethodsStrategy.prototype.findNearestEnemies = function (unit) {
+        DefaultMethodsStrategy.prototype.findNearestEnemies = function (unit, cache_busy_enemies) {
             var _this = this;
+            if (cache_busy_enemies === void 0) { cache_busy_enemies = []; }
             var min = 1000, nearEnemies = undefined, tmp_min = 1000;
-            this.unit_collection.getUserCollection().forEach(function (element) {
+            var unit_collection = this.unit_collection.getUserCollection();
+            if (cache_busy_enemies.length > 0) {
+                console.log("cache_busy_enemies", cache_busy_enemies);
+                unit_collection = this.deleteBusyEnemies(unit_collection, cache_busy_enemies);
+            }
+            unit_collection.forEach(function (element) {
                 tmp_min = _this.getDistanceBetweenUnits(unit, element);
                 if (min > tmp_min) {
                     min = tmp_min;
@@ -318,11 +324,14 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
+        DefaultMethodsStrategy.prototype.isArchers = function (unit) {
+            return unit.person.class == "archer";
+        };
         DefaultMethodsStrategy.prototype.shuffle = function (array) {
             return array.sort(function () { return Math.random() - 0.5; });
         };
-        DefaultMethodsStrategy.prototype.checkEnemieNear = function (current, enemie, coefProximity) {
-            return Math.abs(current.x - enemie.x) < coefProximity && Math.abs(current.y - enemie.y) < coefProximity;
+        DefaultMethodsStrategy.prototype.checkPersonNear = function (current, person, coefProximity) {
+            return Math.abs(current.x - person.x) < coefProximity && Math.abs(current.y - person.y) < coefProximity;
         };
         DefaultMethodsStrategy.prototype.checkFreePointsArcher = function (points, type) {
             var _this = this;
@@ -364,8 +373,26 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {
             var _this = this;
             return this.unit_collection.getUserCollection().filter(function (elem) {
-                if (_this.checkEnemieNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                if (_this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
                     return elem;
+                }
+            });
+        };
+        DefaultMethodsStrategy.prototype.getFriendsInField = function (coord_unit, field_step) {
+            var _this = this;
+            return this.unit_collection.getAICollection().filter(function (elem) {
+                if (_this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                    return elem;
+                }
+            });
+        };
+        DefaultMethodsStrategy.prototype.getArchersInField = function (coord_unit, field_step) {
+            var _this = this;
+            return this.unit_collection.getAICollection().filter(function (elem) {
+                if (elem.person.class == "archer") {
+                    if (_this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                        return elem;
+                    }
                 }
             });
         };

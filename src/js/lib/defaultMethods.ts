@@ -48,21 +48,16 @@ export class DefaultMethodsStrategy {
 
         return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
     }
-    findNearestEnemies(unit) {
+    findNearestEnemies(unit, cache_busy_enemies = []) {
         let min = 1000,
             nearEnemies = undefined,
             tmp_min = 1000;
-
-        // this.unit_collection.getCollection().forEach((element) => {
-        //     if (!element.person.evil && !element.isNotDied()) {
-        //         tmp_min = this.getDistanceBetweenUnits(unit, element)
-        //         if (min > tmp_min) {
-        //             min = tmp_min;
-        //             nearEnemies = element;
-        //         }
-        //     }
-        // });
-        this.unit_collection.getUserCollection().forEach((element) => {
+        let unit_collection = this.unit_collection.getUserCollection();
+        if (cache_busy_enemies.length > 0) {
+            console.log("cache_busy_enemies", cache_busy_enemies);
+            unit_collection = this.deleteBusyEnemies(unit_collection, cache_busy_enemies);
+        }
+        unit_collection.forEach((element) => {
 
             tmp_min = this.getDistanceBetweenUnits(unit, element)
             if (min > tmp_min) {
@@ -341,14 +336,17 @@ export class DefaultMethodsStrategy {
         // console.log("\n frontier", frontier);
         current = { id: 0, x: unit.person.x, y: unit.person.y };
 
-        // console.log("After MOve moveAutoStepStupid=>>>>>>>>>>>>in !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", current, bestPoint, coefProximity, this.checkEnemieNear(current, enemie, coefProximity), frontier);
+        // console.log("After MOve moveAutoStepStupid=>>>>>>>>>>>>in !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", current, bestPoint, coefProximity, this.checkPersonNear(current, enemie, coefProximity), frontier);
 
-        res.findEnime = this.checkEnemieNear(current, obj2go, coefProximity);
+        res.findEnime = this.checkPersonNear(current, obj2go, coefProximity);
         if (res.findEnime) {
             unit.removePrevPoint();
         }
         return res;
 
+    }
+    isArchers(unit) {
+        return unit.person.class == "archer";
     }
     moveCarefully = (unit, obj2go, type, cache = {}) => {
 
@@ -414,7 +412,7 @@ export class DefaultMethodsStrategy {
             this.moveTo(unit, bestPoint.next);
         }
         current = { id: 0, x: unit.person.x, y: unit.person.y };
-        res.findEnime = this.checkEnemieNear(current, obj2go, coefProximity);
+        res.findEnime = this.checkPersonNear(current, obj2go, coefProximity);
         if (res.findEnime) {
             unit.removePrevPoint();
         }
@@ -424,10 +422,9 @@ export class DefaultMethodsStrategy {
     shuffle(array) {
         return array.sort(() => Math.random() - 0.5);
     }
-    checkEnemieNear(current, enemie, coefProximity) {
-        //&&  !enemie.isNotDied()
-        // console.log(current.x, "  -,  111", enemie.x, " || ", current.y - enemie.y, "coefProximity", coefProximity);
-        return Math.abs(current.x - enemie.x) < coefProximity && Math.abs(current.y - enemie.y) < coefProximity;
+    checkPersonNear(current, person, coefProximity) {
+
+        return Math.abs(current.x - person.x) < coefProximity && Math.abs(current.y - person.y) < coefProximity;
     }
     // проверяет  обстановку вокруг лучника, если враг рядом, то передается координаты врага
     checkFreePointsArcher(points, type = "fighter") {
@@ -485,12 +482,28 @@ export class DefaultMethodsStrategy {
     }
     // получить всех врагов какойто либбо области
     getEnemyInField(coord_unit, field_step) {
-        // console.log("this.unit_collection.getUse\n\n\n\n", this.unit_collection.getUserCollection());
-        // var points_near = this.getPointsField(coord_unit, field_step);
+
         return this.unit_collection.getUserCollection().filter(elem => {
-            // console.log("\n\nelem", elem);
-            if (this.checkEnemieNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+            if (this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
                 return elem;
+            }
+        });
+    }
+    getFriendsInField(coord_unit, field_step) {
+
+        return this.unit_collection.getAICollection().filter(elem => {
+            if (this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                return elem;
+            }
+        });
+    }
+    getArchersInField(coord_unit, field_step) {
+
+        return this.unit_collection.getAICollection().filter(elem => {
+            if (elem.person.class == "archer") {
+                if (this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                    return elem;
+                }
             }
         });
     }

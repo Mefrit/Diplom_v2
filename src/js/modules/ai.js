@@ -16,7 +16,7 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
             this.step = function () {
                 var ai_units = _this.unit_collection.getAICollection();
                 _this.stepAi(ai_units, 0);
-                _this.CACHE = {};
+                _this.CACHE = _this.initEmptyGlobalCache();
                 _this.syncUnit(_this.unit_collection);
             };
             this.CACHE = this.initEmptyGlobalCache();
@@ -61,6 +61,7 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
                     view: _this.view,
                     unit_collection: _this.unit_collection
                 });
+                console.log("this.CACHe", _this.CACHE);
                 assessment = tmp_ai.assessment(_this.CACHE);
                 _this.CACHE = assessment.cache;
                 return { assessment: assessment.total, ai: tmp_ai };

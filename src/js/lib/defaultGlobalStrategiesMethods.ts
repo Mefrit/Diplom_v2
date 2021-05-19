@@ -10,8 +10,8 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
         let find = false;
         return cache_enemies.filter(enemies => {
 
-            archers_purpose.forEach(archers_enemies => {
-                if (archers_enemies.person.id == enemies.person.id) {
+            archers_purpose.forEach(archers_enemie => {
+                if (archers_enemie.enemie.person.id == enemies.person.id) {
                     find = true;
                 }
             });

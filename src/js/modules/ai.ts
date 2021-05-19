@@ -75,7 +75,8 @@ export class Ai {
                 ai_units: ai_units,
                 view: this.view,
                 unit_collection: this.unit_collection
-            })
+            });
+            console.log("this.CACHe", this.CACHE);
             assessment = tmp_ai.assessment(this.CACHE)
             this.CACHE = assessment.cache;
             // console.log("ai ", tmp_ai.getInfo(), "total ", assessment.total);
@@ -122,7 +123,7 @@ export class Ai {
         // cacheAi = this.choseTurnUnit(cacheAi);
         this.stepAi(ai_units, 0);
         //очистка кеша
-        this.CACHE = {};
+        this.CACHE = this.initEmptyGlobalCache();
         this.syncUnit(this.unit_collection);
     };
 }

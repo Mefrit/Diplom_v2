@@ -32,16 +32,10 @@ export class Collection {
         });
         return res;
     }
-    // getAiCollection() {
-    //     return this.collection.filter((elem) => {
-    //         if (elem.person.evil) {
-    //             return elem;
-    //         }
-    //     });
-    // }
-    getUserCollection() {
+
+    getPersonById(id) {
         return this.collection.filter((elem) => {
-            if (!elem.person.evil && !element.isNotDied()) {
+            if (!elem.isNotDied() && elem.perosn.id == id) {
                 return elem;
             }
         });
