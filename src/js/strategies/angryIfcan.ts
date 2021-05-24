@@ -7,7 +7,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
     constructor(props: any) {
         super(props);
         // console.log("\n angry", props);
-
+        this.unit_collection = props.unit_collection;
         this.unit = props.unit;
         // this.coordsEvil = { x: props.result.x, y: props.result.y };
     }
@@ -48,7 +48,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             result -= elem.person.health * 5;
         });
         cache.most_damaged_person_3 = damaged_person;
-        console.log("!!!!!!!!!!\n\n\n enemies in fields FightIfYouCan", enemies, "damaged", damaged_person);
+
         return { total: Math.round(result), cache: cache };
     }
     start(cache) {
@@ -58,41 +58,8 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
         // если с переди стоят лучники то выбирать более агрессивную стратегию
         return new Promise((resolve, reject) => {
             let nearEnemie, coord, res, attakedEnemie, checkArcherPosition;
-
-            if (cache.hasOwnProperty("most_damaged_person_3")) {
-                if (cache.most_damaged_person_3.length > 0) {
-                    nearEnemie = cache.most_damaged_person_3;
-                } else {
-                    nearEnemie = this.findNearestEnemies(this.unit);
-                }
-            } else {
-                nearEnemie = this.findNearestEnemies(this.unit);
-            }
-            console.log("start ", cache);
-            coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
-            res = this.moveCarefully(this.unit, nearEnemie, "fighter", cache);
-
-            if (res.findEnime == true) {
-                attakedEnemie = this.findEnemieForAtake(res.enemie);
-                // запуск анимации атаки
-                this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
-                // console.log(res.enemie, this.view);
-                checkArcherPosition = this.checkArcherPosition(res.enemie);
-                // только если олучник стреляет сделать то бишь на позиции
-                if (checkArcherPosition.result && !this.unit.moveAction) {
-
-                    this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache);
-                }
-            }
-            setTimeout(() => { resolve("Promise3") }, 320);
-
-        });
-    }
-
-    atackeChosenUnit(cache, enemie) {
-        return new Promise((resolve, reject) => {
-            let nearEnemie = enemie, coord, res, attakedEnemie, checkArcherPosition;
-            console.log("start cahce", cache);
+            console.log("FightIfYouCan cache ", cache);
+            nearEnemie = this.findNearestEnemies(this.unit);
             // if (cache.hasOwnProperty("most_damaged_person_3")) {
             //     if (cache.most_damaged_person_3.length > 0) {
             //         nearEnemie = cache.most_damaged_person_3;
@@ -102,7 +69,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             // } else {
             //     nearEnemie = this.findNearestEnemies(this.unit);
             // }
-            console.log("start ", cache);
+
             coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
             res = this.moveCarefully(this.unit, nearEnemie, "fighter", cache);
 
@@ -110,14 +77,65 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 attakedEnemie = this.findEnemieForAtake(res.enemie);
                 // запуск анимации атаки
                 this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
-                // console.log(res.enemie, this.view);
+                //FIX ME какая то неправильная функция
                 checkArcherPosition = this.checkArcherPosition(res.enemie);
                 // только если олучник стреляет сделать то бишь на позиции
                 if (checkArcherPosition.result && !this.unit.moveAction) {
-                    console.log("checkArcherPosition", checkArcherPosition)
                     this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache);
                 }
             }
+            setTimeout(() => { resolve("Promise3") }, 320);
+
+        });
+    }
+
+    atackeChosenUnit(cache_unit, enemie) {
+        console.log("FightIfYouCan cache1111111 ", cache_unit, enemie);
+
+        return new Promise((resolve, reject) => {
+            let coord, res, attakedEnemie, checkArcherPosition, archers = this.unit_collection.getAiArchers();
+
+
+
+            coord = { x: enemie.person.x, y: enemie.person.y };
+            // this.unit_collection.getAiArchers()
+            // checkArcherPosition = this.checkUnitNotStatyOnArhcersAtacke(this.unit, this.global_cache.units_purpose, archers);
+
+            checkArcherPosition = this.checkArcherPosition(enemie);
+
+            if (checkArcherPosition.result && !this.unit.moveAction) {
+
+                this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache_unit);
+
+                console.log("\n\n\ this.getDistanceBetweenUnits(this.unit, enemie) ", this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0))
+                if (this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0) <= 1) {
+
+                    this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
+                }
+
+                // запуск анимации атаки
+            } else {
+                res = this.moveCarefully(this.unit, enemie, "fighter", cache_unit);
+
+                if (res.findEnime == true) {
+
+
+                    attakedEnemie = res.enemie;
+                    // запуск анимации атаки
+                    this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
+                    // console.log(" this.global_cache ", this.global_cache);
+
+                    // только если олучник стреляет сделать то бишь на позиции
+
+
+                    // console.log(res.enemie, this.view);
+
+
+                }
+
+            }
+            this.unit.setMoveAction(false);
+
             setTimeout(() => { resolve("Promise3") }, 320);
 
         });

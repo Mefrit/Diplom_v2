@@ -5,7 +5,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
     constructor(props: any) {
         super(props);
         // console.log("\n angry", props);
-
+        
         this.unit = props.unit;
         // this.coordsEvil = { x: props.result.x, y: props.result.y };
     }

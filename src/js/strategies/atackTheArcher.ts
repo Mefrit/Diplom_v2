@@ -32,33 +32,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
 
         return { total: result, cache: cache_assessment };
     }
-    checkFreeWay2Atack(enemie, direction) {
-        // показывает свободен ли путь для атаки из далека
-        // direction - направление по которому будем атаковать
-        let arrayPoit = [], sgn = enemie[direction] < this.unit[direction] ? -1 : 1, tmp,
-            res = { free: false, arrayPoit: [], direction: direction, runAway: false }, coefI;
-        tmp = Math.abs(enemie[direction] - this.unit[direction]);
 
-        if (tmp <= 4) {
-            coefI = tmp;
-        } else {
-            return res;
-        }
-        for (let i = 1; i <= coefI - 1; i++) {
-            tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
-            arrayPoit.push(tmp);
-        }
-        tmp = this.checkFreePointsArcher(arrayPoit, "archer");
-
-        res.free = tmp.free;
-        res.runAway = tmp.runAway;
-        if (tmp.deleteLastPoint) {
-            arrayPoit.splice(arrayPoit.length - 1, 1);
-        }
-        res.arrayPoit = arrayPoit;
-
-        return res;
-    }
     atakeArcher(enemie) {
         this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
     }
@@ -116,9 +90,9 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         let maxX = Math.abs(enemie.person.x - this.unit.person.x),
             maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;
         if (maxY > maxX) {
-            resCheck = this.checkFreeWay2Atack(enemie, "y");
+            resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
         } else {
-            resCheck = this.checkFreeWay2Atack(enemie, "x");
+            resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
         }
         // console.log("resCheck.free => ", resCheck);
         if (resCheck.free) {
@@ -129,9 +103,9 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 maxY = Math.abs(enemie.person.y - this.unit.person.y);
 
                 if (maxY > maxX) {
-                    resCheck = this.checkFreeWay2Atack(enemie, "y");
+                    resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
                 } else {
-                    resCheck = this.checkFreeWay2Atack(enemie, "x");
+                    resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                 }
                 if (resCheck.free) {
                     this.tryAtakeArcher(resCheck, enemie);

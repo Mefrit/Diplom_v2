@@ -3,7 +3,7 @@ define(["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ViewScene = void 0;
     var ViewScene = (function () {
-        function ViewScene(arrObjPlayers) {
+        function ViewScene(arrObjPlayers, loader) {
             var _this = this;
             this.renderPlayer = function (cnvsElem, elem, img) {
                 var ctx;
@@ -32,7 +32,7 @@ define(["require", "exports"], function (require, exports) {
             };
             this.drawHealth = function (ctx, elem, damage) {
                 if (damage === void 0) { damage = 0; }
-                var obj;
+                var obj, img;
                 _this.arrObjPersons.getCollection().forEach(function (elemCollection) {
                     if (elemCollection.getId() == elem.person.id) {
                         obj = elemCollection;
@@ -42,15 +42,19 @@ define(["require", "exports"], function (require, exports) {
                 ctx.lineWidth = 5;
                 ctx.strokeStyle = "green";
                 if (damage != 0) {
-                    if (obj.getHealth() > 10) {
+                    if (obj.getHealth() >= 15) {
                         obj.setHealth(obj.getHealth() - damage);
                     }
                     else {
                         ctx.strokeStyle = "red";
+                        console.log("\n\n\n\\n\n", obj);
+                        ctx.clearRect(0, 0, 1000, 1000);
+                        img = _this.loader.get("./src/images/rip.png");
+                        _this.renderPlayer(obj.getDoomObj(), obj, img);
                     }
+                    ctx.lineTo(obj.getHealth() * 3, 20);
+                    ctx.stroke();
                 }
-                ctx.lineTo(obj.getHealth() * 3, 20);
-                ctx.stroke();
             };
             this.contactPersonsView = function (canvas, img, damage) {
                 if (damage === void 0) { damage = 5; }
@@ -62,6 +66,7 @@ define(["require", "exports"], function (require, exports) {
                 _this.drawHealth(ctx, { person: id }, damage);
             };
             this.arrObjPersons = arrObjPlayers;
+            this.loader = loader;
         }
         ViewScene.prototype.drawImage = function (ctx, img) {
             var width, height, coef;

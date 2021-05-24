@@ -23,11 +23,16 @@ export class Collection {
             }
         });
     }
+
+
+
     checkFreeCoord(coord) {
         let res = true;
         this.collection.forEach((element) => {
-            if (element.x == coord.x && element.y == coord.y) {
-                res = false;
+            if (!element.isNotDied()) {
+                if (element.x == coord.x && element.y == coord.y) {
+                    res = false;
+                }
             }
         });
         return res;

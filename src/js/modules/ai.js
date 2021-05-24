@@ -10,7 +10,6 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
                 _this.syncUnit = syncUnit;
             };
             this.initScene = function (scene) {
-                console.log("initScene", scene);
                 _this.scene = scene;
             };
             this.step = function () {
@@ -28,7 +27,8 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
         }
         Ai.prototype.initEmptyGlobalCache = function () {
             return {
-                archers_purpose: []
+                units_purpose: [],
+                most_damaged_person_3: {}
             };
         };
         Ai.prototype.initView = function (view) {
@@ -61,7 +61,6 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
                     view: _this.view,
                     unit_collection: _this.unit_collection
                 });
-                console.log("this.CACHe", _this.CACHE);
                 assessment = tmp_ai.assessment(_this.CACHE);
                 _this.CACHE = assessment.cache;
                 return { assessment: assessment.total, ai: tmp_ai };

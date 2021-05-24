@@ -19,6 +19,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         __extends(FightIfYouCan, _super);
         function FightIfYouCan(props) {
             var _this = _super.call(this, props) || this;
+            _this.unit_collection = props.unit_collection;
             _this.unit = props.unit;
             return _this;
         }
@@ -56,25 +57,14 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 result -= elem.person.health * 5;
             });
             cache.most_damaged_person_3 = damaged_person;
-            console.log("!!!!!!!!!!\n\n\n enemies in fields FightIfYouCan", enemies, "damaged", damaged_person);
             return { total: Math.round(result), cache: cache };
         };
         FightIfYouCan.prototype.start = function (cache) {
             var _this = this;
             return new Promise(function (resolve, reject) {
                 var nearEnemie, coord, res, attakedEnemie, checkArcherPosition;
-                if (cache.hasOwnProperty("most_damaged_person_3")) {
-                    if (cache.most_damaged_person_3.length > 0) {
-                        nearEnemie = cache.most_damaged_person_3;
-                    }
-                    else {
-                        nearEnemie = _this.findNearestEnemies(_this.unit);
-                    }
-                }
-                else {
-                    nearEnemie = _this.findNearestEnemies(_this.unit);
-                }
-                console.log("start ", cache);
+                console.log("FightIfYouCan cache ", cache);
+                nearEnemie = _this.findNearestEnemies(_this.unit);
                 coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
                 res = _this.moveCarefully(_this.unit, nearEnemie, "fighter", cache);
                 if (res.findEnime == true) {
@@ -88,23 +78,28 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 setTimeout(function () { resolve("Promise3"); }, 320);
             });
         };
-        FightIfYouCan.prototype.atackeChosenUnit = function (cache, enemie) {
+        FightIfYouCan.prototype.atackeChosenUnit = function (cache_unit, enemie) {
             var _this = this;
+            console.log("FightIfYouCan cache1111111 ", cache_unit, enemie);
             return new Promise(function (resolve, reject) {
-                var nearEnemie = enemie, coord, res, attakedEnemie, checkArcherPosition;
-                console.log("start cahce", cache);
-                console.log("start ", cache);
-                coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
-                res = _this.moveCarefully(_this.unit, nearEnemie, "fighter", cache);
-                if (res.findEnime == true) {
-                    attakedEnemie = _this.findEnemieForAtake(res.enemie);
-                    _this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, _this.unit.person.damage);
-                    checkArcherPosition = _this.checkArcherPosition(res.enemie);
-                    if (checkArcherPosition.result && !_this.unit.moveAction) {
-                        console.log("checkArcherPosition", checkArcherPosition);
-                        _this.moveCarefully(_this.unit, checkArcherPosition.point, "fighter", cache);
+                var coord, res, attakedEnemie, checkArcherPosition, archers = _this.unit_collection.getAiArchers();
+                coord = { x: enemie.person.x, y: enemie.person.y };
+                checkArcherPosition = _this.checkArcherPosition(enemie);
+                if (checkArcherPosition.result && !_this.unit.moveAction) {
+                    _this.moveCarefully(_this.unit, checkArcherPosition.point, "fighter", cache_unit);
+                    console.log("\n\n\ this.getDistanceBetweenUnits(this.unit, enemie) ", _this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0));
+                    if (_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0) <= 1) {
+                        _this.view.contactPersonsView(enemie.domPerson, enemie.image, _this.unit.person.damage);
                     }
                 }
+                else {
+                    res = _this.moveCarefully(_this.unit, enemie, "fighter", cache_unit);
+                    if (res.findEnime == true) {
+                        attakedEnemie = res.enemie;
+                        _this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, _this.unit.person.damage);
+                    }
+                }
+                _this.unit.setMoveAction(false);
                 setTimeout(function () { resolve("Promise3"); }, 320);
             });
         };

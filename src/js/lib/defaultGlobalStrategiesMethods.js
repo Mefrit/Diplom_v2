@@ -23,10 +23,41 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         DefaultGlobalMethodsStrategy.prototype.checkConnection = function () {
             alert("connction");
         };
-        DefaultGlobalMethodsStrategy.prototype.deleteBusyEnemies = function (cache_enemies, archers_purpose) {
+        DefaultGlobalMethodsStrategy.prototype.getBestEnemie = function (cache_enemies, unit) {
+            var _this = this;
+            var best_enemie = cache_enemies[0], distance_best, tmp, res_x = false, res_y = false, find_archer = false;
+            distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
+            cache_enemies.forEach(function (elem) {
+                tmp = _this.getDistanceBetweenUnits(elem, unit);
+                if (tmp < distance_best && !find_archer) {
+                    if (best_enemie.x != elem.x || best_enemie.y != elem.y) {
+                        if (elem.person.health < best_enemie.person.health) {
+                            best_enemie = elem;
+                            distance_best = tmp;
+                        }
+                    }
+                }
+                if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
+                    if (_this.getFriendsInField({ x: elem.x, y: elem.y }, 1).length < 1) {
+                        if (_this.isArchers(elem)) {
+                            if (res_x.free || res_y.free) {
+                                best_enemie = elem;
+                                find_archer = true;
+                                return;
+                            }
+                        }
+                        if (!_this.isArchers(elem) && best_enemie.person.health < elem.person.health && !find_archer) {
+                            best_enemie = elem;
+                        }
+                    }
+                }
+            });
+            return best_enemie;
+        };
+        DefaultGlobalMethodsStrategy.prototype.deleteBusyEnemies = function (cache_enemies, units_purpose) {
             var find = false;
             return cache_enemies.filter(function (enemies) {
-                archers_purpose.forEach(function (archers_enemie) {
+                units_purpose.forEach(function (archers_enemie) {
                     if (archers_enemie.enemie.person.id == enemies.person.id) {
                         find = true;
                     }
@@ -37,6 +68,17 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                 }
                 return true;
             });
+        };
+        DefaultGlobalMethodsStrategy.prototype.getEnemieFromCachePurpose = function (cache_purpose, id) {
+            var result = cache_purpose.filter(function (elem) {
+                if (elem.id == id) {
+                    return cache_purpose;
+                }
+            });
+            if (result.length == 0) {
+                return false;
+            }
+            return result[0];
         };
         DefaultGlobalMethodsStrategy.prototype.getStrategyByName = function (cache_ai, name) {
             var result = {};

@@ -18,7 +18,7 @@ export class Scene {
         //  arrImg.map(elem => {
         //     return new Person(elem);
         // });
-        this.view = new ViewScene(this.collectionPersons);
+        this.view = new ViewScene(this.collectionPersons, this.loader);
         this.curentPerson = undefined;
 
         this.ai = ai;
@@ -108,6 +108,7 @@ export class Scene {
                 block.addEventListener("mouseout", this.onOutBlock);
                 block.addEventListener("mouseover", this.onBlock);
                 block.addEventListener("click", this.onMove);
+
                 block = this.view.renderBlockView(block, posX, posY, i, j);
                 scence.appendChild(block);
                 posX += 120;
@@ -119,7 +120,7 @@ export class Scene {
     setAIperson() { }
     play() {
         this.renderArena();
-
+        this.loader.loadElement("./src/images/rip.png");
         this.loader.load(this.collectionPersons);
         this.loader.onReady(() => {
             this.collectionPersons.collection.forEach((elem: any) => {
@@ -143,9 +144,7 @@ export class Scene {
         let canvas = event.target,
             img = this.loader.get(event.target.getAttribute("data-image"));
         this.view.contactPersonsView(canvas, img);
-        // setTimeout(() => {
-        //     this.ai.step();
-        // }, 200);
+
     };
     onChangePerson = (event) => {
         let canvas = event.target;

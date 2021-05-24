@@ -74,7 +74,7 @@ define(["require", "exports", "../viewScene", "./person_collection"], function (
             this.loader = loader;
             this.chosePerson = false;
             this.collectionPersons = new person_collection_1.Collection(arrImg);
-            this.view = new viewScene_1.ViewScene(this.collectionPersons);
+            this.view = new viewScene_1.ViewScene(this.collectionPersons, this.loader);
             this.curentPerson = undefined;
             this.ai = ai;
             this.ai.initView(this.view);
@@ -110,6 +110,7 @@ define(["require", "exports", "../viewScene", "./person_collection"], function (
         Scene.prototype.play = function () {
             var _this = this;
             this.renderArena();
+            this.loader.loadElement("./src/images/rip.png");
             this.loader.load(this.collectionPersons);
             this.loader.onReady(function () {
                 _this.collectionPersons.collection.forEach(function (elem) {

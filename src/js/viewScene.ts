@@ -1,7 +1,8 @@
 export class ViewScene {
     arrObjPersons: any;
-    constructor(arrObjPlayers) {
+    constructor(arrObjPlayers, loader) {
         this.arrObjPersons = arrObjPlayers;
+        this.loader = loader;
     }
 
     renderPlayer = (cnvsElem, elem, img) => {
@@ -35,26 +36,34 @@ export class ViewScene {
         // element.style.top = pos_dif_y + "px";
     };
     drawHealth = (ctx, elem, damage = 0) => {
-        let obj;
+        let obj, img;
         this.arrObjPersons.getCollection().forEach((elemCollection) => {
             if (elemCollection.getId() == elem.person.id) {
                 obj = elemCollection;
             }
         });
-
+        // console.log("elem", elem, obj);
         ctx.moveTo(20, 20);
         ctx.lineWidth = 5;
         ctx.strokeStyle = "green";
         if (damage != 0) {
-            if (obj.getHealth() > 10) {
+            if (obj.getHealth() >= 15) {
                 obj.setHealth(obj.getHealth() - damage);
             } else {
                 ctx.strokeStyle = "red";
+                // docume   nt.getelement
+                console.log("\n\n\n\\n\n", obj);
+                ctx.clearRect(0, 0, 1000, 1000);
+                img = this.loader.get("./src/images/rip.png");
+
+
+                this.renderPlayer(obj.getDoomObj(), obj, img);
+
             }
+            ctx.lineTo(obj.getHealth() * 3, 20);
+            ctx.stroke();
         }
-        ctx.lineTo(obj.getHealth() * 3, 20);
-        ctx.stroke();
-    };
+    }
     contactPersonsView = (canvas, img, damage = 5) => {
         let ctx = canvas.getContext("2d"),
             id;
@@ -63,7 +72,7 @@ export class ViewScene {
         this.drawImage(ctx, img);
         id = { id: canvas.getAttribute("data-id") };
         this.drawHealth(ctx, { person: id }, damage);
-    };
+    }
     drawImage(ctx, img) {
         let width, height, coef;
 
@@ -121,6 +130,7 @@ export class ViewScene {
         block.style.left = posX + "px";
         block.style.top = posY + "px";
         block.src = "src/images/block2.png";
+
         return block;
     }
     showCurentUnit(domPerson) {

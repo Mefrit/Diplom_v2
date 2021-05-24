@@ -24,11 +24,17 @@ export class Person {
     initDomPerson(domPerson) {
         this.domPerson = domPerson;
     }
+    getDoomObj() {
+        return this.domPerson;
+    }
     initImage(image) {
         this.image = image;
     }
     setHealth(value) {
         this.person.health = parseInt(value);
+    }
+    isArchers(unit) {
+        return this.person.class == "archer";
     }
     getHealth() {
         return parseInt(this.person.health);

@@ -16,7 +16,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
         this.global_cache = {};
     }
     assessment(cache) {
-
+        // тут нужно выбрать кто куда будет ходить
         var result = 1100, enemies;
         this.ai_units.forEach(elem => {
             if (elem.person.health > 30) {
@@ -32,22 +32,15 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
             if (elem.person.health < 30) {
                 result += 300;
             }
-
         });
 
         // чем больше. тем лучше будет считаьься стратегия
         return { total: Math.round(result), cache: cache };
     }
-    getBestEnemie(cache_enemies, unit) {
-        var best_enemie = cache_enemies[0], distance_best = 0;
-        cache_enemies.forEach(elem => {
-            distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
-            if (Math.sqrt(elem.x * unit.x + elem.y * unit.y) < distance_best) {
-                best_enemie = elem;
-            }
-        });
-        return best_enemie;
+    createMytantStrategy() {
+
     }
+
     startMove(cache_unit, index) {
         let unit = cache_unit[index];
         let cache_enemies = [], best_enemie = {};
@@ -55,22 +48,21 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
             x: unit.person.x,
             y: unit.person.y
         }, 4);
-        console.log("tcache_enemies", this.global_cache.archers_purpose);
-        cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.archers_purpose);
+
+        cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
         if (cache_enemies.length > 0) {
 
             best_enemie = this.getBestEnemie(cache_enemies, unit);
         } else {
-            best_enemie = this.findNearestEnemies(unit, this.global_cache.archers_purpose);
+            best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
         }
         if (this.unit_collection.getUserCollection().length > 1) {
             if (this.getArchersInField(unit, 2).length > 1 && this.isArchers(unit)) {
-                console.log("global_cache", this.global_cache, this.getArchersInField(unit, 2), unit, this.isArchers(unit));
-                this.global_cache.archers_purpose.push({ enemie: best_enemie, id_archer: unit.person.id });
+                // console.log("global_cache", this.global_cache, this.getArchersInField(unit, 2), unit, this.isArchers(unit));
+                this.global_cache.units_purpose.push({ enemie: best_enemie, id: unit.person.id });
             }
         } else {
             // атаковать по другой траектории
-
         }
 
         var ChoosenStrategy;
@@ -107,6 +99,5 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
     start(cache) {
         this.global_cache = cache;
         this.startMove(this.ai_units, 0);
-        // console.log("start Distance", cache);
     }
 }

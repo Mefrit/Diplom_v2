@@ -117,6 +117,7 @@ define(["require", "exports"], function (require, exports) {
             this.scene = props.scene;
             this.view = props.view;
             this.unit_collection = props.unit_collection;
+            this.global_cache = props.global_cache;
         }
         DefaultMethodsStrategy.prototype.moveTo = function (person, coord) {
             person.setCoord(coord.x, coord.y);
@@ -149,7 +150,6 @@ define(["require", "exports"], function (require, exports) {
             var min = 1000, nearEnemies = undefined, tmp_min = 1000;
             var unit_collection = this.unit_collection.getUserCollection();
             if (cache_busy_enemies.length > 0) {
-                console.log("cache_busy_enemies", cache_busy_enemies);
                 unit_collection = this.deleteBusyEnemies(unit_collection, cache_busy_enemies);
             }
             unit_collection.forEach(function (element) {
@@ -297,25 +297,15 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.checkArcherPosition = function (enemie) {
             var res = { point: {}, result: false };
             if (Math.abs(enemie.x - this.unit.x) < 2) {
-                if (this.checkFreePointsArcher({ x: enemie.x, y: enemie.y - 1 })) {
-                    res.result = true;
-                    res.point = { x: enemie.x, y: enemie.y - 1 };
-                    return res;
-                }
-                if (this.checkFreePointsArcher({ x: enemie.x, y: enemie.y + 1 })) {
-                    res.result = true;
-                    res.point = { x: enemie.x, y: enemie.y + 1 };
-                    return res;
-                }
             }
             else {
                 if (Math.abs(enemie.y - this.unit.y) < 2) {
-                    if (this.checkFreePointsArcher({ x: enemie.x - 1, y: enemie.y })) {
+                    if (this.checkFreePointsArcher([{ x: enemie.x - 1, y: enemie.y }])) {
                         res.result = true;
                         res.point = { x: enemie.x - 1, y: enemie.y };
                         return res;
                     }
-                    if (this.checkFreePointsArcher({ x: enemie.x + 1, y: enemie.y })) {
+                    if (this.checkFreePointsArcher([{ x: enemie.x + 1, y: enemie.y }])) {
                         res.result = true;
                         res.point = { x: enemie.x + 1, y: enemie.y };
                         return res;
@@ -323,6 +313,12 @@ define(["require", "exports"], function (require, exports) {
                 }
             }
             return res;
+        };
+        DefaultMethodsStrategy.prototype.checkUnitNotStatyOnArhcersAtacke = function (unit, units_purpose, cache_archers) {
+            var result = false;
+            units_purpose.forEach(function (element) {
+                console.log("result", result);
+            });
         };
         DefaultMethodsStrategy.prototype.isArchers = function (unit) {
             return unit.person.class == "archer";
@@ -333,9 +329,9 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.checkPersonNear = function (current, person, coefProximity) {
             return Math.abs(current.x - person.x) < coefProximity && Math.abs(current.y - person.y) < coefProximity;
         };
-        DefaultMethodsStrategy.prototype.checkFreePointsArcher = function (points, type) {
-            var _this = this;
+        DefaultMethodsStrategy.prototype.checkFreePointsArcher = function (points, type, unit) {
             if (type === void 0) { type = "fighter"; }
+            if (unit === void 0) { unit = this.unit; }
             var res = { free: true, deleteLastPoint: false, runAway: false };
             this.unit_collection.getCollection().forEach(function (unit) {
                 for (var i = 0; i < points.length; i++) {
@@ -346,7 +342,7 @@ define(["require", "exports"], function (require, exports) {
                         res.free = false;
                     }
                     if (unit.x == points[i].x && points[i].y == unit.y) {
-                        if (_this.unit.person.id != unit.person.id) {
+                        if (unit.person.id != unit.person.id) {
                             if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
                                 res.runAway = true;
                             }
@@ -416,6 +412,30 @@ define(["require", "exports"], function (require, exports) {
                 }
             });
             return coord_min;
+        };
+        DefaultMethodsStrategy.prototype.checkFreeWay2Atack = function (enemie, unit, direction) {
+            if (unit === void 0) { unit = this.unit; }
+            if (direction === void 0) { direction = "x"; }
+            var arrayPoit = [], sgn = enemie[direction] < unit[direction] ? -1 : 1, tmp, res = { free: false, arrayPoit: [], direction: direction, runAway: false }, coefI;
+            tmp = Math.abs(enemie[direction] - unit[direction]);
+            if (tmp <= 4) {
+                coefI = tmp;
+            }
+            else {
+                return res;
+            }
+            for (var i = 1; i <= coefI - 1; i++) {
+                tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
+                arrayPoit.push(tmp);
+            }
+            tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
+            res.free = tmp.free;
+            res.runAway = tmp.runAway;
+            if (tmp.deleteLastPoint) {
+                arrayPoit.splice(arrayPoit.length - 1, 1);
+            }
+            res.arrayPoit = arrayPoit;
+            return res;
         };
         return DefaultMethodsStrategy;
     }());

@@ -11,33 +11,68 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         this.unit_collection = props.unit_collection;
         this.ai_units = props.ai_units;
         this.scene = props.scene;
+        this.global_cache = {};
         this.view = props.view;
     }
     assessment(cache = {}) {
-        var result = 1000, enemies, damaged_person = {}, min_health = 200;
-        this.ai_units.forEach(elem => {
-            if (elem.person.health < 30) {
+        let result = 1000, enemies, damaged_person = {}, min_health = 200, enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
+
+        this.ai_units.forEach(curent_unit => {
+            if (curent_unit.person.health < 30) {
                 result -= 400;
             }
-            if (elem.person.health < 20) {
+            if (curent_unit.person.health < 20) {
                 result -= 700;
             }
+
+            enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
+            enemies_near_4.forEach(enemie => {
+                // учет возможных атак
+                if (enemie.person.class == "archer") {
+                    result -= 300;
+                } else {
+                    result -= 500;
+                }
+                if (curent_unit.person.class == "archer") {
+                    result += 12 * enemie.person.health;
+                } else {
+                    result += 10 * enemie.person.health;
+                }
+            });
+            enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+
+            if (enemies_near_3.length > 0) {
+                cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
+            }
+            if (curent_unit.isArchers()) {
+                console.log("curent_unit", curent_unit);
+                cache_enemies = this.getEnemyInField({
+                    x: curent_unit.person.x,
+                    y: curent_unit.person.y
+                }, 5);
+
+                if (cache_enemies.length > 0) {
+                    best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
+                } else {
+                    best_enemie = this.findNearestEnemies(curent_unit);
+                }
+                cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+            }
+
         });
-        enemies = this.unit_collection.getUserCollection();
-        enemies.forEach(elem => {
-            if (elem.person.health > 30) {
-                result -= 200;
-            }
-            if (elem.person.health < 30) {
-                result += 400;
-            }
-            if (elem.person.health < 20) {
-                result += 700;
-            }
-            // if (elem.person.health > 20 && elem.person.health < 30) {
-            //     result += 100;
-            // }
-        });
+        // enemies = this.unit_collection.getUserCollection();
+        // enemies.forEach(elem => {
+        //     if (elem.person.health > 30) {
+        //         result -= 200;
+        //     }
+        //     if (elem.person.health < 30) {
+        //         result += 400;
+        //     }
+        //     if (elem.person.health < 20) {
+        //         result += 700;
+        //     }
+        // });
+
         // if (!cache.enemies_near_3) {
         //     enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 3);
         //     cache.enemies_near_3 = enemies
@@ -65,36 +100,31 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         // console.log("!!!!!!!!!!\n\n\n enemies in fields FightIfYouCan", enemies, "damaged", damaged_person);
         return { total: Math.round(result), cache: cache };
     }
-    getBestEnemie(cache_enemies, unit) {
-        var best_enemie = cache_enemies[0], distance_best = 0;
-        cache_enemies.forEach(elem => {
-            distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
-            if (Math.sqrt(elem.x * unit.x + elem.y * unit.y) < distance_best) {
-                best_enemie = elem;
-            }
-        });
-        return best_enemie;
-    }
+
     startMove(cache_unit, index) {
 
         let unit = cache_unit[index];
         let cache_enemies = [], best_enemie = {};
+        console.log("this.global_cache", this.global_cache);
+        best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
 
-        cache_enemies = this.getEnemyInField({
-            x: unit.person.x,
-            y: unit.person.y
-        }, 4);
-        console.log("cache_enemies", cache_enemies, cache_unit[index]);
+        if (!best_enemie) {
 
-        if (cache_enemies.length > 0) {
-            best_enemie = this.getBestEnemie(cache_enemies, unit);
+            cache_enemies = this.getEnemyInField({
+                x: unit.person.x,
+                y: unit.person.y
+            }, 5);
+
+            if (cache_enemies.length > 0) {
+                best_enemie = this.getBestEnemie(cache_enemies, unit);
+            } else {
+                best_enemie = this.findNearestEnemies(unit);
+            }
         } else {
-            best_enemie = this.findNearestEnemies(unit);
+            best_enemie = best_enemie.enemie;
         }
+
         // сделать так , что бы двигались в сторону ближайших игроков
-
-        // alert(cache_unit[index].person.type);
-
 
         if (cache_unit[index].person.class == "fighter") {
             const ChoosenStrategy = this.getStrategyByName(cacheFighterAI, "FightIfYouCan");
@@ -106,9 +136,10 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             scene: this.scene,
             view: this.view,
             unit_collection: this.unit_collection,
-            unit: unit
+            unit: unit,
+            global_cache: this.global_cache
         });
-
+        // console.log("best_enemie find arher", best_enemie);
         ai.atackeChosenUnit(cache_unit, best_enemie).then(() => {
             if (index < cache_unit.length - 1) {
                 this.startMove(cache_unit, index + 1);
@@ -117,51 +148,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         });
     }
     start(cache) {
-        // console.log("SmartAgro start", cache, cacheFighterAI);
+        this.global_cache = cache;
         this.ai_units = this.sortArchersFirst(this.ai_units);
-        // var cache_enemies = [], best_enemie = {}, distance_best = 0;
         this.startMove(this.ai_units, 0);
-        // console.log(this.ai_units);
-        // this.ai_units.map(unit => {
 
-
-        //     // console.log("\cacheFighterAI", FightIfYouCan);
-        // });
-
-        // this.checkConnection();
-        // var unit = cacheAi[index];
-        // this.view.showCurentUnit(unit.domPerson);
-        // var best_ai;
-        // unit.moveAction = false;
-
-        // if (unit.person.class == "fighter") {
-        //     best_ai = this.choseStrategy(cacheFighterAI, unit);
-        //     best_ai.start(this.CACHE).then(res => {
-        //         // alert(res);
-
-        //         this.view.disableCurentUnit(unit.domPerson);
-        //         if (index < cacheAi.length - 1) {
-        //             index++;
-        //             this.stepAi(cacheAi, index);
-        //         }
-        //     });
-
-        // } else {
-        //     best_ai = new AtackTheArcher({
-        //         unit: unit,
-        //         scene: this.scene,
-        //         unit_collection: this.unit_collection,
-        //         view: this.view
-        //     });
-        //     best_ai.start().then(res => {
-
-        //         this.view.disableCurentUnit(unit.domPerson);
-
-        //         if (index < cacheAi.length - 1) {
-        //             index++;
-        //             this.stepAi(cacheAi, index);
-        //         }
-        //     });
-        // }
     }
 }

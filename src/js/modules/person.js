@@ -15,11 +15,17 @@ define(["require", "exports"], function (require, exports) {
         Person.prototype.initDomPerson = function (domPerson) {
             this.domPerson = domPerson;
         };
+        Person.prototype.getDoomObj = function () {
+            return this.domPerson;
+        };
         Person.prototype.initImage = function (image) {
             this.image = image;
         };
         Person.prototype.setHealth = function (value) {
             this.person.health = parseInt(value);
+        };
+        Person.prototype.isArchers = function (unit) {
+            return this.person.class == "archer";
         };
         Person.prototype.getHealth = function () {
             return parseInt(this.person.health);

@@ -25,7 +25,9 @@ export class Ai {
     }
     initEmptyGlobalCache() {
         return {
-            archers_purpose: []
+            units_purpose: [],
+            most_damaged_person_3: {}
+
         }
     }
     initPersons = (unit_collection, syncUnit) => {
@@ -36,7 +38,7 @@ export class Ai {
         this.view = view;
     }
     initScene = (scene) => {
-        console.log("initScene", scene);
+
         this.scene = scene;
     };
     getCoord(coord) {
@@ -76,7 +78,7 @@ export class Ai {
                 view: this.view,
                 unit_collection: this.unit_collection
             });
-            console.log("this.CACHe", this.CACHE);
+
             assessment = tmp_ai.assessment(this.CACHE)
             this.CACHE = assessment.cache;
             // console.log("ai ", tmp_ai.getInfo(), "total ", assessment.total);
