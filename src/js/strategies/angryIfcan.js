@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FightIfYouCan = void 0;
     var FightIfYouCan = (function (_super) {
         __extends(FightIfYouCan, _super);
         function FightIfYouCan(props) {
@@ -26,43 +27,11 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             return "FightIfYouCan";
         };
         FightIfYouCan.prototype.assessment = function (cache) {
-            var result = 1000, enemies, damaged_person = {}, min_health = 200;
-            if (this.unit.health < 30) {
-                result -= 400;
-            }
-            if (this.unit.health < 20) {
-                result -= 700;
-            }
-            if (!cache.enemies_near_3) {
-                enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 3);
-                cache.enemies_near_3 = enemies;
-            }
-            else {
-                enemies = cache.enemies_near_3;
-            }
-            if (enemies.length == 0) {
-                result -= 500;
-                damaged_person = {};
-            }
-            else {
-                damaged_person = enemies[0];
-                min_health = damaged_person.person.health;
-                result += 1000 / enemies.length;
-            }
-            enemies.forEach(function (elem) {
-                if (elem.person.health < min_health) {
-                    damaged_person = elem;
-                }
-                result -= elem.person.health * 5;
-            });
-            cache.most_damaged_person_3 = damaged_person;
-            return { total: Math.round(result), cache: cache };
         };
         FightIfYouCan.prototype.start = function (cache) {
             var _this = this;
             return new Promise(function (resolve, reject) {
                 var nearEnemie, coord, res, attakedEnemie, checkArcherPosition;
-                console.log("FightIfYouCan cache ", cache);
                 nearEnemie = _this.findNearestEnemies(_this.unit);
                 coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
                 res = _this.moveCarefully(_this.unit, nearEnemie, "fighter", cache);
@@ -79,14 +48,13 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         };
         FightIfYouCan.prototype.atackeChosenUnit = function (cache_unit, enemie) {
             var _this = this;
-            console.log("FightIfYouCan cache1111111 ", cache_unit, enemie);
             return new Promise(function (resolve, reject) {
-                var coord, res, attakedEnemie, checkArcherPosition, archers = _this.unit_collection.getAiArchers();
+                var coord, res, attakedEnemie, checkArcherPosition = { result: false, point: {} }, archers = _this.unit_collection.getAiArchers();
                 coord = { x: enemie.person.x, y: enemie.person.y };
-                checkArcherPosition = _this.checkArcherPosition(enemie);
-                console.log("checkArcherPosition", checkArcherPosition);
-                if (checkArcherPosition.result && !_this.unit.moveAction && _this.getDistanceBetweenUnits(_this.unit, enemie) < 3) {
-                    console.log("checkArcherPosition poinr", _this.unit, checkArcherPosition.point);
+                if (_this.checkArchersPosition()) {
+                    checkArcherPosition = _this.checkArcherPosition(enemie);
+                }
+                if (archers.length != 0 && checkArcherPosition.result && !_this.unit.moveAction && _this.getDistanceBetweenUnits(_this.unit, enemie) < 4) {
                     _this.moveTo(_this.unit, checkArcherPosition.point);
                     if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1) {
                         _this.view.contactPersonsView(enemie.domPerson, enemie.image, _this.unit.person.damage);

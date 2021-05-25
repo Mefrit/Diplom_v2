@@ -1,5 +1,6 @@
 export class ViewScene {
     arrObjPersons: any;
+    loader:any;
     constructor(arrObjPlayers, loader) {
         this.arrObjPersons = arrObjPlayers;
         this.loader = loader;
@@ -42,17 +43,17 @@ export class ViewScene {
                 obj = elemCollection;
             }
         });
-        // console.log("elem", elem, obj);
+     
         ctx.moveTo(20, 20);
         ctx.lineWidth = 5;
         ctx.strokeStyle = "green";
-        if (damage != 0) {
-            if (obj.getHealth() >= 10) {
+        if (damage != 0) {  
+            if (obj.getHealth() >= 11) {
                 obj.setHealth(obj.getHealth() - damage);
             } else {
                 ctx.strokeStyle = "red";
                 // docume   nt.getelement
-                console.log("\n\n\n\\n\n", obj);
+               
                 ctx.clearRect(0, 0, 1000, 1000);
                 img = this.loader.get("./src/images/rip.png");
 

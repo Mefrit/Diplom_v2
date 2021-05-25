@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -154,8 +155,8 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.deleteBusyEnemies = function (cache_enemies, units_purpose) {
             var find = false;
             return cache_enemies.filter(function (enemies) {
-                units_purpose.forEach(function (archers_enemie) {
-                    if (archers_enemie.enemie.person.id == enemies.person.id) {
+                units_purpose.forEach(function (elem) {
+                    if (elem.enemie.person.id == enemies.person.id) {
                         find = true;
                     }
                 });
@@ -166,10 +167,22 @@ define(["require", "exports"], function (require, exports) {
                 return true;
             });
         };
+        DefaultMethodsStrategy.prototype.checkEnemyInCache = function (id_person, cache_busy_enemies) {
+            return cache_busy_enemies.filter(function (element) {
+                if (element.id == id_person) {
+                    return element.enemie;
+                }
+            });
+        };
         DefaultMethodsStrategy.prototype.findNearestEnemies = function (unit, cache_busy_enemies) {
             var _this = this;
             if (cache_busy_enemies === void 0) { cache_busy_enemies = []; }
             var min = 1000, nearEnemies = undefined, tmp_min = 1000;
+            var enemy_in_cache = this.checkEnemyInCache(unit.person.id, cache_busy_enemies);
+            console.log("enemy_in_cache", enemy_in_cache, cache_busy_enemies);
+            if (enemy_in_cache.length == 0) {
+                return enemy_in_cache[0];
+            }
             var unit_collection = this.unit_collection.getUserCollection();
             if (cache_busy_enemies.length > 0) {
                 unit_collection = this.deleteBusyEnemies(unit_collection, cache_busy_enemies);
@@ -181,14 +194,15 @@ define(["require", "exports"], function (require, exports) {
                     nearEnemies = element;
                 }
             });
+            console.log("nearEnemies", nearEnemies);
             return nearEnemies;
         };
         DefaultMethodsStrategy.prototype.deleteExcessCoord = function (cahceCoord) {
             var _this = this;
             if (cahceCoord === void 0) { cahceCoord = []; }
             return cahceCoord.filter(function (elem) {
-                if (elem.x >= 0 && elem.x < 11) {
-                    if (elem.y >= 0 && elem.y < 6) {
+                if (elem.x >= 0 && elem.x < 12) {
+                    if (elem.y >= 0 && elem.y < 8) {
                         if (_this.unit.x == elem.x && _this.unit.y == elem.y) {
                             return elem;
                         }
@@ -317,10 +331,21 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
-        DefaultMethodsStrategy.prototype.deleteExistPointIfArcherNear = function (points) {
+        DefaultMethodsStrategy.prototype.checkArchersPosition = function () {
+            var _this = this;
+            var archers = this.unit_collection.getAiArchers(), result = false;
+            archers.forEach(function (archer) {
+                if (archer.x == _this.unit.x || _this.unit.y == archer.y) {
+                    if (_this.getDistanceBetweenUnits(_this.unit, archer) < 4) {
+                        result = true;
+                    }
+                }
+            });
+            return result;
+        };
+        DefaultMethodsStrategy.prototype.deleteExistPointIfArcherNear = function (points, enemie) {
             var _this = this;
             var archers = this.unit_collection.getAiArchers(), result = true;
-            ;
             return points.filter(function (point) {
                 result = true;
                 archers.forEach(function (archer) {
@@ -331,16 +356,24 @@ define(["require", "exports"], function (require, exports) {
                     }
                 });
                 if (result) {
-                    return point;
+                    if (parseInt(_this.getDistanceBetweenUnits(point, enemie).toFixed(0)) <= 1.2) {
+                        return {
+                            point: point
+                        };
+                    }
                 }
             });
         };
         DefaultMethodsStrategy.prototype.checkArcherPosition = function (enemie) {
             var _this = this;
-            var res = { point: { x: enemie.x - 1, y: enemie.y }, result: false }, points = [], min_count = 1000, count_enemy = 0;
-            points = this.getPointsField(enemie, 1);
-            points = this.deleteExistPointIfArcherNear(points);
-            console.log(points);
+            var res = { point: { x: enemie.x - 1, y: enemie.y }, result: false }, points = [], min_count = 1000, count_enemy = 0, tmp_res;
+            if (parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) == 2) {
+                points = this.getPointsField(this.unit, 1);
+            }
+            else {
+                points = this.getPointsField(enemie, 1);
+            }
+            points = this.deleteExistPointIfArcherNear(points, enemie);
             if (points.length == 0) {
                 res.result = false;
             }
@@ -349,13 +382,18 @@ define(["require", "exports"], function (require, exports) {
             }
             points.forEach(function (elem) {
                 count_enemy = _this.getEnemyInField(elem, 3).length;
-                console.log("count_enemy", count_enemy, min_count, elem, min_count < count_enemy);
                 if (min_count > count_enemy) {
                     res.point = elem;
                     min_count = count_enemy;
                 }
+                else {
+                    if (min_count == count_enemy) {
+                        if (_this.getEnemyInField(elem, 2).length < _this.getEnemyInField(res.point, 2).length) {
+                            res.point = elem;
+                        }
+                    }
+                }
             });
-            console.log("  \n res.point ", res.point);
             return res;
         };
         DefaultMethodsStrategy.prototype.checkUnitNotStatyOnArhcersAtacke = function (unit, units_purpose, cache_archers) {
@@ -382,7 +420,7 @@ define(["require", "exports"], function (require, exports) {
                     if (points[i].x < 0 || points[i].x > 11) {
                         res.free = false;
                     }
-                    if (points[i].y < 0 || points[i].y > 5) {
+                    if (points[i].y < 0 || points[i].y > 8) {
                         res.free = false;
                     }
                     if (unit.x == points[i].x && points[i].y == unit.y) {

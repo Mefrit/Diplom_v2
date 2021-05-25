@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DistanceAgro = void 0;
     var DistanceAgro = (function (_super) {
         __extends(DistanceAgro, _super);
         function DistanceAgro(props) {
@@ -56,18 +57,12 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 y: unit.person.y
             }, 4);
             cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+            console.log("cache_enemies", cache_enemies, this.global_cache.units_purpose);
             if (cache_enemies.length > 0) {
                 best_enemie = this.getBestEnemie(cache_enemies, unit);
             }
             else {
                 best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
-            }
-            if (this.unit_collection.getUserCollection().length > 1) {
-                if (this.getArchersInField(unit, 2).length > 1 && this.isArchers(unit)) {
-                    this.global_cache.units_purpose.push({ enemie: best_enemie, id: unit.person.id });
-                }
-            }
-            else {
             }
             var ChoosenStrategy;
             if (cache_unit[index].person.class == "fighter") {

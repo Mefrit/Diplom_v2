@@ -6,6 +6,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
     ai_units = []; // пулл оставшейся команды
     scene;
     view;
+    local_cache: any;
     constructor(props: any) {
         // console.log("DistanceAgro", props);
         super(props);

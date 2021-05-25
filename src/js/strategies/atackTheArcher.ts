@@ -2,7 +2,8 @@ import { DefaultMethodsStrategy } from "../lib/defaultMethods";
 export class AtackTheArcher extends DefaultMethodsStrategy {
     unit: any;
     coordsEvil: any;
-    view: any
+    view: any;
+    last_enemie:any
     constructor(props: any) {
         super(props);
         this.unit = props.unit;
@@ -64,7 +65,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 let new_x, new_y;
                 if (!this.unit.moveAction) {
                     if (enemie.person.y < 3) {
-                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 6 }, "fighter", {});
+                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 8 }, "fighter", {});
                     } else {
                         this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
                     }
@@ -79,7 +80,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     }
     //если на лучника атакуют, то он убегает
     runAwayArcher() {
-        if (this.unit.x < 8) {
+        if (this.unit.x < 11) {
             this.moveAutoStepStupid(this.unit, { x: this.unit.x + 1, y: this.unit.y }, "archer");
         }
     }
@@ -113,6 +114,17 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             }
         } else {
             this.got2AttackePosition(enemie);
+            maxX = Math.abs(enemie.person.x - this.unit.person.x);
+            maxY = Math.abs(enemie.person.y - this.unit.person.y);
+
+            if (maxY > maxX) {
+                resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
+            } else {
+                resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
+            }
+            if (resCheck.free) {
+                this.tryAtakeArcher(resCheck, enemie);
+            }
         }
     }
     start(cache) {
@@ -130,6 +142,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     }
     atackeChosenUnit(cache, enemie) {
         return new Promise((resolve, reject) => {
+            console.log(":enemie",enemie);
             this.findPointAtackArcher(enemie);
             setTimeout(() => { resolve("Promise5") }, 520);
         });

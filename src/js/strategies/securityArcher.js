@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SecurityArcher = void 0;
     var SecurityArcher = (function (_super) {
         __extends(SecurityArcher, _super);
         function SecurityArcher(props) {
@@ -51,7 +52,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                         pos_security.y = near_archer.y;
                     }
                     else {
-                        if (_this.unit.y + 1 < 7 && _this.randomInteger(-2, 1) > 0) {
+                        if (_this.unit.y + 1 < 8 && _this.randomInteger(-2, 1) > 0) {
                             if (_this.unit.y > pos_security.y) {
                                 pos_security.y = near_archer.y + 1;
                             }

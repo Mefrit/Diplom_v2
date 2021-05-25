@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -61,7 +62,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 5);
-                    console.log("\n\ncache_enemies11", cache_enemies);
                     if (cache_enemies.length > 0) {
                         best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
                     }

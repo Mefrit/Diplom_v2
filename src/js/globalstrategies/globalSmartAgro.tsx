@@ -51,7 +51,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     x: curent_unit.person.x,
                     y: curent_unit.person.y
                 }, 5);
-                console.log("\n\ncache_enemies11", cache_enemies);
+
                 if (cache_enemies.length > 0) {
                     best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
                 } else {
@@ -124,15 +124,14 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         } else {
             best_enemie = best_enemie.enemie;
         }
-
         // сделать так , что бы двигались в сторону ближайших игроков
 
         if (cache_unit[index].person.class == "fighter") {
             ChoosenStrategy = this.getStrategyByName(cacheFighterAI, "FightIfYouCan");
         } else {
             ChoosenStrategy = this.getStrategyByName(cacheArcherAI, "AtackTheArcher");
-
         }
+
         var ai = new ChoosenStrategy({
             scene: this.scene,
             view: this.view,
@@ -140,16 +139,18 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             unit: unit,
             global_cache: this.global_cache
         });
-        // console.log("best_enemie find arher", best_enemie);
+
         ai.atackeChosenUnit(cache_unit, best_enemie).then(() => {
             if (index < cache_unit.length - 1) {
                 this.startMove(cache_unit, index + 1);
             }
-
         });
     }
+
     start(cache) {
         this.global_cache = cache;
+        // ToDO? сделать так что бы программа проверяла в какой
+        //  последовательности ходить юнитами, типа если бойцы атаку прикрывают - их 1ми
         this.ai_units = this.sortArchersFirst(this.ai_units);
         this.startMove(this.ai_units, 0);
 

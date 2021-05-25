@@ -22,7 +22,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
         return new Promise((resolve, reject) => {
             var near_enemy = this.findNearestEnemies(this.unit);
             var near_archer = this.findNearestArchers(this.unit);
-            var pos_security = {};
+            var pos_security:any = {};
             var near_enemies = [];
             // if (near_enemy.y >= this.unit.y) {
             // if (this.unit.y + 1 < 5 ) {
@@ -51,7 +51,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                     pos_security.y = near_archer.y;
                 } else {
                     // что бы они не были все в нижней части 
-                    if (this.unit.y + 1 < 7 && this.randomInteger(-2, 1) > 0) {
+                    if (this.unit.y + 1 < 8 && this.randomInteger(-2, 1) > 0) {
                         if (this.unit.y > pos_security.y) {
                             pos_security.y = near_archer.y + 1;
                         }

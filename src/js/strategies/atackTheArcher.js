@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.AtackTheArcher = void 0;
     var AtackTheArcher = (function (_super) {
         __extends(AtackTheArcher, _super);
         function AtackTheArcher(props) {
@@ -73,7 +74,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     var new_x = void 0, new_y = void 0;
                     if (!this.unit.moveAction) {
                         if (enemie.person.y < 3) {
-                            this.moveCarefully(this.unit, { x: enemie.person.x, y: 6 }, "fighter", {});
+                            this.moveCarefully(this.unit, { x: enemie.person.x, y: 8 }, "fighter", {});
                         }
                         else {
                             this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
@@ -88,7 +89,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             return res;
         };
         AtackTheArcher.prototype.runAwayArcher = function () {
-            if (this.unit.x < 8) {
+            if (this.unit.x < 11) {
                 this.moveAutoStepStupid(this.unit, { x: this.unit.x + 1, y: this.unit.y }, "archer");
             }
         };
@@ -122,6 +123,17 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
             else {
                 this.got2AttackePosition(enemie);
+                maxX = Math.abs(enemie.person.x - this.unit.person.x);
+                maxY = Math.abs(enemie.person.y - this.unit.person.y);
+                if (maxY > maxX) {
+                    resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
+                }
+                else {
+                    resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
+                }
+                if (resCheck.free) {
+                    this.tryAtakeArcher(resCheck, enemie);
+                }
             }
         };
         AtackTheArcher.prototype.start = function (cache) {
@@ -136,6 +148,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         AtackTheArcher.prototype.atackeChosenUnit = function (cache, enemie) {
             var _this = this;
             return new Promise(function (resolve, reject) {
+                console.log(":enemie", enemie);
                 _this.findPointAtackArcher(enemie);
                 setTimeout(function () { resolve("Promise5"); }, 520);
             });

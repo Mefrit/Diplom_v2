@@ -1,78 +1,72 @@
-body,html{
-    margin:0px;
-    padding:0px;
-    box-sizing: border-box;
-    width: 100%;
-    background-color: rgb(39, 39, 39);
+body,
+html {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  width: 100%;
+  background-color: rgb(39, 39, 39);
 }
-.background{
-    /* background-image: url("../images/back.jpg"); */
+.background {
+  /* background-image: url("../images/back.jpg"); */
 }
-.scene{
-    position: relative;
-    left:0;
-    top:0;
-    width:100%;
-    /* max-width:1280px; */
-    margin:0;
-    height: 90vh;
+.scene {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* max-width:1280px; */
+  margin: 0;
+  height: 90vh;
 }
-.button{
-    float:left;
-    position: relative;
-    top: 852px;
-    left: 100px;
+.button {
+  float: left;
+  position: relative;
+  top: 1002px;
+  left: 100px;
 }
-.sence__block{
-    /* background-image: url("../images/block.png") ; */
-    /* float: left; */
-    position: absolute;
-    width:120px;
-    height:120px;
-    border-radius: 15px;
-    padding
-    :3px;
-
+.sence__block {
+  /* background-image: url("../images/block.png") ; */
+  /* float: left; */
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+  padding: 3px;
 }
-.sence__block:hover{
-    box-shadow: 0px 0px 20px white;
-   
+.sence__block:hover {
+  box-shadow: 0px 0px 20px white;
 }
-.block__free{
-    box-shadow: 0px 0px 20px rgb(0, 255, 34);
-
+.block__free {
+  box-shadow: 0px 0px 20px rgb(0, 255, 34);
 }
-.block__free:hover{
-    box-shadow: 0px 0px 20px rgb(0, 255, 34);
-
+.block__free:hover {
+  box-shadow: 0px 0px 20px rgb(0, 255, 34);
 }
-.block__nonFree{
-    box-shadow: 0px 0px 20px gorgb(245, 20, 20) ;
-
+.block__nonFree {
+  box-shadow: 0px 0px 20px gorgb(245, 20, 20);
 }
-.block__nonFree:hover{
-    box-shadow: 0px 0px 20px rgb(245, 20, 20);
-
+.block__nonFree:hover {
+  box-shadow: 0px 0px 20px rgb(245, 20, 20);
 }
 
-.canvas{
-    width:100%;
-    max-width:1280px;
-    height: 90vh;
+.canvas {
+  width: 100%;
+  max-width: 1280px;
+  height: 90vh;
 }
-.person{
-    position: absolute;
-    border-radius: 30px;
-    width: 20px;
-    height: 20px;
-    float: left;
+.person {
+  position: absolute;
+  border-radius: 30px;
+  width: 20px;
+  height: 20px;
+  float: left;
 }
-.person:hover{
-    box-shadow: 5px 5px 5px rgb(190, 108, 54) ,-5px -5px 5px rgb(228, 137, 76);
+.person:hover {
+  box-shadow: 5px 5px 5px rgb(190, 108, 54), -5px -5px 5px rgb(228, 137, 76);
 }
-#block_information{
-    width:200px;
-    height:100px;
-    float: left;
-    background-color: #333232;
+#block_information {
+  width: 200px;
+  height: 100px;
+  float: left;
+  background-color: #333232;
 }

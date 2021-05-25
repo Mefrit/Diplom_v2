@@ -102,8 +102,8 @@ export class Scene {
             block,
             posX = 0,
             posY = 0;
-        for (let j = 0; j < 6; j++) {
-            for (let i = 0; i < 11; i++) {
+        for (let j = 0; j < 8; j++) {
+            for (let i = 0; i < 12; i++) {
                 block = document.createElement("img");
                 block.addEventListener("mouseout", this.onOutBlock);
                 block.addEventListener("mouseover", this.onBlock);

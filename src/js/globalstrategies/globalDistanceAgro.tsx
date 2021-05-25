@@ -50,20 +50,20 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
         }, 4);
 
         cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+        console.log("cache_enemies", cache_enemies, this.global_cache.units_purpose);
         if (cache_enemies.length > 0) {
 
             best_enemie = this.getBestEnemie(cache_enemies, unit);
         } else {
             best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
         }
-        if (this.unit_collection.getUserCollection().length > 1) {
-            if (this.getArchersInField(unit, 2).length > 1 && this.isArchers(unit)) {
-                // console.log("global_cache", this.global_cache, this.getArchersInField(unit, 2), unit, this.isArchers(unit));
-                this.global_cache.units_purpose.push({ enemie: best_enemie, id: unit.person.id });
-            }
-        } else {
-            // атаковать по другой траектории
-        }
+        // if (this.unit_collection.getUserCollection().length > 1) {
+
+        //     this.global_cache.units_purpose.push({ enemie: best_enemie, id: unit.person.id });
+
+        // } else {
+        //     // атаковать по другой траектории
+        // }
 
         var ChoosenStrategy;
 

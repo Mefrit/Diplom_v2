@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ViewScene = void 0;
     var ViewScene = (function () {
         function ViewScene(arrObjPlayers, loader) {
             var _this = this;
@@ -41,12 +42,11 @@ define(["require", "exports"], function (require, exports) {
                 ctx.lineWidth = 5;
                 ctx.strokeStyle = "green";
                 if (damage != 0) {
-                    if (obj.getHealth() >= 10) {
+                    if (obj.getHealth() >= 11) {
                         obj.setHealth(obj.getHealth() - damage);
                     }
                     else {
                         ctx.strokeStyle = "red";
-                        console.log("\n\n\n\\n\n", obj);
                         ctx.clearRect(0, 0, 1000, 1000);
                         img = _this.loader.get("./src/images/rip.png");
                         _this.renderPlayer(obj.getDoomObj(), obj, img);
