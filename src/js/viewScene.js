@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ViewScene = void 0;
     var ViewScene = (function () {
         function ViewScene(arrObjPlayers, loader) {
             var _this = this;
@@ -42,7 +41,7 @@ define(["require", "exports"], function (require, exports) {
                 ctx.lineWidth = 5;
                 ctx.strokeStyle = "green";
                 if (damage != 0) {
-                    if (obj.getHealth() >= 15) {
+                    if (obj.getHealth() >= 10) {
                         obj.setHealth(obj.getHealth() - damage);
                     }
                     else {

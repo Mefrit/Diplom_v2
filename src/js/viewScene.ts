@@ -47,7 +47,7 @@ export class ViewScene {
         ctx.lineWidth = 5;
         ctx.strokeStyle = "green";
         if (damage != 0) {
-            if (obj.getHealth() >= 15) {
+            if (obj.getHealth() >= 10) {
                 obj.setHealth(obj.getHealth() - damage);
             } else {
                 ctx.strokeStyle = "red";

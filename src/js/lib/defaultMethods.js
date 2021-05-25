@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -31,7 +30,7 @@ define(["require", "exports"], function (require, exports) {
                     new_cost = cost_so_far[current.id] + 1;
                     if (cost_so_far.indexOf(next.id) == -1 || new_cost < cost_so_far[next.id]) {
                         cost_so_far[next.id] = new_cost;
-                        priority = _this.heuristic({ x: obj2go.x, y: obj2go.y }, next, type);
+                        priority = _this.heuristic({ x: obj2go.x, y: obj2go.y }, next, type, []);
                         frontier.push({ next: next, priority: priority });
                         came_from[next.id] = current;
                     }
@@ -118,6 +117,7 @@ define(["require", "exports"], function (require, exports) {
             this.view = props.view;
             this.unit_collection = props.unit_collection;
             this.global_cache = props.global_cache;
+            this.unit = props.unit;
         }
         DefaultMethodsStrategy.prototype.moveTo = function (person, coord) {
             person.setCoord(coord.x, coord.y);
@@ -140,9 +140,31 @@ define(["require", "exports"], function (require, exports) {
             return nearArcher;
         };
         DefaultMethodsStrategy.prototype.getDistanceBetweenUnits = function (unit1, unit2) {
-            var tmp_x = unit1.person.x - unit2.person.x;
-            var tmp_y = unit1.person.y - unit2.person.y;
+            var tmp_x, tmp_y;
+            if (unit1.hasOwnProperty("person") && unit2.hasOwnProperty("person")) {
+                tmp_x = unit1.person.x - unit2.person.x;
+                tmp_y = unit1.person.y - unit2.person.y;
+            }
+            else {
+                tmp_x = unit1.x - unit2.x;
+                tmp_y = unit1.y - unit2.y;
+            }
             return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+        };
+        DefaultMethodsStrategy.prototype.deleteBusyEnemies = function (cache_enemies, units_purpose) {
+            var find = false;
+            return cache_enemies.filter(function (enemies) {
+                units_purpose.forEach(function (archers_enemie) {
+                    if (archers_enemie.enemie.person.id == enemies.person.id) {
+                        find = true;
+                    }
+                });
+                if (find) {
+                    find = false;
+                    return false;
+                }
+                return true;
+            });
         };
         DefaultMethodsStrategy.prototype.findNearestEnemies = function (unit, cache_busy_enemies) {
             var _this = this;
@@ -186,7 +208,8 @@ define(["require", "exports"], function (require, exports) {
             });
             return res;
         };
-        DefaultMethodsStrategy.prototype.heuristic = function (a, b, type) {
+        DefaultMethodsStrategy.prototype.heuristic = function (a, b, type, enemies) {
+            if (enemies === void 0) { enemies = []; }
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             switch (type) {
                 case "archer":
@@ -294,24 +317,45 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
+        DefaultMethodsStrategy.prototype.deleteExistPointIfArcherNear = function (points) {
+            var _this = this;
+            var archers = this.unit_collection.getAiArchers(), result = true;
+            ;
+            return points.filter(function (point) {
+                result = true;
+                archers.forEach(function (archer) {
+                    if (archer.x == point.x || point.y == archer.y) {
+                        if (_this.getDistanceBetweenUnits(point, archer) < 4) {
+                            result = false;
+                        }
+                    }
+                });
+                if (result) {
+                    return point;
+                }
+            });
+        };
         DefaultMethodsStrategy.prototype.checkArcherPosition = function (enemie) {
-            var res = { point: {}, result: false };
-            if (Math.abs(enemie.x - this.unit.x) < 2) {
+            var _this = this;
+            var res = { point: { x: enemie.x - 1, y: enemie.y }, result: false }, points = [], min_count = 1000, count_enemy = 0;
+            points = this.getPointsField(enemie, 1);
+            points = this.deleteExistPointIfArcherNear(points);
+            console.log(points);
+            if (points.length == 0) {
+                res.result = false;
             }
             else {
-                if (Math.abs(enemie.y - this.unit.y) < 2) {
-                    if (this.checkFreePointsArcher([{ x: enemie.x - 1, y: enemie.y }])) {
-                        res.result = true;
-                        res.point = { x: enemie.x - 1, y: enemie.y };
-                        return res;
-                    }
-                    if (this.checkFreePointsArcher([{ x: enemie.x + 1, y: enemie.y }])) {
-                        res.result = true;
-                        res.point = { x: enemie.x + 1, y: enemie.y };
-                        return res;
-                    }
-                }
+                res.result = true;
             }
+            points.forEach(function (elem) {
+                count_enemy = _this.getEnemyInField(elem, 3).length;
+                console.log("count_enemy", count_enemy, min_count, elem, min_count < count_enemy);
+                if (min_count > count_enemy) {
+                    res.point = elem;
+                    min_count = count_enemy;
+                }
+            });
+            console.log("  \n res.point ", res.point);
             return res;
         };
         DefaultMethodsStrategy.prototype.checkUnitNotStatyOnArhcersAtacke = function (unit, units_purpose, cache_archers) {

@@ -17,7 +17,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
     // оценка ситуации
     assessment(cache) {
         // FIX ME возможно стоит завести 2 поля, самый слабый по здорровью юнит или вдруг, самый отдаленный от корешей
-        var result = 1000, enemies, damaged_person = {}, min_health = 200;
+        var result = 1000, enemies, damaged_person: any = {}, min_health = 200;
         if (this.unit.health < 30) {
             result -= 400;
         }
@@ -102,13 +102,15 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             // checkArcherPosition = this.checkUnitNotStatyOnArhcersAtacke(this.unit, this.global_cache.units_purpose, archers);
 
             checkArcherPosition = this.checkArcherPosition(enemie);
+            console.log("checkArcherPosition", checkArcherPosition);
+            if (checkArcherPosition.result && !this.unit.moveAction && this.getDistanceBetweenUnits(this.unit, enemie) < 3) {
+                console.log("checkArcherPosition poinr", this.unit, checkArcherPosition.point);
+                // this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache_unit);
+                this.moveTo(this.unit, checkArcherPosition.point);
 
-            if (checkArcherPosition.result && !this.unit.moveAction) {
+                // console.log("\n\n\ this.getDistanceBetweenUnits(this.unit, enemie) ", this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0), enemie)
 
-                this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache_unit);
-
-                console.log("\n\n\ this.getDistanceBetweenUnits(this.unit, enemie) ", this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0))
-                if (this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0) <= 1) {
+                if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1) {
 
                     this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
                 }

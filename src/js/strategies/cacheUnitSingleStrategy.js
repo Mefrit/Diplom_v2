@@ -1,7 +1,6 @@
 define(["require", "exports", "./angryIfcan", "./securityArcher", "./goAvayIfManyEnemies", "./atackTheArcher"], function (require, exports, angryIfcan_1, securityArcher_1, goAvayIfManyEnemies_1, atackTheArcher_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.cacheArcherAI = exports.cacheFighterAI = void 0;
     exports.cacheFighterAI = {
         "SecurityArcher": securityArcher_1.SecurityArcher,
         "FightIfYouCan": angryIfcan_1.FightIfYouCan,

@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.FightIfYouCan = void 0;
     var FightIfYouCan = (function (_super) {
         __extends(FightIfYouCan, _super);
         function FightIfYouCan(props) {
@@ -85,10 +84,11 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 var coord, res, attakedEnemie, checkArcherPosition, archers = _this.unit_collection.getAiArchers();
                 coord = { x: enemie.person.x, y: enemie.person.y };
                 checkArcherPosition = _this.checkArcherPosition(enemie);
-                if (checkArcherPosition.result && !_this.unit.moveAction) {
-                    _this.moveCarefully(_this.unit, checkArcherPosition.point, "fighter", cache_unit);
-                    console.log("\n\n\ this.getDistanceBetweenUnits(this.unit, enemie) ", _this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0));
-                    if (_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0) <= 1) {
+                console.log("checkArcherPosition", checkArcherPosition);
+                if (checkArcherPosition.result && !_this.unit.moveAction && _this.getDistanceBetweenUnits(_this.unit, enemie) < 3) {
+                    console.log("checkArcherPosition poinr", _this.unit, checkArcherPosition.point);
+                    _this.moveTo(_this.unit, checkArcherPosition.point);
+                    if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1) {
                         _this.view.contactPersonsView(enemie.domPerson, enemie.image, _this.unit.person.damage);
                     }
                 }

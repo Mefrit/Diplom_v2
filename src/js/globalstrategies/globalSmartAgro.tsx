@@ -6,6 +6,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
     ai_units = []; // пулл оставшейся команды
     scene;
     view;
+    global_cache: any;
     constructor(props: any) {
         super(props);
         this.unit_collection = props.unit_collection;
@@ -14,7 +15,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         this.global_cache = {};
         this.view = props.view;
     }
-    assessment(cache = {}) {
+    assessment(cache: any = {}) {
         let result = 1000, enemies, damaged_person = {}, min_health = 200, enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
 
         this.ai_units.forEach(curent_unit => {
@@ -45,12 +46,12 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
             }
             if (curent_unit.isArchers()) {
-                console.log("curent_unit", curent_unit);
+
                 cache_enemies = this.getEnemyInField({
                     x: curent_unit.person.x,
                     y: curent_unit.person.y
                 }, 5);
-
+                console.log("\n\ncache_enemies11", cache_enemies);
                 if (cache_enemies.length > 0) {
                     best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
                 } else {
@@ -104,7 +105,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
     startMove(cache_unit, index) {
 
         let unit = cache_unit[index];
-        let cache_enemies = [], best_enemie = {};
+        let cache_enemies = [], best_enemie: any = {}, ChoosenStrategy;
         console.log("this.global_cache", this.global_cache);
         best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
 
@@ -127,9 +128,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         // сделать так , что бы двигались в сторону ближайших игроков
 
         if (cache_unit[index].person.class == "fighter") {
-            const ChoosenStrategy = this.getStrategyByName(cacheFighterAI, "FightIfYouCan");
+            ChoosenStrategy = this.getStrategyByName(cacheFighterAI, "FightIfYouCan");
         } else {
-            const ChoosenStrategy = this.getStrategyByName(cacheArcherAI, "AtackTheArcher");
+            ChoosenStrategy = this.getStrategyByName(cacheArcherAI, "AtackTheArcher");
 
         }
         var ai = new ChoosenStrategy({

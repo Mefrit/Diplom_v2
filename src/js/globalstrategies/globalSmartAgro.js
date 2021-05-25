@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -58,11 +57,11 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     cache.units_purpose.push({ enemie: _this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
                 }
                 if (curent_unit.isArchers()) {
-                    console.log("curent_unit", curent_unit);
                     cache_enemies = _this.getEnemyInField({
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 5);
+                    console.log("\n\ncache_enemies11", cache_enemies);
                     if (cache_enemies.length > 0) {
                         best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
                     }
@@ -77,7 +76,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         SmartAgro.prototype.startMove = function (cache_unit, index) {
             var _this = this;
             var unit = cache_unit[index];
-            var cache_enemies = [], best_enemie = {};
+            var cache_enemies = [], best_enemie = {}, ChoosenStrategy;
             console.log("this.global_cache", this.global_cache);
             best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
             if (!best_enemie) {
@@ -96,10 +95,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 best_enemie = best_enemie.enemie;
             }
             if (cache_unit[index].person.class == "fighter") {
-                var ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "FightIfYouCan");
+                ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "FightIfYouCan");
             }
             else {
-                var ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheArcherAI, "AtackTheArcher");
+                ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheArcherAI, "AtackTheArcher");
             }
             var ai = new ChoosenStrategy({
                 scene: this.scene,
