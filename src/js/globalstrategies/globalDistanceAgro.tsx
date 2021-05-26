@@ -43,27 +43,28 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
 
     startMove(cache_unit, index) {
         let unit = cache_unit[index];
-        let cache_enemies = [], best_enemie = {};
+        let cache_enemies = [], best_enemie: any;
         cache_enemies = this.getEnemyInField({
             x: unit.person.x,
             y: unit.person.y
         }, 4);
 
         cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
-        console.log("cache_enemies", cache_enemies, this.global_cache.units_purpose);
         if (cache_enemies.length > 0) {
 
             best_enemie = this.getBestEnemie(cache_enemies, unit);
         } else {
-            best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
+            best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
+
+            if (!best_enemie) {
+                best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
+
+                best_enemie = best_enemie.enemie;
+            } else {
+                best_enemie = best_enemie.enemie;
+            }
+
         }
-        // if (this.unit_collection.getUserCollection().length > 1) {
-
-        //     this.global_cache.units_purpose.push({ enemie: best_enemie, id: unit.person.id });
-
-        // } else {
-        //     // атаковать по другой траектории
-        // }
 
         var ChoosenStrategy;
 

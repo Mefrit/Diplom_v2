@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -30,7 +29,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         SmartAgro.prototype.assessment = function (cache) {
             var _this = this;
             if (cache === void 0) { cache = {}; }
-            var result = 1000, enemies, damaged_person = {}, min_health = 200, enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
+            var result = 1000, min_health = 200, enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
             this.ai_units.forEach(function (curent_unit) {
                 if (curent_unit.person.health < 30) {
                     result -= 400;

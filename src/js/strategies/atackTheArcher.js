@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AtackTheArcher = void 0;
     var AtackTheArcher = (function (_super) {
         __extends(AtackTheArcher, _super);
         function AtackTheArcher(props) {
@@ -148,7 +147,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         AtackTheArcher.prototype.atackeChosenUnit = function (cache, enemie) {
             var _this = this;
             return new Promise(function (resolve, reject) {
-                console.log(":enemie", enemie);
                 _this.findPointAtackArcher(enemie);
                 setTimeout(function () { resolve("Promise5"); }, 520);
             });

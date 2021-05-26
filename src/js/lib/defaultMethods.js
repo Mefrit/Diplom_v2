@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -162,14 +161,14 @@ define(["require", "exports"], function (require, exports) {
                 });
                 if (find) {
                     find = false;
-                    return false;
+                    return find;
                 }
                 return true;
             });
         };
         DefaultMethodsStrategy.prototype.checkEnemyInCache = function (id_person, cache_busy_enemies) {
             return cache_busy_enemies.filter(function (element) {
-                if (element.id == id_person) {
+                if (element.id == id_person && !!element.enemie) {
                     return element.enemie;
                 }
             });
@@ -179,12 +178,11 @@ define(["require", "exports"], function (require, exports) {
             if (cache_busy_enemies === void 0) { cache_busy_enemies = []; }
             var min = 1000, nearEnemies = undefined, tmp_min = 1000;
             var enemy_in_cache = this.checkEnemyInCache(unit.person.id, cache_busy_enemies);
-            console.log("enemy_in_cache", enemy_in_cache, cache_busy_enemies);
-            if (enemy_in_cache.length == 0) {
+            if (enemy_in_cache.length > 0) {
                 return enemy_in_cache[0];
             }
             var unit_collection = this.unit_collection.getUserCollection();
-            if (cache_busy_enemies.length > 0) {
+            if (cache_busy_enemies.length > 0 && this.isArchers(unit)) {
                 unit_collection = this.deleteBusyEnemies(unit_collection, cache_busy_enemies);
             }
             unit_collection.forEach(function (element) {
@@ -194,7 +192,6 @@ define(["require", "exports"], function (require, exports) {
                     nearEnemies = element;
                 }
             });
-            console.log("nearEnemies", nearEnemies);
             return nearEnemies;
         };
         DefaultMethodsStrategy.prototype.deleteExcessCoord = function (cahceCoord) {

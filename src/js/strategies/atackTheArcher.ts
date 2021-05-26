@@ -3,7 +3,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     unit: any;
     coordsEvil: any;
     view: any;
-    last_enemie:any
+    last_enemie: any
     constructor(props: any) {
         super(props);
         this.unit = props.unit;
@@ -75,7 +75,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             // проверка на тикать от сюда
 
         } else { res.result = false }
-        // console.log("tryAtakeArcherRes", res);
         return res;
     }
     //если на лучника атакуют, то он убегает
@@ -95,7 +94,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         } else {
             resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
         }
-        // console.log("resCheck.free => ", resCheck);
         if (resCheck.free) {
             res = this.tryAtakeArcher(resCheck, enemie);
             if (!res.result) {
@@ -142,7 +140,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     }
     atackeChosenUnit(cache, enemie) {
         return new Promise((resolve, reject) => {
-            console.log(":enemie",enemie);
+
             this.findPointAtackArcher(enemie);
             setTimeout(() => { resolve("Promise5") }, 520);
         });
