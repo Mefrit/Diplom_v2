@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DistanceAgro = void 0;
     var DistanceAgro = (function (_super) {
         __extends(DistanceAgro, _super);
         function DistanceAgro(props) {
@@ -27,20 +28,56 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             return _this;
         }
         DistanceAgro.prototype.assessment = function (cache) {
-            var result = 1100, enemies;
-            this.ai_units.forEach(function (elem) {
-                if (elem.person.health > 30) {
+            var _this = this;
+            var result = 1000, enemies, enemies_near_6, enemies_near_3, best_enemie, cache_enemies;
+            this.ai_units.forEach(function (curent_unit) {
+                if (curent_unit.person.health > 30) {
                     result += 300;
                 }
-                if (elem.person.health > 20 && elem.person.health < 30) {
+                if (curent_unit.person.health > 20 && curent_unit.person.health < 30) {
                     result += 100;
                 }
-            });
-            this.global_cache = cache;
-            enemies = this.unit_collection.getUserCollection();
-            enemies.forEach(function (elem) {
-                if (elem.person.health < 30) {
-                    result += 300;
+                enemies_near_6 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
+                enemies_near_6.forEach(function (enemie) {
+                    if (enemie.person.class == "archer") {
+                        result -= 300;
+                    }
+                    else {
+                        result -= 500;
+                    }
+                    if (curent_unit.person.class == "archer") {
+                        result += 12 * enemie.person.health;
+                    }
+                    else {
+                        result += 10 * enemie.person.health;
+                    }
+                });
+                if (curent_unit.isArchers()) {
+                    cache_enemies = _this.getEnemyInField({
+                        x: curent_unit.person.x,
+                        y: curent_unit.person.y
+                    }, 6);
+                    if (cache_enemies.length > 0) {
+                        cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                        if (cache_enemies.length > 0) {
+                            best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
+                        }
+                        else {
+                            best_enemie = _this.findNearestEnemies(curent_unit, cache.units_purpose);
+                        }
+                    }
+                    else {
+                        best_enemie = _this.findNearestEnemies(curent_unit, cache.units_purpose);
+                    }
+                    console.log("cache_enemies deleteEqualEnemyFromCache", best_enemie, curent_unit.person.id);
+                    cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+                }
+                else {
+                    enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+                    if (enemies_near_3.length > 0) {
+                        console.log("not ARcher ", _this.getBestEnemie(enemies_near_3, curent_unit), curent_unit.person.id);
+                        cache.units_purpose.push({ enemie: _this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
+                    }
                 }
             });
             return { total: Math.round(result), cache: cache };
@@ -55,7 +92,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 x: unit.person.x,
                 y: unit.person.y
             }, 4);
-            cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+            if (unit.person.class != "fighter") {
+                cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+            }
             if (cache_enemies.length > 0) {
                 best_enemie = this.getBestEnemie(cache_enemies, unit);
             }
@@ -70,7 +109,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 }
             }
             var ChoosenStrategy;
-            if (cache_unit[index].person.class == "fighter") {
+            if (unit.person.class == "fighter") {
                 ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "SecurityArcher");
             }
             else {
@@ -82,7 +121,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 unit_collection: this.unit_collection,
                 unit: unit
             });
-            if (cache_unit[index].person.class == "fighter") {
+            if (unit.person.class == "fighter") {
                 ai.start(cache_unit).then(function () {
                     if (index < cache_unit.length - 1) {
                         _this.startMove(cache_unit, index + 1);

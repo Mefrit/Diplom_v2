@@ -510,11 +510,11 @@ export class DefaultMethodsStrategy {
         return Math.abs(current.x - person.x) < coefProximity && Math.abs(current.y - person.y) < coefProximity;
     }
     // проверяет  обстановку вокруг лучника, если враг рядом, то передается координаты врага
-    checkFreePointsArcher(points, type = "fighter", unit = this.unit) {
+    checkFreePointsArcher(points, type = "fighter", curent_unit = this.unit) {
         let res = { free: true, deleteLastPoint: false, runAway: false };
+    //    alert("points"+ points+curent_unit.person.id);
         this.unit_collection.getCollection().forEach((unit) => {
             for (let i = 0; i < points.length; i++) {
-
                 if (points[i].x < 0 || points[i].x > 11) {
                     res.free = false;
                 }
@@ -522,10 +522,7 @@ export class DefaultMethodsStrategy {
                     res.free = false;
                 }
                 if (unit.x == points[i].x && points[i].y == unit.y) {
-                    //FIX ME удалил, хрен знает зачем это было сделанно
-                    // if (!(type == "archer" && i == points.length - 1)) {\c
-
-                    if (unit.person.id != unit.person.id) {
+                    if (unit.person.id != curent_unit.person.id) {
                         if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
 
                             res.runAway = true;
@@ -628,6 +625,7 @@ export class DefaultMethodsStrategy {
             tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
             arrayPoit.push(tmp);
         }
+        // console.log("arrayPoit",arrayPoit);
         tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
 
         res.free = tmp.free;

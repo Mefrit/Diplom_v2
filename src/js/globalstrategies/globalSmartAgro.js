@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -53,21 +54,29 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }
                 });
                 enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
-                if (enemies_near_3.length > 0) {
-                    cache.units_purpose.push({ enemie: _this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
-                }
                 if (curent_unit.isArchers()) {
                     cache_enemies = _this.getEnemyInField({
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 5);
                     if (cache_enemies.length > 0) {
-                        best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
+                        cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                        if (cache_enemies.length > 0) {
+                            best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
+                        }
+                        else {
+                            best_enemie = _this.findNearestEnemies(curent_unit);
+                        }
                     }
                     else {
                         best_enemie = _this.findNearestEnemies(curent_unit);
                     }
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+                }
+                else {
+                    if (enemies_near_3.length > 0) {
+                        cache.units_purpose.push({ enemie: _this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
+                    }
                 }
             });
             return { total: Math.round(result), cache: cache };

@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SecurityArcher = void 0;
     var SecurityArcher = (function (_super) {
         __extends(SecurityArcher, _super);
         function SecurityArcher(props) {

@@ -17,24 +17,83 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
     }
     assessment(cache) {
         // тут нужно выбрать кто куда будет ходить
-        var result = 1100, enemies;
-        this.ai_units.forEach(elem => {
-            if (elem.person.health > 30) {
+
+        let result = 1000, enemies, enemies_near_6, enemies_near_3, best_enemie, cache_enemies;
+        this.ai_units.forEach(curent_unit => {
+            if (curent_unit.person.health > 30) {
                 result += 300;
             }
-            if (elem.person.health > 20 && elem.person.health < 30) {
+            if (curent_unit.person.health > 20 && curent_unit.person.health < 30) {
                 result += 100;
             }
-        });
-        this.global_cache = cache;
-        enemies = this.unit_collection.getUserCollection();
-        enemies.forEach(elem => {
-            if (elem.person.health < 30) {
-                result += 300;
-            }
-        });
+            enemies_near_6 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
+            enemies_near_6.forEach(enemie => {
+                // учет возможных атак
+                if (enemie.person.class == "archer") {
+                    result -= 300;
+                } else {
+                    result -= 500;
+                }
+                if (curent_unit.person.class == "archer") {
+                    result += 12 * enemie.person.health;
+                } else {
+                    result += 10 * enemie.person.health;
+                }
+            });
 
-        // чем больше. тем лучше будет считаьься стратегия
+
+
+            if (curent_unit.isArchers()) {
+
+                cache_enemies = this.getEnemyInField({
+                    x: curent_unit.person.x,
+                    y: curent_unit.person.y
+                }, 6);
+
+                if (cache_enemies.length > 0) {
+
+                    cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+
+                    if (cache_enemies.length > 0) {
+
+                        best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
+
+                    } else {
+
+                        best_enemie = this.findNearestEnemies(curent_unit, cache.units_purpose);
+                    }
+
+                } else {
+                    best_enemie = this.findNearestEnemies(curent_unit, cache.units_purpose);
+                }
+                console.log("cache_enemies deleteEqualEnemyFromCache", best_enemie, curent_unit.person.id);
+                cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+
+
+            } else {
+
+                enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+                if (enemies_near_3.length > 0) {
+                    console.log("not ARcher ", this.getBestEnemie(enemies_near_3, curent_unit), curent_unit.person.id)
+                    cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
+                }
+            }
+
+
+        });
+        // this.global_cache = cache;
+        // enemies = this.unit_collection.getUserCollection();
+        // enemies.forEach(elem => {
+        //     if (elem.person.health < 30) {
+        //         result += 300;
+        //     }
+        // });
+        // enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+
+        // if (enemies_near_3.length > 0) {
+        //     cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
+        // }
+
         return { total: Math.round(result), cache: cache };
     }
     createMytantStrategy() {
@@ -49,27 +108,28 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
             y: unit.person.y
         }, 4);
 
-        cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+
+        if (unit.person.class != "fighter") {
+            cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+        }
+
         if (cache_enemies.length > 0) {
 
             best_enemie = this.getBestEnemie(cache_enemies, unit);
         } else {
-            best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
 
+            best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
             if (!best_enemie) {
                 best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
-
                 best_enemie = best_enemie.enemie;
             } else {
                 best_enemie = best_enemie.enemie;
             }
-
         }
-
         var ChoosenStrategy;
 
         // сделать так , что бы двигались в сторону ближайших игроков
-        if (cache_unit[index].person.class == "fighter") {
+        if (unit.person.class == "fighter") {
             ChoosenStrategy = this.getStrategyByName(cacheFighterAI, "SecurityArcher");
         } else {
             ChoosenStrategy = this.getStrategyByName(cacheArcherAI, "AtackTheArcher");
@@ -80,7 +140,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
             unit_collection: this.unit_collection,
             unit: unit
         });
-        if (cache_unit[index].person.class == "fighter") {
+        if (unit.person.class == "fighter") {
             ai.start(cache_unit).then(() => {
                 if (index < cache_unit.length - 1) {
                     this.startMove(cache_unit, index + 1);

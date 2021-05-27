@@ -13,15 +13,12 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     //     })
     // }
     getBestEnemie(cache_enemies, unit) {
-
-        var best_enemie = cache_enemies[0], distance_best, tmp, res_x, res_y, find_archer = false;
+        // console.log('cache_enemies', cache_enemies);
+        var best_enemie = cache_enemies[0], distance_best, tmp, res_x, res_y, find_archer = false,resCheck;
         distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
         // console.log("getBestEnemie cache_enemies", cache_enemies);
         cache_enemies.forEach(elem => {
-            // if (find_archer) {
-            //     if () {
-            //         find_archer = false;
-            //     }
+    
 
             tmp = this.getDistanceBetweenUnits(elem, unit);
 
@@ -37,17 +34,44 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
             if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
 
                 if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 1) {
-                    if (this.isArchers(elem)) {
-                        // if (res_x.free || res_y.free) {
-                        best_enemie = elem;
-                        find_archer = true;
-                        return;
-                        // }
-                    } else {
-                        if (best_enemie.person.health < elem.person.health && !find_archer) {
+                    
+                    
+                    if(this.isArchers(unit)){
+                        res_x = Math.abs(elem.person.x - unit.person.x);
+                        res_y = Math.abs(elem.person.y - unit.person.y);
+                        if (res_x > res_y) {
+                            resCheck = this.checkFreeWay2Atack(elem,unit, "y");
+                        } else {
+                            resCheck = this.checkFreeWay2Atack(elem,unit, "x");
+                        }
+                     
+                        if(resCheck.free){
+                            if (this.isArchers(elem) ) {
+                               
+                                best_enemie = elem;
+                                find_archer = true;
+                                return;
+                                // }
+                            } else {
+                                if (best_enemie.person.health < elem.person.health && !find_archer) {
+                                    best_enemie = elem;
+                                }
+                            }
+                        }
+                    } else{
+                        if (this.isArchers(elem) ) {
+                     
                             best_enemie = elem;
+                            find_archer = true;
+                            return;
+                            // }
+                        } else {
+                            if (best_enemie.person.health < elem.person.health && !find_archer) {
+                                best_enemie = elem;
+                            }
                         }
                     }
+                
 
 
                 }
@@ -56,7 +80,22 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
         });
         return best_enemie;
     }
-
+    // удаляет врагов которые уже заняты в кеше и предоставляет незанятых врагов
+    deleteEqualEnemyFromCache(cache_enemies,units_purpose){
+        let add ;
+        return cache_enemies.filter(elem => {
+            add = true;
+            units_purpose.forEach(purpose => {
+                if(purpose.enemie.person.id == elem.person.id){
+                    add = false;
+                }
+            });
+            if(add){
+                return elem;
+            }
+            
+        })
+    }
     getEnemieFromCachePurpose(cache_purpose, id) {
         let result = cache_purpose.filter(elem => {
 
@@ -80,6 +119,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
         return result;
 
     }
+ 
     sortArchersFirst(cacheAi) {
         return cacheAi.sort((prev, next) => {
             if (prev.person.class == "archer") {

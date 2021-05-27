@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -408,9 +409,9 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.checkPersonNear = function (current, person, coefProximity) {
             return Math.abs(current.x - person.x) < coefProximity && Math.abs(current.y - person.y) < coefProximity;
         };
-        DefaultMethodsStrategy.prototype.checkFreePointsArcher = function (points, type, unit) {
+        DefaultMethodsStrategy.prototype.checkFreePointsArcher = function (points, type, curent_unit) {
             if (type === void 0) { type = "fighter"; }
-            if (unit === void 0) { unit = this.unit; }
+            if (curent_unit === void 0) { curent_unit = this.unit; }
             var res = { free: true, deleteLastPoint: false, runAway: false };
             this.unit_collection.getCollection().forEach(function (unit) {
                 for (var i = 0; i < points.length; i++) {
@@ -421,7 +422,7 @@ define(["require", "exports"], function (require, exports) {
                         res.free = false;
                     }
                     if (unit.x == points[i].x && points[i].y == unit.y) {
-                        if (unit.person.id != unit.person.id) {
+                        if (unit.person.id != curent_unit.person.id) {
                             if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
                                 res.runAway = true;
                             }

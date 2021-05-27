@@ -7,7 +7,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
     var arrPersons = [
         {
             url: "./src/images/hola_1.png",
-            x: 7,
+            x: 8,
             y: 2,
             evil: false,
             class: "fighter",
@@ -17,7 +17,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
         },
         {
             url: "./src/images/kind_archer2.png",
-            x: 7,
+            x: 8,
             y: 3,
             evil: false,
             class: "archer",
@@ -28,7 +28,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
         {
             url: "./src/images/hola3.png",
             x: 7,
-            y: 4,
+            y: 3,
             evil: false,
             class: "fighter",
             damage: 10,
@@ -67,8 +67,8 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
         },
         {
             url: "./src/images/vinny.png",
-            x: 0,
-            y: 1,
+            x: 2,
+            y: 3,
             evil: true,
             class: "archer",
             damage: 10,
@@ -88,20 +88,20 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
         {
             url: "./src/images/vinny2.png",
             x: 3,
-            y: 2,
+            y: 3,
             evil: true,
             class: "archer",
-            damage: 10,
+            damage: 7,
             health: 50,
             id: 6,
         },
         {
             url: "./src/images/person2.png",
             x: 3,
-            y: 3,
+            y: 4,
             evil: true,
             class: "fighter",
-            damage: 10,
+            damage: 7,
             health: 80,
             id: 7,
         },

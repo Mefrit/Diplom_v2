@@ -87,6 +87,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         this.moveAutoStepStupid(this.unit, { x: enemie.x, y: enemie.y }, "archer");
     }
     findPointAtackArcher(enemie) {
+     
         let maxX = Math.abs(enemie.person.x - this.unit.person.x),
             maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;
         if (maxY > maxX) {
@@ -94,6 +95,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         } else {
             resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
         }
+        // console.log("resCheck ========>>>>>>-000000000000000000 ",resCheck, this.unit, maxY > maxX);
         if (resCheck.free) {
             res = this.tryAtakeArcher(resCheck, enemie);
             if (!res.result) {
@@ -106,6 +108,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 } else {
                     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                 }
+                // console.log("resCheck ========>>>>>>11111111111 ",resCheck, this.unit);
                 if (resCheck.free) {
                     this.tryAtakeArcher(resCheck, enemie);
                 }
@@ -120,6 +123,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             } else {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
             }
+            // console.log("resCheck ========>>>>>>22222222222222 ",resCheck, this.unit);
             if (resCheck.free) {
                 this.tryAtakeArcher(resCheck, enemie);
             }

@@ -25,7 +25,6 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             if (curent_unit.person.health < 20) {
                 result -= 700;
             }
-
             enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
             enemies_near_4.forEach(enemie => {
                 // учет возможных атак
@@ -42,9 +41,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             });
             enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
 
-            if (enemies_near_3.length > 0) {
-                cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
-            }
+
             if (curent_unit.isArchers()) {
 
                 cache_enemies = this.getEnemyInField({
@@ -53,11 +50,21 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 }, 5);
 
                 if (cache_enemies.length > 0) {
-                    best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
+                    cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                    if (cache_enemies.length > 0) {
+                        best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
+                    } else {
+                        best_enemie = this.findNearestEnemies(curent_unit);
+                    }
                 } else {
                     best_enemie = this.findNearestEnemies(curent_unit);
                 }
+
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+            } else {
+                if (enemies_near_3.length > 0) {
+                    cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
+                }
             }
 
         });
