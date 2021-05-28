@@ -12,7 +12,7 @@ export class Ai {
     syncUnit: any;
     cache_coord_bots: any;
     view: any;
-    CACHE:any;
+    CACHE: any;
     // обьект для рендера элементов
     scene: any;
     constructor(arrAllPersons) {
@@ -85,7 +85,7 @@ export class Ai {
             // console.log("ai ", tmp_ai.getInfo(), "total ", assessment.total);
             return { assessment: assessment.total, ai: tmp_ai };
         });
-      
+
         result_assessment.forEach(elem => {
 
             if (max == -1) {
@@ -97,7 +97,7 @@ export class Ai {
                 best_ai = elem.ai;
             }
         });
-        console.log(this.CACHE,best_ai);
+
         return best_ai;
     }
 

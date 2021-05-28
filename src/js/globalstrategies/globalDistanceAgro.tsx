@@ -45,15 +45,13 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
 
             if (curent_unit.isArchers()) {
 
-                cache_enemies = this.getEnemyInField({
-                    x: curent_unit.person.x,
-                    y: curent_unit.person.y
-                }, 6);
+                cache_enemies = enemies_near_6;
 
                 if (cache_enemies.length > 0) {
-
+                    console.log("cache_enemies ======>>>>>>>1", cache_enemies, JSON.stringify(cache.units_purpose));
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
 
+                    console.log("cache_enemies ======>>>>>>>2", JSON.stringify(cache_enemies.length), cache_enemies, cache.units_purpose, curent_unit.domPerson);
                     if (cache_enemies.length > 0) {
 
                         best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
@@ -66,7 +64,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 } else {
                     best_enemie = this.findNearestEnemies(curent_unit, cache.units_purpose);
                 }
-                console.log("cache_enemies deleteEqualEnemyFromCache", best_enemie, curent_unit.person.id);
+                console.log("cache_enemies best_enemie", best_enemie, curent_unit.person.id);
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
 
 
@@ -103,29 +101,30 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
     startMove(cache_unit, index) {
         let unit = cache_unit[index];
         let cache_enemies = [], best_enemie: any;
-        cache_enemies = this.getEnemyInField({
-            x: unit.person.x,
-            y: unit.person.y
-        }, 4);
+        best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
+        if (!best_enemie) {
+            cache_enemies = this.getEnemyInField({
+                x: unit.person.x,
+                y: unit.person.y
+            }, 4);
 
 
-        if (unit.person.class != "fighter") {
-            cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
-        }
+            if (unit.person.class != "fighter") {
+                cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+            }
 
-        if (cache_enemies.length > 0) {
+            if (cache_enemies.length > 0) {
 
-            best_enemie = this.getBestEnemie(cache_enemies, unit);
-        } else {
-
-            best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
-            if (!best_enemie) {
+                best_enemie = this.getBestEnemie(cache_enemies, unit);
+            } else {
                 best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
                 best_enemie = best_enemie.enemie;
-            } else {
-                best_enemie = best_enemie.enemie;
+
             }
+        } else {
+            best_enemie = best_enemie.enemie;
         }
+
         var ChoosenStrategy;
 
         // сделать так , что бы двигались в сторону ближайших игроков
@@ -152,9 +151,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 if (index < cache_unit.length - 1) {
                     this.startMove(cache_unit, index + 1);
                 }
-
             });
-
         }
     }
     start(cache) {

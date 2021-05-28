@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ViewScene = void 0;
     var ViewScene = (function () {
         function ViewScene(arrObjPlayers, loader) {
             var _this = this;

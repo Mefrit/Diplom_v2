@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "./defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultGlobalMethodsStrategy = void 0;
     var DefaultGlobalMethodsStrategy = (function (_super) {
         __extends(DefaultGlobalMethodsStrategy, _super);
         function DefaultGlobalMethodsStrategy(props) {
@@ -25,7 +24,7 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         };
         DefaultGlobalMethodsStrategy.prototype.getBestEnemie = function (cache_enemies, unit) {
             var _this = this;
-            var best_enemie = cache_enemies[0], distance_best, tmp, res_x, res_y, find_archer = false, resCheck;
+            var best_enemie = cache_enemies[this.randomInteger(0, cache_enemies.length - 1)], distance_best, tmp, res_x, res_y, find_archer = false, resCheck;
             distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
             cache_enemies.forEach(function (elem) {
                 tmp = _this.getDistanceBetweenUnits(elem, unit);
@@ -38,7 +37,7 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                     }
                 }
                 if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
-                    if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 1) {
+                    if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
                         if (_this.isArchers(unit)) {
                             res_x = Math.abs(elem.person.x - unit.person.x);
                             res_y = Math.abs(elem.person.y - unit.person.y);

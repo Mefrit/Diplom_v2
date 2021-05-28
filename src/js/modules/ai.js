@@ -1,7 +1,6 @@
 define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (require, exports, cacheGlobalStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Ai = void 0;
     var Ai = (function () {
         function Ai(arrAllPersons) {
             var _this = this;
@@ -75,7 +74,6 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
                     best_ai = elem.ai;
                 }
             });
-            console.log(this.CACHE, best_ai);
             return best_ai;
         };
         Ai.prototype.stepAi = function (ai_units, index) {

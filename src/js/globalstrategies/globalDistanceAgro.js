@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DistanceAgro = void 0;
     var DistanceAgro = (function (_super) {
         __extends(DistanceAgro, _super);
         function DistanceAgro(props) {
@@ -53,12 +52,11 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }
                 });
                 if (curent_unit.isArchers()) {
-                    cache_enemies = _this.getEnemyInField({
-                        x: curent_unit.person.x,
-                        y: curent_unit.person.y
-                    }, 6);
+                    cache_enemies = enemies_near_6;
                     if (cache_enemies.length > 0) {
+                        console.log("cache_enemies ======>>>>>>>1", cache_enemies, JSON.stringify(cache.units_purpose));
                         cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                        console.log("cache_enemies ======>>>>>>>2", JSON.stringify(cache_enemies.length), cache_enemies, cache.units_purpose, curent_unit.domPerson);
                         if (cache_enemies.length > 0) {
                             best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
                         }
@@ -69,7 +67,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     else {
                         best_enemie = _this.findNearestEnemies(curent_unit, cache.units_purpose);
                     }
-                    console.log("cache_enemies deleteEqualEnemyFromCache", best_enemie, curent_unit.person.id);
+                    console.log("cache_enemies best_enemie", best_enemie, curent_unit.person.id);
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
@@ -88,25 +86,25 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             var _this = this;
             var unit = cache_unit[index];
             var cache_enemies = [], best_enemie;
-            cache_enemies = this.getEnemyInField({
-                x: unit.person.x,
-                y: unit.person.y
-            }, 4);
-            if (unit.person.class != "fighter") {
-                cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
-            }
-            if (cache_enemies.length > 0) {
-                best_enemie = this.getBestEnemie(cache_enemies, unit);
-            }
-            else {
-                best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
-                if (!best_enemie) {
+            best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
+            if (!best_enemie) {
+                cache_enemies = this.getEnemyInField({
+                    x: unit.person.x,
+                    y: unit.person.y
+                }, 4);
+                if (unit.person.class != "fighter") {
+                    cache_enemies = this.deleteBusyEnemies(cache_enemies, this.global_cache.units_purpose);
+                }
+                if (cache_enemies.length > 0) {
+                    best_enemie = this.getBestEnemie(cache_enemies, unit);
+                }
+                else {
                     best_enemie = this.findNearestEnemies(unit, this.global_cache.units_purpose);
                     best_enemie = best_enemie.enemie;
                 }
-                else {
-                    best_enemie = best_enemie.enemie;
-                }
+            }
+            else {
+                best_enemie = best_enemie.enemie;
             }
             var ChoosenStrategy;
             if (unit.person.class == "fighter") {

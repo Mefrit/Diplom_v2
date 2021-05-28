@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -15,7 +14,7 @@ define(["require", "exports"], function (require, exports) {
             this.moveAutoStepStupid = function (unit, obj2go, type) {
                 if (type === void 0) { type = "fighter"; }
                 var pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
-                var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {}, frontier = [], cost_so_far = [], new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
+                var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {}, frontier = [], cost_so_far = [], max_x, max_y, res_check, new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
                 came_from[0] = NaN;
                 cost_so_far[0] = 0;
                 pointsNear = _this.getNeighbors({ x: unit.person.x, y: unit.person.y }, type);
@@ -192,7 +191,13 @@ define(["require", "exports"], function (require, exports) {
                     min = tmp_min;
                     nearEnemies = element;
                 }
+                else {
+                    if (typeof nearEnemies == "undefined") {
+                        nearEnemies = element;
+                    }
+                }
             });
+            console.log("!!!!!!!!!!!!!", nearEnemies);
             return nearEnemies;
         };
         DefaultMethodsStrategy.prototype.deleteExcessCoord = function (cahceCoord) {
@@ -508,6 +513,7 @@ define(["require", "exports"], function (require, exports) {
                 tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
                 arrayPoit.push(tmp);
             }
+            console.log("arrayPoit", arrayPoit);
             tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
             res.free = tmp.free;
             res.runAway = tmp.runAway;

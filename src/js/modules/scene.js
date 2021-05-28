@@ -1,7 +1,6 @@
 define(["require", "exports", "../viewScene", "./person_collection"], function (require, exports, viewScene_1, person_collection_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Scene = void 0;
     var Scene = (function () {
         function Scene(loader, arrImg, ai) {
             var _this = this;

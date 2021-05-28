@@ -103,15 +103,21 @@ export class DefaultMethodsStrategy {
         }
 
         unit_collection.forEach((element) => {
-
             tmp_min = this.getDistanceBetweenUnits(unit, element)
+
+
             if (min > tmp_min) {
                 min = tmp_min;
+                // console.log("archerrr", res_check, element, unit.domPerson);
                 nearEnemies = element;
+            } else {
+                if (typeof nearEnemies == "undefined") {
+                    nearEnemies = element;
+                }
             }
 
         });
-
+        console.log("!!!!!!!!!!!!!", nearEnemies);
         return nearEnemies;
     }
     //указывает на лучшую  точку
@@ -375,7 +381,7 @@ export class DefaultMethodsStrategy {
 
         let current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {},
             frontier: any = [],//граница
-            cost_so_far = [],
+            cost_so_far = [], max_x, max_y, res_check,
             new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
 
         came_from[0] = NaN;
@@ -409,7 +415,10 @@ export class DefaultMethodsStrategy {
             if (element.priority <= bestPoint.priority) {
                 // что бы искал пути, конечно это не панацея в более сложных ситуация фигурка будет тупить
                 if (type == "archer") {
+
+
                     bestPoint = element;
+
                 } else {
                     // написать по нормальному!!!!!
 
@@ -512,7 +521,7 @@ export class DefaultMethodsStrategy {
     // проверяет  обстановку вокруг лучника, если враг рядом, то передается координаты врага
     checkFreePointsArcher(points, type = "fighter", curent_unit = this.unit) {
         let res = { free: true, deleteLastPoint: false, runAway: false };
-    //    alert("points"+ points+curent_unit.person.id);
+        //    alert("points"+ points+curent_unit.person.id);
         this.unit_collection.getCollection().forEach((unit) => {
             for (let i = 0; i < points.length; i++) {
                 if (points[i].x < 0 || points[i].x > 11) {
@@ -625,7 +634,7 @@ export class DefaultMethodsStrategy {
             tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
             arrayPoit.push(tmp);
         }
-        // console.log("arrayPoit",arrayPoit);
+        console.log("arrayPoit", arrayPoit);
         tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
 
         res.free = tmp.free;
