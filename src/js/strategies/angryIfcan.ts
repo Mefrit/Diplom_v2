@@ -3,10 +3,10 @@ import { DefaultMethodsStrategy } from "../lib/defaultMethods";
 export class FightIfYouCan extends DefaultMethodsStrategy {
     unit: any;
     coordsEvil: any;
-    view: any
+    view: any;
     constructor(props: any) {
         super(props);
-      
+
         this.unit_collection = props.unit_collection;
         this.unit = props.unit;
         // this.coordsEvil = { x: props.result.x, y: props.result.y };
@@ -46,7 +46,6 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
         //     result -= elem.person.health * 5;
         // });
         // cache.most_damaged_person_3 = damaged_person;
-
         // return { total: Math.round(result), cache: cache };
     }
     start(cache) {
@@ -72,25 +71,30 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                     this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache);
                 }
             }
-            setTimeout(() => { resolve("Promise3") }, 320);
-
+            setTimeout(() => {
+                resolve("Promise3");
+            }, 320);
         });
     }
 
     atackeChosenUnit(cache_unit, enemie) {
-
         return new Promise((resolve, reject) => {
-            let coord, res, attakedEnemie, checkArcherPosition = {result:false, point:{}}, archers = this.unit_collection.getAiArchers();
+            let coord,
+                res,
+                attakedEnemie,
+                checkArcherPosition = { result: false, point: {} },
+                archers = this.unit_collection.getAiArchers();
             coord = { x: enemie.person.x, y: enemie.person.y };
-            if(this.checkArchersPosition()){
-               
+            if (this.checkArchersPosition()) {
                 checkArcherPosition = this.checkArcherPosition(enemie);
             }
-         
 
-            if (archers.length != 0 && checkArcherPosition.result && !this.unit.moveAction && this.getDistanceBetweenUnits(this.unit, enemie) < 4) {
-    
-
+            if (
+                archers.length != 0 &&
+                checkArcherPosition.result &&
+                !this.unit.moveAction &&
+                this.getDistanceBetweenUnits(this.unit, enemie) < 4
+            ) {
                 this.moveTo(this.unit, checkArcherPosition.point);
                 if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1) {
                     this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
@@ -101,21 +105,16 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 res = this.moveCarefully(this.unit, enemie, "fighter", cache_unit);
 
                 if (res.findEnime == true) {
-
-
                     attakedEnemie = res.enemie;
                     // запуск анимации атаки
                     this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
-                  
-
-
                 }
-
             }
             this.unit.setMoveAction(false);
 
-            setTimeout(() => { resolve("Promise3") }, 320);
-
+            setTimeout(() => {
+                resolve("Promise3");
+            }, 120);
         });
     }
     findEnemieForAtake(enemie) {

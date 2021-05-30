@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ImageDownloader = void 0;
     var ImageDownloader = (function () {
         function ImageDownloader() {
             this.resourceCache = [];

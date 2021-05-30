@@ -25,18 +25,18 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             if (curent_unit.person.health < 20) {
                 result -= 700;
             }
-            enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
+            enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 5);
             enemies_near_4.forEach(enemie => {
                 // учет возможных атак
                 if (enemie.person.class == "archer") {
-                    result -= 300;
+                    result += 800;
                 } else {
-                    result -= 500;
+                    result += 500;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 12 * enemie.person.health;
+                    result += 8 * Math.abs(100 - enemie.person.health);
                 } else {
-                    result += 10 * enemie.person.health;
+                    result += 5 * Math.abs(100 - enemie.person.health);
                 }
             });
             enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
@@ -105,7 +105,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         //     result -= elem.person.health * 5;
         // });
         // cache.most_damaged_person_3 = damaged_person;
-        // console.log("!!!!!!!!!!\n\n\n enemies in fields FightIfYouCan", enemies, "damaged", damaged_person);
+        console.log("Smart Agro", Math.round(result));
         return { total: Math.round(result), cache: cache };
     }
 
@@ -113,7 +113,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
 
         let unit = cache_unit[index];
         let cache_enemies = [], best_enemie: any = {}, ChoosenStrategy;
-        console.log("this.global_cache", this.global_cache);
+
         best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
 
         if (!best_enemie) {
@@ -146,7 +146,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             unit: unit,
             global_cache: this.global_cache
         });
-
+        // console.log("best_enemie", cache_unit[index], best_enemie);
         ai.atackeChosenUnit(cache_unit, best_enemie).then(() => {
             if (index < cache_unit.length - 1) {
                 this.startMove(cache_unit, index + 1);

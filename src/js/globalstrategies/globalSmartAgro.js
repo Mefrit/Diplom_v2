@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -37,19 +38,19 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 if (curent_unit.person.health < 20) {
                     result -= 700;
                 }
-                enemies_near_4 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
+                enemies_near_4 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 5);
                 enemies_near_4.forEach(function (enemie) {
                     if (enemie.person.class == "archer") {
-                        result -= 300;
+                        result += 800;
                     }
                     else {
-                        result -= 500;
+                        result += 500;
                     }
                     if (curent_unit.person.class == "archer") {
-                        result += 12 * enemie.person.health;
+                        result += 8 * Math.abs(100 - enemie.person.health);
                     }
                     else {
-                        result += 10 * enemie.person.health;
+                        result += 5 * Math.abs(100 - enemie.person.health);
                     }
                 });
                 enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
@@ -78,13 +79,13 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }
                 }
             });
+            console.log("Smart Agro", Math.round(result));
             return { total: Math.round(result), cache: cache };
         };
         SmartAgro.prototype.startMove = function (cache_unit, index) {
             var _this = this;
             var unit = cache_unit[index];
             var cache_enemies = [], best_enemie = {}, ChoosenStrategy;
-            console.log("this.global_cache", this.global_cache);
             best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
             if (!best_enemie) {
                 cache_enemies = this.getEnemyInField({

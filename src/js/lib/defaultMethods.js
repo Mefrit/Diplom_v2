@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -22,7 +23,7 @@ define(["require", "exports"], function (require, exports) {
                 if (!obj2go.hasOwnProperty("domPerson")) {
                     pointsNear.push({
                         x: unit.x,
-                        y: unit.y
+                        y: unit.y,
                     });
                 }
                 pointsNear.forEach(function (next, index, arr) {
@@ -67,7 +68,7 @@ define(["require", "exports"], function (require, exports) {
                 if (!obj2go.hasOwnProperty("domPerson")) {
                     pointsNear.push({
                         x: unit.x,
-                        y: unit.y
+                        y: unit.y,
                     });
                 }
                 var enemies_near_3;
@@ -127,7 +128,7 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.findNearestArchers = function (unit) {
             var min = 1000, nearArcher = undefined, tmp_x, tmp_y, tmp_min = 1000;
             this.unit_collection.getCollection().forEach(function (element) {
-                if (element.person.evil && !element.isNotDied() && element.person.class == 'archer') {
+                if (element.person.evil && !element.isNotDied() && element.person.class == "archer") {
                     tmp_x = unit.person.x - element.person.x;
                     tmp_y = unit.person.y - element.person.y;
                     tmp_min = Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
@@ -197,7 +198,6 @@ define(["require", "exports"], function (require, exports) {
                     }
                 }
             });
-            console.log("!!!!!!!!!!!!!", nearEnemies);
             return nearEnemies;
         };
         DefaultMethodsStrategy.prototype.deleteExcessCoord = function (cahceCoord) {
@@ -361,7 +361,7 @@ define(["require", "exports"], function (require, exports) {
                 if (result) {
                     if (parseInt(_this.getDistanceBetweenUnits(point, enemie).toFixed(0)) <= 1.2) {
                         return {
-                            point: point
+                            point: point,
                         };
                     }
                 }
@@ -441,6 +441,21 @@ define(["require", "exports"], function (require, exports) {
             });
             return res;
         };
+        DefaultMethodsStrategy.prototype.getCoordForArcher = function (unit, enemie) {
+            var res_check;
+            if (Math.abs(unit.y - enemie.y) <= 2) {
+                res_check = this.checkFreeWay2Atack(enemie, this.unit, "x");
+                if (res_check.free) {
+                    return res_check.arrayPoit;
+                }
+            }
+            if (enemie.y < 4) {
+                return { x: enemie.x, y: 0 };
+            }
+            else {
+                return { x: enemie.x, y: 7 };
+            }
+        };
         DefaultMethodsStrategy.prototype.getPointsField = function (coord_unit, field_step) {
             var cache_points = [];
             for (var i = -field_step; i < field_step + 1; i++) {
@@ -484,7 +499,7 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getNearFriendsUnit = function (unit, cacheUnits) {
             var coord_min = {
                 x: cacheUnits[0].x,
-                y: cacheUnits[0].y
+                y: cacheUnits[0].y,
             }, hypotenuse_min, hypotenuse_elem;
             cacheUnits.forEach(function (elem) {
                 if (unit.x != elem.x && unit.y != elem.y) {
@@ -513,7 +528,6 @@ define(["require", "exports"], function (require, exports) {
                 tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
                 arrayPoit.push(tmp);
             }
-            console.log("arrayPoit", arrayPoit);
             tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
             res.free = tmp.free;
             res.runAway = tmp.runAway;

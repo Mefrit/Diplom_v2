@@ -1,6 +1,7 @@
 define(["require", "exports", "./person"], function (require, exports, person_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Collection = void 0;
     var Collection = (function () {
         function Collection(data) {
             this.collection = data.map(function (elem) {
@@ -8,7 +9,12 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
             });
         }
         Collection.prototype.getCollection = function () {
-            return this.collection;
+            return this.collection.filter(function (element) {
+                if (element.person.health > 10) {
+                    return element;
+                }
+                ;
+            });
         };
         Collection.prototype.getAICollection = function () {
             return this.collection.filter(function (element) {

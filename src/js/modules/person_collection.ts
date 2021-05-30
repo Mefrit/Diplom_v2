@@ -7,11 +7,18 @@ export class Collection {
         });
     }
     getCollection() {
-        return this.collection;
+        return this.collection.filter(element => {
+            if (element.person.health > 10) {
+                return element;
+            };
+        });
     }
     getAICollection() {
         return this.collection.filter(element => {
+           
+           
             if (element.person.evil && element.person.health > 10) {
+              
                 return element;
             }
         });

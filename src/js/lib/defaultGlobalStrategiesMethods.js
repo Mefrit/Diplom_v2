@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "./defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultGlobalMethodsStrategy = void 0;
     var DefaultGlobalMethodsStrategy = (function (_super) {
         __extends(DefaultGlobalMethodsStrategy, _super);
         function DefaultGlobalMethodsStrategy(props) {
@@ -24,52 +25,26 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         };
         DefaultGlobalMethodsStrategy.prototype.getBestEnemie = function (cache_enemies, unit) {
             var _this = this;
-            var best_enemie = cache_enemies[this.randomInteger(0, cache_enemies.length - 1)], distance_best, tmp, res_x, res_y, find_archer = false, resCheck;
+            var best_enemie = cache_enemies[0], distance_best, tmp, res_x, res_y, find_archer = false, resCheck;
             distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
             cache_enemies.forEach(function (elem) {
-                tmp = _this.getDistanceBetweenUnits(elem, unit);
-                if (tmp < distance_best && !find_archer) {
-                    if (best_enemie.x != elem.x || best_enemie.y != elem.y && _this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3) {
-                        if (elem.person.health < best_enemie.person.health) {
-                            best_enemie = elem;
-                            distance_best = tmp;
-                        }
+                tmp = _this.getDistanceBetweenUnits(elem, unit).toFixed(0);
+                if (tmp < distance_best) {
+                    if (best_enemie.x != elem.x ||
+                        (best_enemie.y != elem.y && _this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)) {
+                        best_enemie = elem;
+                        distance_best = tmp;
                     }
                 }
                 if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
                     if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-                        if (_this.isArchers(unit)) {
-                            res_x = Math.abs(elem.person.x - unit.person.x);
-                            res_y = Math.abs(elem.person.y - unit.person.y);
-                            if (res_x > res_y) {
-                                resCheck = _this.checkFreeWay2Atack(elem, unit, "y");
-                            }
-                            else {
-                                resCheck = _this.checkFreeWay2Atack(elem, unit, "x");
-                            }
-                            if (resCheck.free) {
-                                if (_this.isArchers(elem)) {
-                                    best_enemie = elem;
-                                    find_archer = true;
-                                    return;
-                                }
-                                else {
-                                    if (best_enemie.person.health < elem.person.health && !find_archer) {
-                                        best_enemie = elem;
-                                    }
-                                }
-                            }
+                        if (_this.isArchers(elem)) {
+                            best_enemie = elem;
+                            find_archer = true;
                         }
                         else {
-                            if (_this.isArchers(elem)) {
+                            if (best_enemie.person.health < elem.person.health) {
                                 best_enemie = elem;
-                                find_archer = true;
-                                return;
-                            }
-                            else {
-                                if (best_enemie.person.health < elem.person.health && !find_archer) {
-                                    best_enemie = elem;
-                                }
                             }
                         }
                     }
@@ -79,11 +54,16 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         };
         DefaultGlobalMethodsStrategy.prototype.deleteEqualEnemyFromCache = function (cache_enemies, units_purpose) {
             var add;
+            if (units_purpose.length == 0) {
+                return cache_enemies;
+            }
             return cache_enemies.filter(function (elem) {
                 add = true;
                 units_purpose.forEach(function (purpose) {
-                    if (purpose.enemie.person.id == elem.person.id) {
-                        add = false;
+                    if (typeof purpose.enemie != "undefined") {
+                        if (purpose.enemie.person.id == elem.person.id) {
+                            add = false;
+                        }
                     }
                 });
                 if (add) {

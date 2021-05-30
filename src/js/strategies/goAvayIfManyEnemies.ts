@@ -13,10 +13,11 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
         return "GoAwayIfManyEnemies";
     }
     assessment(cache) {
-        var result = 200, enemies;
+        var result = 200,
+            enemies;
         if (!cache.enemies_near_5) {
             enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 5);
-            cache.enemies_near_5 = enemies
+            cache.enemies_near_5 = enemies;
         }
         result += 150 * cache.enemies_near_5.length;
         console.log("result\n \n \n", Math.round(result));
@@ -24,11 +25,9 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
         // return Math.floor(Math.random() * Math.floor(100));
     }
     heuristicSave(point, near_enemies, nearest_friend) {
-
         var priority = 0;
         near_enemies.forEach((elem, index, arr) => {
-
-            priority += (Math.pow(Math.abs(point.x - elem.x), 2) + Math.pow(Math.abs(point.y - elem.y), 2));
+            priority += Math.pow(Math.abs(point.x - elem.x), 2) + Math.pow(Math.abs(point.y - elem.y), 2);
             if (Math.abs(point.x - elem.x) < 3 && point.y == elem.y) {
                 priority += 10;
             }
@@ -44,7 +43,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             if (Math.abs(point.x - this.unit.x) < 2 && Math.abs(point.y - this.unit.y) < 2) {
                 priority += 10;
             }
-            // priority += 
+            // priority +=
             // if (Math.abs(point.x - elem.x) < 2) {
             //     priority += 20;
             // }
@@ -58,7 +57,8 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
         }
         // console.log(point.x, "-", Math.pow(Math.abs(point.x - nearest_friend.x), 2) + Math.pow(Math.abs(point.y - nearest_friend.y), 2));
         // alert(Math.pow(Math.abs(point.x - nearest_friend.x), 2) + Math.pow(Math.abs(point.y - nearest_friend.y), 3));
-        priority += Math.pow(Math.abs(point.x - nearest_friend.x), 2) + Math.pow(Math.abs(point.y - nearest_friend.y), 3) + 10;
+        priority +=
+            Math.pow(Math.abs(point.x - nearest_friend.x), 2) + Math.pow(Math.abs(point.y - nearest_friend.y), 3) + 10;
         priority += Math.abs(point.x - nearest_friend.x) * 10;
         return priority;
     }
@@ -68,8 +68,10 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
         near_enemies = this.getEnemyInField(
             {
                 x: this.unit.x,
-                y: this.unit.y
-            }, 4);
+                y: this.unit.y,
+            },
+            4
+        );
 
         console.log("near_enemies", near_enemies);
         points_near = this.getNeighbors({ x: this.unit.x, y: this.unit.y });
@@ -81,8 +83,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
         });
         best_point = points_near[0];
         // console.log("frontier points=> go2friendsSafety ", points_near);
-        points_near.forEach(element => {
-
+        points_near.forEach((element) => {
             if (element.priority <= best_point.priority) {
                 // что бы искал пути, конечно это не панацея в более сложных ситуация фигурка будет тупить
                 // написать по нормальному!!!!!
@@ -90,7 +91,6 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
                 // console.log("unit.coordPrevPoint,", unit.coordPrevPoint, element.next);
                 best_point = element;
                 // }
-
             }
         });
         console.log(" tbest_point);", best_point);
@@ -101,16 +101,18 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
     }
     start(cache) {
         return new Promise((resolve, reject) => {
-            var near_friends = this.unit_collection.getAICollection(), nearest_friend;
+            var near_friends = this.unit_collection.getAICollection(),
+                nearest_friend;
             if (near_friends.length == 0) {
                 //FIX ME убегать тупо
             } else {
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  near_friends", near_friends);
                 nearest_friend = this.getNearFriendsUnit(this.unit, near_friends);
                 this.go2friendsSafety(nearest_friend);
             }
             console.log("nearest_friend", nearest_friend);
-            setTimeout(() => { resolve("Promise4") }, 320);
+            setTimeout(() => {
+                resolve("Promise4");
+            }, 320);
         });
     }
 }

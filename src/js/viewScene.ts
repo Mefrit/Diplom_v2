@@ -1,6 +1,6 @@
 export class ViewScene {
     arrObjPersons: any;
-    loader:any;
+    loader: any;
     constructor(arrObjPlayers, loader) {
         this.arrObjPersons = arrObjPlayers;
         this.loader = loader;
@@ -30,7 +30,6 @@ export class ViewScene {
         return cnvsElem;
     };
     renderElement = (element) => {
-
         element.domPerson.style.left = element.getX() * 120 + "px";
         element.domPerson.style.top = element.getY() * 120 + "px";
         // element.style.left = pos_dif_x + "px";
@@ -43,28 +42,27 @@ export class ViewScene {
                 obj = elemCollection;
             }
         });
-     
+
         ctx.moveTo(20, 20);
         ctx.lineWidth = 5;
         ctx.strokeStyle = "green";
-        if (damage != 0) {  
-            if (obj.getHealth() >= 11) {
+        if (damage != 0) {
+            // console.log(obj.getHealth(), obj.domPerson);
+            if (obj.getHealth() >= 10) {
                 obj.setHealth(obj.getHealth() - damage);
             } else {
                 ctx.strokeStyle = "red";
                 // docume   nt.getelement
-               
+
                 ctx.clearRect(0, 0, 1000, 1000);
                 img = this.loader.get("./src/images/rip.png");
 
-
                 this.renderPlayer(obj.getDoomObj(), obj, img);
-
             }
             ctx.lineTo(obj.getHealth() * 3, 20);
             ctx.stroke();
         }
-    }
+    };
     contactPersonsView = (canvas, img, damage = 5) => {
         let ctx = canvas.getContext("2d"),
             id;
@@ -73,7 +71,7 @@ export class ViewScene {
         this.drawImage(ctx, img);
         id = { id: canvas.getAttribute("data-id") };
         this.drawHealth(ctx, { person: id }, damage);
-    }
+    };
     drawImage(ctx, img) {
         let width, height, coef;
 

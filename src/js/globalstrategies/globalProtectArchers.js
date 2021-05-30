@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ProtectArchers = void 0;
     var ProtectArchers = (function (_super) {
         __extends(ProtectArchers, _super);
         function ProtectArchers(props) {
@@ -36,9 +37,20 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 enemies_near_archers = _this.getEnemyInField({
                     x: elem.person.x,
                     y: elem.person.y
+                }, 5);
+                result += enemies_near_archers.length * 500;
+                result += elem.person.health * 4;
+                enemies_near_archers = _this.getEnemyInField({
+                    x: elem.person.x,
+                    y: elem.person.y
                 }, 3);
-                result += enemies_near_archers.length * 1000;
-                result += elem.person.health * 5;
+                result += enemies_near_archers.length * 1200;
+                result += elem.person.health * 10;
+                enemies_near_archers = _this.getEnemyInField({
+                    x: elem.person.x,
+                    y: elem.person.y
+                }, 2);
+                result += enemies_near_archers.length * 2200;
             });
             console.log("ProtectArchers ==> ", Math.round(result));
             return { total: Math.round(result), cache: cache };

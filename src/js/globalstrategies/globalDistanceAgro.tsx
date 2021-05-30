@@ -7,7 +7,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
     scene;
     view;
     constructor(props: any) {
-        // console.log("DistanceAgro", props);
+
         super(props);
         this.unit_collection = props.unit_collection;
         this.ai_units = props.ai_units;
@@ -48,10 +48,10 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 cache_enemies = enemies_near_6;
 
                 if (cache_enemies.length > 0) {
-                    console.log("cache_enemies ======>>>>>>>1", cache_enemies, JSON.stringify(cache.units_purpose));
+
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
 
-                    console.log("cache_enemies ======>>>>>>>2", JSON.stringify(cache_enemies.length), cache_enemies, cache.units_purpose, curent_unit.domPerson);
+
                     if (cache_enemies.length > 0) {
 
                         best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
@@ -64,15 +64,11 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 } else {
                     best_enemie = this.findNearestEnemies(curent_unit, cache.units_purpose);
                 }
-                console.log("cache_enemies best_enemie", best_enemie, curent_unit.person.id);
+
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
-
-
             } else {
-
                 enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
                 if (enemies_near_3.length > 0) {
-                    console.log("not ARcher ", this.getBestEnemie(enemies_near_3, curent_unit), curent_unit.person.id)
                     cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
                 }
             }
@@ -91,7 +87,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
         // if (enemies_near_3.length > 0) {
         //     cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
         // }
-
+        console.log("distanceAgro ", Math.round(result));
         return { total: Math.round(result), cache: cache };
     }
     createMytantStrategy() {

@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FightIfYouCan = void 0;
     var FightIfYouCan = (function (_super) {
         __extends(FightIfYouCan, _super);
         function FightIfYouCan(props) {
@@ -42,7 +43,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                         _this.moveCarefully(_this.unit, checkArcherPosition.point, "fighter", cache);
                     }
                 }
-                setTimeout(function () { resolve("Promise3"); }, 320);
+                setTimeout(function () {
+                    resolve("Promise3");
+                }, 320);
             });
         };
         FightIfYouCan.prototype.atackeChosenUnit = function (cache_unit, enemie) {
@@ -53,7 +56,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (_this.checkArchersPosition()) {
                     checkArcherPosition = _this.checkArcherPosition(enemie);
                 }
-                if (archers.length != 0 && checkArcherPosition.result && !_this.unit.moveAction && _this.getDistanceBetweenUnits(_this.unit, enemie) < 4) {
+                if (archers.length != 0 &&
+                    checkArcherPosition.result &&
+                    !_this.unit.moveAction &&
+                    _this.getDistanceBetweenUnits(_this.unit, enemie) < 4) {
                     _this.moveTo(_this.unit, checkArcherPosition.point);
                     if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1) {
                         _this.view.contactPersonsView(enemie.domPerson, enemie.image, _this.unit.person.damage);
@@ -67,7 +73,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                 }
                 _this.unit.setMoveAction(false);
-                setTimeout(function () { resolve("Promise3"); }, 320);
+                setTimeout(function () {
+                    resolve("Promise3");
+                }, 120);
             });
         };
         FightIfYouCan.prototype.findEnemieForAtake = function (enemie) {

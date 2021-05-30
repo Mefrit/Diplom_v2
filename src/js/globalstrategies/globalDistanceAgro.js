@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DistanceAgro = void 0;
     var DistanceAgro = (function (_super) {
         __extends(DistanceAgro, _super);
         function DistanceAgro(props) {
@@ -54,9 +55,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 if (curent_unit.isArchers()) {
                     cache_enemies = enemies_near_6;
                     if (cache_enemies.length > 0) {
-                        console.log("cache_enemies ======>>>>>>>1", cache_enemies, JSON.stringify(cache.units_purpose));
                         cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
-                        console.log("cache_enemies ======>>>>>>>2", JSON.stringify(cache_enemies.length), cache_enemies, cache.units_purpose, curent_unit.domPerson);
                         if (cache_enemies.length > 0) {
                             best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
                         }
@@ -67,17 +66,16 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     else {
                         best_enemie = _this.findNearestEnemies(curent_unit, cache.units_purpose);
                     }
-                    console.log("cache_enemies best_enemie", best_enemie, curent_unit.person.id);
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
                     enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
                     if (enemies_near_3.length > 0) {
-                        console.log("not ARcher ", _this.getBestEnemie(enemies_near_3, curent_unit), curent_unit.person.id);
                         cache.units_purpose.push({ enemie: _this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
                     }
                 }
             });
+            console.log("distanceAgro ", Math.round(result));
             return { total: Math.round(result), cache: cache };
         };
         DistanceAgro.prototype.createMytantStrategy = function () {

@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.GoAwayIfManyEnemies = void 0;
     var GoAwayIfManyEnemies = (function (_super) {
         __extends(GoAwayIfManyEnemies, _super);
         function GoAwayIfManyEnemies(props) {
@@ -38,7 +39,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             var _this = this;
             var priority = 0;
             near_enemies.forEach(function (elem, index, arr) {
-                priority += (Math.pow(Math.abs(point.x - elem.x), 2) + Math.pow(Math.abs(point.y - elem.y), 2));
+                priority += Math.pow(Math.abs(point.x - elem.x), 2) + Math.pow(Math.abs(point.y - elem.y), 2);
                 if (Math.abs(point.x - elem.x) < 3 && point.y == elem.y) {
                     priority += 10;
                 }
@@ -61,7 +62,8 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             if (Math.abs(point.y - nearest_friend.y) == 1 && Math.abs(point.x - nearest_friend.x) == 0) {
                 priority -= 100;
             }
-            priority += Math.pow(Math.abs(point.x - nearest_friend.x), 2) + Math.pow(Math.abs(point.y - nearest_friend.y), 3) + 10;
+            priority +=
+                Math.pow(Math.abs(point.x - nearest_friend.x), 2) + Math.pow(Math.abs(point.y - nearest_friend.y), 3) + 10;
             priority += Math.abs(point.x - nearest_friend.x) * 10;
             return priority;
         };
@@ -70,7 +72,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             var near_enemies, points_near, best_point;
             near_enemies = this.getEnemyInField({
                 x: this.unit.x,
-                y: this.unit.y
+                y: this.unit.y,
             }, 4);
             console.log("near_enemies", near_enemies);
             points_near = this.getNeighbors({ x: this.unit.x, y: this.unit.y });
@@ -98,12 +100,13 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (near_friends.length == 0) {
                 }
                 else {
-                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  near_friends", near_friends);
                     nearest_friend = _this.getNearFriendsUnit(_this.unit, near_friends);
                     _this.go2friendsSafety(nearest_friend);
                 }
                 console.log("nearest_friend", nearest_friend);
-                setTimeout(function () { resolve("Promise4"); }, 320);
+                setTimeout(function () {
+                    resolve("Promise4");
+                }, 320);
             });
         };
         return GoAwayIfManyEnemies;

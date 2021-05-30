@@ -13,70 +13,44 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     //     })
     // }
     getBestEnemie(cache_enemies, unit) {
-
-        var best_enemie = cache_enemies[this.randomInteger(0, cache_enemies.length - 1)], distance_best, tmp, res_x, res_y, find_archer = false, resCheck;
+        var best_enemie = cache_enemies[0],
+            distance_best,
+            tmp,
+            res_x,
+            res_y,
+            find_archer = false,
+            resCheck;
 
         distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
 
-        cache_enemies.forEach(elem => {
+        cache_enemies.forEach((elem) => {
+            tmp = this.getDistanceBetweenUnits(elem, unit).toFixed(0);
 
-
-            tmp = this.getDistanceBetweenUnits(elem, unit);
-
-
-            if (tmp < distance_best && !find_archer) {
-                if (best_enemie.x != elem.x || best_enemie.y != elem.y && this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3) {
-                    if (elem.person.health < best_enemie.person.health) {
-                        best_enemie = elem;
-                        distance_best = tmp;
-                    }
+            // && !find_archer
+            if (tmp < distance_best) {
+                if (
+                    best_enemie.x != elem.x ||
+                    (best_enemie.y != elem.y && this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)
+                ) {
+                    // if (elem.person.health < best_enemie.person.health) {
+                    best_enemie = elem;
+                    distance_best = tmp;
+                    // }
                 }
             }
+            // console.log("tmp",tmp,distance_best,elem.domPerson);
             if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
-                // чтобы е врывался в толпу врагов ии
+                // чтобы не врывался в толпу врагов ии
                 if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-
-
-                    if (this.isArchers(unit)) {
-                        res_x = Math.abs(elem.person.x - unit.person.x);
-                        res_y = Math.abs(elem.person.y - unit.person.y);
-                        if (res_x > res_y) {
-                            resCheck = this.checkFreeWay2Atack(elem, unit, "y");
-                        } else {
-                            resCheck = this.checkFreeWay2Atack(elem, unit, "x");
-                        }
-
-                        if (resCheck.free) {
-                            if (this.isArchers(elem)) {
-
-                                best_enemie = elem;
-                                find_archer = true;
-                                return;
-                                // }
-                            } else {
-                                if (best_enemie.person.health < elem.person.health && !find_archer) {
-                                    best_enemie = elem;
-                                }
-                            }
-                        }
+                    if (this.isArchers(elem)) {
+                        best_enemie = elem;
+                        find_archer = true;
                     } else {
-                        if (this.isArchers(elem)) {
-
+                        if (best_enemie.person.health < elem.person.health) {
                             best_enemie = elem;
-                            find_archer = true;
-                            return;
-                            // }
-                        } else {
-                            if (best_enemie.person.health < elem.person.health && !find_archer) {
-                                best_enemie = elem;
-                            }
                         }
                     }
-
-
-
                 }
-
             }
         });
         return best_enemie;
@@ -84,33 +58,35 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     // удаляет врагов которые уже заняты в кеше и предоставляет незанятых врагов
     deleteEqualEnemyFromCache(cache_enemies, units_purpose) {
         let add;
-        return cache_enemies.filter(elem => {
+        if (units_purpose.length == 0) {
+            return cache_enemies;
+        }
+        return cache_enemies.filter((elem) => {
             add = true;
-            units_purpose.forEach(purpose => {
-                if (purpose.enemie.person.id == elem.person.id) {
-                    add = false;
+            units_purpose.forEach((purpose) => {
+                if (typeof purpose.enemie != "undefined") {
+                    if (purpose.enemie.person.id == elem.person.id) {
+                        add = false;
+                    }
                 }
             });
             if (add) {
                 return elem;
             }
-
-        })
+        });
     }
     getEnemieFromCachePurpose(cache_purpose, id) {
-        let result = cache_purpose.filter(elem => {
-
+        let result = cache_purpose.filter((elem) => {
             if (elem.id == id) {
                 return cache_purpose;
             }
-        })
+        });
         if (result.length == 0) {
             return false;
         }
         return result[0];
     }
     getStrategyByName(cache_ai, name) {
-
         let result = {};
         for (let key in cache_ai) {
             if (key == name) {
@@ -118,7 +94,6 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
             }
         }
         return result;
-
     }
 
     sortArchersFirst(cacheAi) {

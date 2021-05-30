@@ -1,5 +1,6 @@
-define(["require", "exports", "../globalstrategies/globalDistanceAgro"], function (require, exports, globalDistanceAgro_1) {
+define(["require", "exports", "../globalstrategies/globalSmartAgro", "../globalstrategies/globalDistanceAgro", "../globalstrategies/globalProtectArchers"], function (require, exports, globalSmartAgro_1, globalDistanceAgro_1, globalProtectArchers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.cacheGlobalAI = [globalDistanceAgro_1.DistanceAgro];
+    exports.cacheGlobalAI = void 0;
+    exports.cacheGlobalAI = [globalDistanceAgro_1.DistanceAgro, globalProtectArchers_1.ProtectArchers, globalSmartAgro_1.SmartAgro];
 });

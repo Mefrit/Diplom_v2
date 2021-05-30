@@ -29,9 +29,20 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
             enemies_near_archers = this.getEnemyInField({
                 x: elem.person.x,
                 y: elem.person.y
+            }, 5);
+            result += enemies_near_archers.length * 500;
+            result += elem.person.health * 4;
+            enemies_near_archers = this.getEnemyInField({
+                x: elem.person.x,
+                y: elem.person.y
             }, 3);
-            result += enemies_near_archers.length * 1000;
-            result += elem.person.health * 5;
+            result += enemies_near_archers.length * 1200;
+            result += elem.person.health * 10;
+            enemies_near_archers = this.getEnemyInField({
+                x: elem.person.x,
+                y: elem.person.y
+            }, 2);
+            result += enemies_near_archers.length * 2200;
             // }
         });
         // this.ai_units.forEach(elem => {
