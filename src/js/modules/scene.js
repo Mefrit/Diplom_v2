@@ -53,7 +53,6 @@ define(["require", "exports", "../viewScene", "./person_collection"], function (
                         }
                     });
                     setTimeout(function () {
-                        _this.ai.step();
                     }, 200);
                 }
             };

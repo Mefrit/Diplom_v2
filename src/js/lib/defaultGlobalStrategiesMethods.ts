@@ -6,12 +6,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     checkConnection() {
         alert("connction");
     }
-    // chooseBestEnemie(unit, cache_enemie) {
-    //     let best_enemie
-    //     cache_enemie.forEach(elem => {
 
-    //     })
-    // }
     getBestEnemie(cache_enemies, unit) {
         var best_enemie = cache_enemies[0],
             distance_best,

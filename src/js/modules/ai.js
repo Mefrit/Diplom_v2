@@ -28,7 +28,7 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
         Ai.prototype.initEmptyGlobalCache = function () {
             return {
                 units_purpose: [],
-                most_damaged_person_3: {}
+                most_damaged_person_3: {},
             };
         };
         Ai.prototype.initView = function (view) {
@@ -59,7 +59,7 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
                     scene: _this.scene,
                     ai_units: ai_units,
                     view: _this.view,
-                    unit_collection: _this.unit_collection
+                    unit_collection: _this.unit_collection,
                 });
                 assessment = tmp_ai.assessment(_this.CACHE);
                 _this.CACHE = assessment.cache;

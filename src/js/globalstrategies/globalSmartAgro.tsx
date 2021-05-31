@@ -12,8 +12,30 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         this.unit_collection = props.unit_collection;
         this.ai_units = props.ai_units;
         this.scene = props.scene;
+        // window.stop()
+        // throw "stop";
         this.global_cache = {};
         this.view = props.view;
+    }
+    choseTurnUnits(ai_units) {
+        // let res_1: any = { cache: [], have_archer: false },
+        //     res_2: any = { cache: [], have_archer: false };
+
+        let friends, reverse = false;
+        ai_units.forEach((element) => {
+            // console.log(element);
+            if (this.isArchers(element)) {
+                friends = this.getFriendsInField(element, 2);
+
+                friends.forEach(near_friend => {
+                    if (!this.isArchers(near_friend) && (near_friend.y == element.y)) {
+                        reverse = true;
+                    }
+                })
+            }
+        });
+
+        return reverse ? [...ai_units].reverse() : ai_units;
     }
     assessment(cache: any = {}) {
         let result = 1000, min_health = 200, enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
@@ -25,18 +47,19 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             if (curent_unit.person.health < 20) {
                 result -= 700;
             }
-            enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 5);
+            result += (5 - this.unit_collection.getCountEnemy()) * 300;
+            enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
             enemies_near_4.forEach(enemie => {
                 // учет возможных атак
                 if (enemie.person.class == "archer") {
-                    result += 800;
-                } else {
                     result += 500;
+                } else {
+                    result += 300;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 8 * Math.abs(100 - enemie.person.health);
+                    result += 10 * Math.abs(80 - enemie.person.health);
                 } else {
-                    result += 5 * Math.abs(100 - enemie.person.health);
+                    result += 8 * Math.abs(80 - enemie.person.health);
                 }
             });
             enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
@@ -68,6 +91,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             }
 
         });
+        // console.log(cache.units_purpose);
         // enemies = this.unit_collection.getUserCollection();
         // enemies.forEach(elem => {
         //     if (elem.person.health > 30) {
@@ -159,6 +183,8 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         // ToDO? сделать так что бы программа проверяла в какой
         //  последовательности ходить юнитами, типа если бойцы атаку прикрывают - их 1ми
         this.ai_units = this.sortArchersFirst(this.ai_units);
+        this.ai_units = this.choseTurnUnits(this.ai_units);
+
         this.startMove(this.ai_units, 0);
 
     }

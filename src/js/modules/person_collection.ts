@@ -7,31 +7,29 @@ export class Collection {
         });
     }
     getCollection() {
-        return this.collection.filter(element => {
+        return this.collection.filter((element) => {
             if (element.person.health > 10) {
                 return element;
-            };
+            }
         });
     }
+    getCountEnemy() {
+        return this.getUserCollection().length;
+    }
     getAICollection() {
-        return this.collection.filter(element => {
-           
-           
+        return this.collection.filter((element) => {
             if (element.person.evil && element.person.health > 10) {
-              
                 return element;
             }
         });
     }
     getUserCollection() {
-        return this.collection.filter(element => {
+        return this.collection.filter((element) => {
             if (!element.person.evil && element.person.health > 10) {
                 return element;
             }
         });
     }
-
-
 
     checkFreeCoord(coord) {
         let res = true;
@@ -54,7 +52,7 @@ export class Collection {
     }
     getAiArchers() {
         return this.collection.filter((elem) => {
-            if (elem.person.evil && elem.person.class == 'archer') {
+            if (elem.person.evil && elem.person.class == "archer") {
                 return elem;
             }
         });

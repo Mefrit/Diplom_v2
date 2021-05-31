@@ -29,7 +29,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         }
         DistanceAgro.prototype.assessment = function (cache) {
             var _this = this;
-            var result = 1000, enemies, enemies_near_6, enemies_near_3, best_enemie, cache_enemies;
+            var result = 1000, enemies, enemies_near_6, enemies_near_3, best_enemie, cache_enemies, enemies_near_4;
             this.ai_units.forEach(function (curent_unit) {
                 if (curent_unit.person.health > 30) {
                     result += 300;
@@ -46,12 +46,16 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         result -= 500;
                     }
                     if (curent_unit.person.class == "archer") {
-                        result += 12 * enemie.person.health;
+                        result += 14 * enemie.person.health;
                     }
                     else {
                         result += 10 * enemie.person.health;
                     }
                 });
+                enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
+                if (_this.isArchers(curent_unit)) {
+                    result -= enemies_near_3.length * 800;
+                }
                 if (curent_unit.isArchers()) {
                     cache_enemies = enemies_near_6;
                     if (cache_enemies.length > 0) {
@@ -69,7 +73,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
-                    enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
                     if (enemies_near_3.length > 0) {
                         cache.units_purpose.push({ enemie: _this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
                     }
@@ -115,7 +118,8 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 scene: this.scene,
                 view: this.view,
                 unit_collection: this.unit_collection,
-                unit: unit
+                unit: unit,
+                parent_strategy: "distanceAgro"
             });
             if (unit.person.class == "fighter") {
                 ai.start(cache_unit).then(function () {

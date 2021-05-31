@@ -18,7 +18,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
     assessment(cache) {
         // тут нужно выбрать кто куда будет ходить
 
-        let result = 1000, enemies, enemies_near_6, enemies_near_3, best_enemie, cache_enemies;
+        let result = 1000, enemies, enemies_near_6, enemies_near_3, best_enemie, cache_enemies, enemies_near_4;
         this.ai_units.forEach(curent_unit => {
             if (curent_unit.person.health > 30) {
                 result += 300;
@@ -27,6 +27,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 result += 100;
             }
             enemies_near_6 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
+
             enemies_near_6.forEach(enemie => {
                 // учет возможных атак
                 if (enemie.person.class == "archer") {
@@ -35,12 +36,17 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                     result -= 500;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 12 * enemie.person.health;
+                    result += 14 * enemie.person.health;
                 } else {
                     result += 10 * enemie.person.health;
                 }
             });
+            enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
+            if (this.isArchers(curent_unit)) {
 
+                // console.log()
+                result -= enemies_near_3.length * 800;
+            }
 
 
             if (curent_unit.isArchers()) {
@@ -67,7 +73,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
 
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
             } else {
-                enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+
                 if (enemies_near_3.length > 0) {
                     cache.units_purpose.push({ enemie: this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
                 }
@@ -133,7 +139,8 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
             scene: this.scene,
             view: this.view,
             unit_collection: this.unit_collection,
-            unit: unit
+            unit: unit,
+            parent_strategy: "distanceAgro"
         });
         if (unit.person.class == "fighter") {
             ai.start(cache_unit).then(() => {

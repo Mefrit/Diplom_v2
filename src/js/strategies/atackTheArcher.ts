@@ -4,10 +4,14 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     coordsEvil: any;
     view: any;
     last_enemie: any;
+    parent_strategy: string;
     constructor(props: any) {
         super(props);
         this.unit = props.unit;
         this.last_enemie;
+
+        this.parent_strategy = props.hasOwnProperty("parent_strategy") ? props.parent_strategy : "default";
+        // console.log("props", props, this.parent_strategy);
     }
     getInfo() {
         return "AtackTheArcher";
@@ -45,25 +49,35 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         if (resCheck.arrayPoit.length > 0) {
             pointPosition = resCheck.arrayPoit[resCheck.arrayPoit.length - 1];
             res.pointPosition = pointPosition;
-
+            // враги на линии
             xLineCondition = enemie.x == this.unit.x && pointPosition.x == this.unit.x;
             yLineCondition = enemie.y == this.unit.y && pointPosition.y == this.unit.y;
         } else {
             xLineCondition = false;
             yLineCondition = false;
         }
+        console.log(
+            "yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0",
+            yLineCondition,
+            xLineCondition,
+            resCheck.arrayPoit
+        );
         if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
-            if (Math.abs(this.unit.x - enemie.x) > Math.abs(this.unit.y - enemie.y)) {
+            console.log(Math.abs(this.unit.x - enemie.x), Math.abs(this.unit.y - enemie.y));
+            if (Math.abs(this.unit.x - enemie.x) >= Math.abs(this.unit.y - enemie.y)) {
                 // поиск атаки по горизонтале
                 if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
                     this.moveAutoStepStupid(this.unit, enemie, "archer");
                 } else {
-                    if (Math.abs(this.unit.y - enemie.y) < 2 && this.unit.y != enemie.y && !this.unit.moveAction) {
+                    // if (Math.abs(this.unit.y - enemie.y) < 3 && this.unit.y != enemie.y && !this.unit.moveAction) {
+                    if (Math.abs(this.unit.y - enemie.y) < 3 && this.unit.y != enemie.y && !this.unit.moveAction) {
                         this.moveAutoStepStupid(this.unit, enemie, "archer");
                     }
                 }
+
                 this.atakeArcher(enemie);
             } else {
+                console.log("HERE");
                 // поиск атаки по вертикали
                 let new_x, new_y;
                 if (!this.unit.moveAction) {
@@ -88,7 +102,20 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
     }
     got2AttackePosition(enemie) {
-        return this.moveAutoStepStupid(this.unit, { x: enemie.x, y: enemie.y - 1 }, "archer");
+        console.log(
+            "this.getCoordForAtacke ===========>>>> ",
+            this.getCoordForAtacke(this.unit, enemie),
+            this.parent_strategy
+        );
+        if (this.parent_strategy == "UndercoverArcherAttack") {
+            return this.moveAutoStepStupid(
+                this.unit,
+                this.getCoordForAtacke(this.unit, enemie, "StayForwardArcher"),
+                "fighter"
+            );
+        }
+        // console.log("this.getCoordForAtacke(this.unit, enemie,", this.getCoordForAtacke(this.unit, enemie, "default"));
+        return this.moveAutoStepStupid(this.unit, this.getCoordForAtacke(this.unit, enemie, "default"), "archer");
     }
     findPointAtackArcher(enemie) {
         let maxX = Math.abs(enemie.person.x - this.unit.person.x),

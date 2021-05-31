@@ -85,6 +85,8 @@ export class ViewScene {
         }
 
         ctx.drawImage(img, 0, 0, width + 150, height);
+        ctx.scale(-1, 1);
+        ctx.restore();
         return ctx;
     }
     clearPrev(canvas, loader) {

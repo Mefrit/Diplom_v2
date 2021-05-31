@@ -21,6 +21,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             var _this = _super.call(this, props) || this;
             _this.unit = props.unit;
             _this.last_enemie;
+            _this.parent_strategy = props.hasOwnProperty("parent_strategy") ? props.parent_strategy : "default";
             return _this;
         }
         AtackTheArcher.prototype.getInfo = function () {
@@ -58,19 +59,22 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 xLineCondition = false;
                 yLineCondition = false;
             }
+            console.log("yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0", yLineCondition, xLineCondition, resCheck.arrayPoit);
             if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
-                if (Math.abs(this.unit.x - enemie.x) > Math.abs(this.unit.y - enemie.y)) {
+                console.log(Math.abs(this.unit.x - enemie.x), Math.abs(this.unit.y - enemie.y));
+                if (Math.abs(this.unit.x - enemie.x) >= Math.abs(this.unit.y - enemie.y)) {
                     if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
                         this.moveAutoStepStupid(this.unit, enemie, "archer");
                     }
                     else {
-                        if (Math.abs(this.unit.y - enemie.y) < 2 && this.unit.y != enemie.y && !this.unit.moveAction) {
+                        if (Math.abs(this.unit.y - enemie.y) < 3 && this.unit.y != enemie.y && !this.unit.moveAction) {
                             this.moveAutoStepStupid(this.unit, enemie, "archer");
                         }
                     }
                     this.atakeArcher(enemie);
                 }
                 else {
+                    console.log("HERE");
                     var new_x = void 0, new_y = void 0;
                     if (!this.unit.moveAction) {
                         if (enemie.person.y < 3) {
@@ -94,7 +98,11 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
         };
         AtackTheArcher.prototype.got2AttackePosition = function (enemie) {
-            return this.moveAutoStepStupid(this.unit, { x: enemie.x, y: enemie.y - 1 }, "archer");
+            console.log("this.getCoordForAtacke ===========>>>> ", this.getCoordForAtacke(this.unit, enemie), this.parent_strategy);
+            if (this.parent_strategy == "UndercoverArcherAttack") {
+                return this.moveAutoStepStupid(this.unit, this.getCoordForAtacke(this.unit, enemie, "StayForwardArcher"), "fighter");
+            }
+            return this.moveAutoStepStupid(this.unit, this.getCoordForAtacke(this.unit, enemie, "default"), "archer");
         };
         AtackTheArcher.prototype.findPointAtackArcher = function (enemie) {
             var maxX = Math.abs(enemie.person.x - this.unit.person.x), maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;

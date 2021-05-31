@@ -142,14 +142,8 @@ define(["require", "exports"], function (require, exports) {
         };
         DefaultMethodsStrategy.prototype.getDistanceBetweenUnits = function (unit1, unit2) {
             var tmp_x, tmp_y;
-            if (unit1.hasOwnProperty("person") && unit2.hasOwnProperty("person")) {
-                tmp_x = unit1.person.x - unit2.person.x;
-                tmp_y = unit1.person.y - unit2.person.y;
-            }
-            else {
-                tmp_x = unit1.x - unit2.x;
-                tmp_y = unit1.y - unit2.y;
-            }
+            tmp_x = unit1.x - unit2.x;
+            tmp_y = unit1.y - unit2.y;
             return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
         };
         DefaultMethodsStrategy.prototype.deleteBusyEnemies = function (cache_enemies, units_purpose) {
@@ -466,10 +460,49 @@ define(["require", "exports"], function (require, exports) {
             cache_points = this.deleteExcessCoord(cache_points);
             return cache_points;
         };
+        DefaultMethodsStrategy.prototype.getCoordForAtacke = function (unit, enemie, type) {
+            var _this = this;
+            if (type === void 0) { type = "default"; }
+            var friend_2 = this.getFriendsInField(unit, 2), enemy = this.findNearestEnemies(unit, []), coord = { x: enemie.x, y: enemie.y - 1 };
+            if (friend_2.length > 0) {
+                friend_2.forEach(function (element) {
+                    if (type == "StayForwardArcher") {
+                        if (element.x == unit.x || element.y == unit.y) {
+                            if (_this.unit_collection.checkFreeCoord({ x: element.x + 1, y: element.y }) &&
+                                _this.getDistanceBetweenUnits({ x: element.x + 1, y: element.y }, enemy) > 1) {
+                                coord = { x: element.x + 2, y: element.y };
+                            }
+                            else {
+                                if (_this.unit_collection.checkFreeCoord({ x: element.x, y: element.y + 1 }) &&
+                                    _this.getDistanceBetweenUnits({ x: element.x, y: element.y + 1 }, enemy) > 1) {
+                                    coord = { x: element.x, y: element.y + 2 };
+                                }
+                                else {
+                                    if (_this.unit_collection.checkFreeCoord({ x: element.x, y: element.y - 1 }) &&
+                                        _this.getDistanceBetweenUnits({ x: element.x, y: element.y - 1 }, enemy) > 1) {
+                                        coord = { x: element.x, y: element.y - 2 };
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        coord = { x: enemie.x + 1, y: enemie.y };
+                        if (enemie.x < unit.x) {
+                            coord = { x: enemie.x - 1, y: enemie.y };
+                        }
+                        else {
+                            coord = { x: enemie.x + 1, y: enemie.y };
+                        }
+                    }
+                });
+            }
+            return coord;
+        };
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {
             var _this = this;
             return this.unit_collection.getUserCollection().filter(function (elem) {
-                if (_this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
                     return elem;
                 }
             });
@@ -477,7 +510,7 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getFriendsInField = function (coord_unit, field_step) {
             var _this = this;
             return this.unit_collection.getAICollection().filter(function (elem) {
-                if (_this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                if (coord_unit.person.id != elem.person.id && _this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
                     return elem;
                 }
             });
@@ -486,7 +519,7 @@ define(["require", "exports"], function (require, exports) {
             var _this = this;
             return this.unit_collection.getAICollection().filter(function (elem) {
                 if (elem.person.class == "archer") {
-                    if (_this.checkPersonNear(coord_unit, elem, field_step) && elem.person.health > 10) {
+                    if (_this.checkPersonNear(coord_unit, elem, field_step)) {
                         return elem;
                     }
                 }

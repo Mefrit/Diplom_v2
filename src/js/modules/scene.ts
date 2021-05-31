@@ -90,7 +90,7 @@ export class Scene {
                 }
             });
             setTimeout(() => {
-                this.ai.step();
+                // this.ai.step();
             }, 200);
         }
     };
@@ -117,7 +117,7 @@ export class Scene {
             posY += 120;
         }
     }
-    setAIperson() { }
+    setAIperson() {}
     play() {
         this.renderArena();
         this.loader.loadElement("./src/images/rip.png");
@@ -144,7 +144,6 @@ export class Scene {
         let canvas = event.target,
             img = this.loader.get(event.target.getAttribute("data-image"));
         this.view.contactPersonsView(canvas, img);
-
     };
     onChangePerson = (event) => {
         let canvas = event.target;
@@ -160,5 +159,5 @@ export class Scene {
 
         this.view.showAvailabeMovies(this.canvas);
     };
-    renderAiPerson() { }
+    renderAiPerson() {}
 }

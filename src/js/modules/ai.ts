@@ -3,7 +3,7 @@
 import { AtackTheArcher } from "../strategies/atackTheArcher";
 // import { SecurityArcher } from "../strategies/sucurityArcher";
 
-import { cacheGlobalAI } from "../strategies/cacheGlobalStrategy"
+import { cacheGlobalAI } from "../strategies/cacheGlobalStrategy";
 // FightIfYouCan
 export class Ai {
     arrOwnPerson: any;
@@ -20,16 +20,15 @@ export class Ai {
         this.scene = {};
         //тут храняться занятые координаты( то бишь, что бы не на 1 клетку ходили )\
         this.cache_coord_bots = [];
-        this.syncUnit = function () {
+        this.syncUnit = function() {
             console.log("default");
         };
     }
     initEmptyGlobalCache() {
         return {
             units_purpose: [],
-            most_damaged_person_3: {}
-
-        }
+            most_damaged_person_3: {},
+        };
     }
     initPersons = (unit_collection, syncUnit) => {
         this.unit_collection = unit_collection;
@@ -39,7 +38,6 @@ export class Ai {
         this.view = view;
     }
     initScene = (scene) => {
-
         this.scene = scene;
     };
     getCoord(coord) {
@@ -64,30 +62,32 @@ export class Ai {
     }
 
     choseGlobalStr(ai_units) {
-        // тут будет выбор между стратегиями 
+        // тут будет выбор между стратегиями
         // var global_strategy = new GlobalSTRMaxAgro({
         //     scene: this.scene,
         //     unit_collection: this.unit_collection,
         //     // view: this.view
         // });
         // return global_strategy;
-        let tmp_ai = {}, assessment, max = -1, best_ai = {};
-        let result_assessment = cacheGlobalAI.map(AI => {
+        let tmp_ai: any = {},
+            assessment,
+            max = -1,
+            best_ai = {};
+        let result_assessment = cacheGlobalAI.map((AI) => {
             tmp_ai = new AI({
                 scene: this.scene,
                 ai_units: ai_units,
                 view: this.view,
-                unit_collection: this.unit_collection
+                unit_collection: this.unit_collection,
             });
 
-            assessment = tmp_ai.assessment(this.CACHE)
+            assessment = tmp_ai.assessment(this.CACHE);
             this.CACHE = assessment.cache;
             // console.log("ai ", tmp_ai.getInfo(), "total ", assessment.total);
             return { assessment: assessment.total, ai: tmp_ai };
         });
 
-        result_assessment.forEach(elem => {
-
+        result_assessment.forEach((elem) => {
             if (max == -1) {
                 max = elem.assessment;
                 best_ai = elem.ai;
@@ -106,9 +106,8 @@ export class Ai {
         // ..сходили 1м чуваком, и нужно заного искать стратегию...
         // var global_strategy = this.choseGlobalStr();
 
-        const best_strategy = this.choseGlobalStr(ai_units);
+        const best_strategy: any = this.choseGlobalStr(ai_units);
         best_strategy.start(this.CACHE);
-
     }
     choseTurnUnit(cacheAi) {
         return cacheAi.sort((prev, next) => {
@@ -120,7 +119,6 @@ export class Ai {
         });
     }
     step = () => {
-
         let ai_units = this.unit_collection.getAICollection();
 
         // нужно решить в какой посследовательности следует ходить юнитам, давай пока сделаем рандомно

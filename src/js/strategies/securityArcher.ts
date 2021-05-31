@@ -1,28 +1,25 @@
-
 import { DefaultMethodsStrategy } from "../lib/defaultMethods";
 
 export class SecurityArcher extends DefaultMethodsStrategy {
     constructor(props: any) {
         super(props);
         // console.log("\n angry", props);
-        
+
         this.unit = props.unit;
         // this.coordsEvil = { x: props.result.x, y: props.result.y };
     }
     // оценка ситуации
-    // при оценке учитывать, что хотябы 1н лучник жив, чем больше лучников живо, 
+    // при оценке учитывать, что хотябы 1н лучник жив, чем больше лучников живо,
     // тем выше приоритет стратегии
     getInfo() {
         return "SecurityArcher";
     }
 
-
-
     start(cache) {
         return new Promise((resolve, reject) => {
             var near_enemy = this.findNearestEnemies(this.unit);
             var near_archer = this.findNearestArchers(this.unit);
-            var pos_security:any = {};
+            var pos_security: any = {};
             var near_enemies = [];
             // if (near_enemy.y >= this.unit.y) {
             // if (this.unit.y + 1 < 5 ) {
@@ -34,8 +31,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 if (near_enemies.length == 0) {
                     pos_security.x = near_archer.x - 1;
                 } else {
-                    near_enemies.forEach(elem => {
-
+                    near_enemies.forEach((elem) => {
                         //FIX ME  как то это нужно пооптимизировать
                         if (elem.x < near_archer.x) {
                             pos_security.x = near_archer.x + 1;
@@ -50,7 +46,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 if (this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y })) {
                     pos_security.y = near_archer.y;
                 } else {
-                    // что бы они не были все в нижней части 
+                    // что бы они не были все в нижней части
                     if (this.unit.y + 1 < 8 && this.randomInteger(-2, 1) > 0) {
                         if (this.unit.y > pos_security.y) {
                             pos_security.y = near_archer.y + 1;
@@ -61,15 +57,14 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                         }
                     }
                 }
-                // console.log("pos_security => ", pos_security);
+
                 pos_security.near_archer = near_archer;
                 var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
                 if (res.findEnime == true) {
                     //атака , если лучник не далеко
 
-
                     if (Math.abs(this.unit.x - near_enemy.x) == 1) {
-                        // запуск анимации атаки   
+                        // запуск анимации атаки
                         this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
 
                         var checkArcherPosition = this.checkArcherPosition(near_enemy);
@@ -82,15 +77,15 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                         // догоняем лучника
                         // this.moveAutoStepStupid(this.unit, pos_security, "fighter");
                     }
-
                 }
             }
 
-            setTimeout(() => { resolve("Promise2") }, 220);
-
+            setTimeout(() => {
+                resolve("Promise2");
+            }, 220);
         });
         // this.findNearestEnemies(this.unit)
-        // мы нашли ближайшего врага и лучника, следует двигаться к позиции стрельбы лучника, 
+        // мы нашли ближайшего врага и лучника, следует двигаться к позиции стрельбы лучника,
         // либо, как можно ближе к лучнику, что бы его защитить
         // console.log("get Nearest res=> ", res);
     }

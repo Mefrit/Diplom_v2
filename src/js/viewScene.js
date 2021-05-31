@@ -79,6 +79,8 @@ define(["require", "exports"], function (require, exports) {
                 height = img.height;
             }
             ctx.drawImage(img, 0, 0, width + 150, height);
+            ctx.scale(-1, 1);
+            ctx.restore();
             return ctx;
         };
         ViewScene.prototype.clearPrev = function (canvas, loader) {

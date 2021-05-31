@@ -13,8 +13,10 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
                 if (element.person.health > 10) {
                     return element;
                 }
-                ;
             });
+        };
+        Collection.prototype.getCountEnemy = function () {
+            return this.getUserCollection().length;
         };
         Collection.prototype.getAICollection = function () {
             return this.collection.filter(function (element) {
@@ -50,7 +52,7 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
         };
         Collection.prototype.getAiArchers = function () {
             return this.collection.filter(function (elem) {
-                if (elem.person.evil && elem.person.class == 'archer') {
+                if (elem.person.evil && elem.person.class == "archer") {
                     return elem;
                 }
             });

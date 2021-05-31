@@ -1,16 +1,18 @@
 import { FightIfYouCan } from "./angryIfcan";
+import { StayForwardArcher } from "./stayForwardArcher";
 import { SecurityArcher } from "./securityArcher";
-import { GoAwayIfManyEnemies } from "./goAvayIfManyEnemies"
-import { AtackTheArcher } from "./atackTheArcher"
+import { GoAwayIfManyEnemies } from "./goAvayIfManyEnemies";
+import { AtackTheArcher } from "./atackTheArcher";
 
 // идеи для стратегий
-// -если чувак остался 1 а по близости много врагов 
+// -если чувак остался 1 а по близости много врагов
 // спасение чувака из ситуации выше
 export const cacheFighterAI = {
-    "SecurityArcher": SecurityArcher,
-    "FightIfYouCan": FightIfYouCan,
-    "GoAwayIfManyEnemies": GoAwayIfManyEnemies
+    SecurityArcher: SecurityArcher,
+    StayForwardArcher: StayForwardArcher,
+    FightIfYouCan: FightIfYouCan,
+    GoAwayIfManyEnemies: GoAwayIfManyEnemies,
 };
 export const cacheArcherAI = {
-    "AtackTheArcher": AtackTheArcher
+    AtackTheArcher: AtackTheArcher,
 };

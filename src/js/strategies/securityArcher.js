@@ -77,7 +77,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                         }
                     }
                 }
-                setTimeout(function () { resolve("Promise2"); }, 220);
+                setTimeout(function () {
+                    resolve("Promise2");
+                }, 220);
             });
         };
         return SecurityArcher;

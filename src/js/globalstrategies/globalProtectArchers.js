@@ -38,19 +38,19 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     x: elem.person.x,
                     y: elem.person.y
                 }, 5);
-                result += enemies_near_archers.length * 500;
-                result += elem.person.health * 4;
+                result += enemies_near_archers.length * 600;
+                result += elem.person.health * 6;
                 enemies_near_archers = _this.getEnemyInField({
                     x: elem.person.x,
                     y: elem.person.y
                 }, 3);
-                result += enemies_near_archers.length * 1200;
+                result += enemies_near_archers.length * 2200;
                 result += elem.person.health * 10;
                 enemies_near_archers = _this.getEnemyInField({
                     x: elem.person.x,
                     y: elem.person.y
                 }, 2);
-                result += enemies_near_archers.length * 2200;
+                result += enemies_near_archers.length * 3200;
             });
             console.log("ProtectArchers ==> ", Math.round(result));
             return { total: Math.round(result), cache: cache };
@@ -80,7 +80,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         ProtectArchers.prototype.startMove = function (cache_unit, index) {
             var _this = this;
             var unit = cache_unit[index];
-            var cache_enemies = [], best_enemie = {}, enemies_2field = [], strategy_cache = {}, archers;
+            var cache_enemies = [], best_enemie = {}, enemies_3field = [], strategy_cache = {}, archers;
             cache_enemies = this.getEnemyInField({
                 x: unit.person.x,
                 y: unit.person.y
@@ -95,12 +95,12 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             if (cache_unit[index].person.class == "fighter") {
                 archers = this.unit_collection.getAiArchers();
                 archers.forEach(function (elem) {
-                    enemies_2field = _this.getEnemyInField({
+                    enemies_3field = _this.getEnemyInField({
                         x: elem.person.x,
                         y: elem.person.y
-                    }, 2);
-                    if (enemies_2field.length > 0) {
-                        strategy_cache.most_damaged_person_3 = _this.getEnemyFromCache(elem, enemies_2field);
+                    }, 3);
+                    if (enemies_3field.length > 0) {
+                        strategy_cache.most_damaged_person_3 = _this.getEnemyFromCache(elem, enemies_3field);
                         ChoosenStrategy = _this.getStrategyByName(cacheUnitSingleStrategy_1.cacheFighterAI, "FightIfYouCan");
                     }
                     else {
