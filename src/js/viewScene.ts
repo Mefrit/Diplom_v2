@@ -1,3 +1,5 @@
+import { DragonAnimationUpdate } from "./lib/dragon";
+// new DragonAnimationUpdate(result.data, element.children, obj.name);
 export class ViewScene {
     arrObjPersons: any;
     loader: any;
@@ -88,6 +90,9 @@ export class ViewScene {
         ctx.scale(-1, 1);
         ctx.restore();
         return ctx;
+    }
+    renderDragon(name) {
+        new DragonAnimationUpdate(result.data, element.children, name);
     }
     clearPrev(canvas, loader) {
         let ctx = canvas.getContext("2d"),

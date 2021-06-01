@@ -10,9 +10,27 @@ export class ImageDownloader {
     }
     load(elemArr) {
         let obj = this;
-        elemArr.getCollection().forEach(function (elem) {
+        elemArr.getCollection().forEach(function(elem) {
             obj.loadElement(elem.person.url);
         });
+    }
+    loadJSON(path) {
+        return fetch(path)
+            .then((r) => r.json())
+            .then((data) => {
+                var resource = {
+                    data: null,
+                    loaded: false,
+                    type: "json",
+
+                    path: path,
+                };
+
+                resource.data = data;
+                resource.loaded = true;
+
+                return resource;
+            });
     }
     loadElement(url) {
         let obj: any = this;
@@ -20,10 +38,10 @@ export class ImageDownloader {
             return this.resourceCache[url];
         } else {
             var img = new Image();
-            img.onload = function () {
+            img.onload = function() {
                 obj.resourceCache[url] = img;
                 if (obj.isReady()) {
-                    obj.readyCallbacks.forEach(function (func) {
+                    obj.readyCallbacks.forEach(function(func) {
                         func();
                     });
                 }
