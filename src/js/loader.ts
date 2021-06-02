@@ -1,4 +1,4 @@
-export class ImageDownloader {
+export class Downloader {
     resourceCache: any;
     loading: any;
     readyCallbacks: any;
@@ -15,6 +15,8 @@ export class ImageDownloader {
         });
     }
     loadJSON(path) {
+        let obj: any = this;
+        obj.resourceCache[path] = false;
         return fetch(path)
             .then((r) => r.json())
             .then((data) => {
@@ -27,8 +29,13 @@ export class ImageDownloader {
                 };
 
                 resource.data = data;
-                resource.loaded = true;
-
+                // resource.loaded = true;
+                obj.resourceCache[path] = data;
+                if (obj.isReady()) {
+                    obj.readyCallbacks.forEach(function(func) {
+                        func();
+                    });
+                }
                 return resource;
             });
     }
@@ -40,6 +47,7 @@ export class ImageDownloader {
             var img = new Image();
             img.onload = function() {
                 obj.resourceCache[url] = img;
+
                 if (obj.isReady()) {
                     obj.readyCallbacks.forEach(function(func) {
                         func();
@@ -47,6 +55,7 @@ export class ImageDownloader {
                 }
             };
             this.resourceCache[url] = false;
+
             img.src = url;
         }
     }
@@ -59,6 +68,7 @@ export class ImageDownloader {
     isReady() {
         var ready = true;
         for (var k in this.resourceCache) {
+            // console.log(k, this.resourceCache[k]);
             if (this.resourceCache.hasOwnProperty(k) && !this.resourceCache[k]) {
                 ready = false;
             }

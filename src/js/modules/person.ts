@@ -6,9 +6,9 @@ export class Person {
     moveAction: any;
     x: any;
     y: any;
-    coordPrevPoint: any;// координаты предыдущей точки
+    coordPrevPoint: any; // координаты предыдущей точки
 
-
+    animation: any[];
     domPerson: any;
     image: any; // картинка персонажа
     constructor(person) {
@@ -17,15 +17,18 @@ export class Person {
         this.y = person.y;
         this.moveAction = false;
         this.domPerson = undefined;
-
+        this.animation = [];
         this.coordPrevPoint = {};
-        this.image = undefined
+        this.image = undefined;
     }
     initDomPerson(domPerson) {
         this.domPerson = domPerson;
     }
     getDoomObj() {
         return this.domPerson;
+    }
+    setAnimation(animation) {
+        this.animation.push(animation);
     }
     initImage(image) {
         this.image = image;

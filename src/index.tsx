@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ImageDownloader } from "./js/loader";
+import { Downloader } from "./js/loader";
 import { Ai } from "./js/modules/ai";
 import { Scene } from "./js/modules/scene";
 // import { Persons } from './js/modules/personsController';
@@ -10,7 +10,7 @@ const ROOT = document.getElementById("root");
 
 ReactDOM.render(<h1>Hellen</h1>, ROOT);
 
-let loader = new ImageDownloader();
+let loader = new Downloader();
 // to json
 // FIX ME низя 1 фотку вставлять в несколько изображений
 let arrPersons = [
@@ -121,14 +121,33 @@ let arrPersons = [
         id: 7,
     },
 ];
-
+let config_skins = [
+    {
+        class: "evil_fighter",
+        children: [{
+            src_json: "./src/images/dragon/knight1/knight1.json",
+            src_images: [
+                { name: "1_body_", path: "./src/images/dragon/knight1/images/1_body_.png" },
+                { name: "1_head_", path: "./src/images/dragon/knight1/images/1_head_.png" },
+                { name: "1_left_arm_", path: "./src/images/dragon/knight1/images/1_left_arm_.png" },
+                { name: "1_left_lag_", path: "./src/images/dragon/knight1/images/1_left_lag_.png" },
+                { name: "1_right_arm_", path: "./src/images/dragon/knight1/images/1_right_arm_.png" },
+                { name: "1_right_lag_", path: "./src/images/dragon/knight1/images/1_right_lag_.png" },
+                { name: "1_shield_", path: "./src/images/dragon/knight1/images/1_shield_.png" },
+                { name: "1_spear_", path: "./src/images/dragon/knight1/images/1_spear_.png" }
+            ],
+            name: "atacke",
+            scale: 0.8
+        }]
+    }
+];
 class Director {
     scene: any;
     ai: any;
     persController: any;
     constructor(loader, arrPersons) {
         this.ai = new Ai([]);
-        this.scene = new Scene(loader, arrPersons, this.ai);
+        this.scene = new Scene(loader, arrPersons, config_skins, this.ai);
 
         this.ai.initScene(this.scene);
         this.start();

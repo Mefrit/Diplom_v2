@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "./lib/dragon"], function (require, exports, dragon_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ViewScene = void 0;
@@ -69,19 +69,27 @@ define(["require", "exports"], function (require, exports) {
         }
         ViewScene.prototype.drawImage = function (ctx, img) {
             var width, height, coef;
-            if (img.width > 200) {
-                coef = 150 / parseFloat(img.width);
-                width = img.width * coef;
-                height = img.height * coef;
+            if (img) {
+                if (img.width > 200) {
+                    coef = 150 / parseFloat(img.width);
+                    width = img.width * coef;
+                    height = img.height * coef;
+                }
+                else {
+                    width = img.width;
+                    height = img.height;
+                }
+                ctx.drawImage(img, 0, 0, width + 150, height);
+                ctx.scale(-1, 1);
+                ctx.restore();
             }
             else {
-                width = img.width;
-                height = img.height;
+                console.log("fail in load image");
             }
-            ctx.drawImage(img, 0, 0, width + 150, height);
-            ctx.scale(-1, 1);
-            ctx.restore();
             return ctx;
+        };
+        ViewScene.prototype.renderDragon = function (name) {
+            new dragon_1.DragonAnimationUpdate(result.data, element.children, name);
         };
         ViewScene.prototype.clearPrev = function (canvas, loader) {
             var ctx = canvas.getContext("2d"), img, width;

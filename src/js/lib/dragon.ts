@@ -23,7 +23,9 @@ export class DragonAnimationUpdate {
         this.name_elem = name_elem;
         this.canvas = null;
     }
-
+    updateCanvas(canvas) {
+        this.canvas = canvas;
+    }
     getObject(name, list) {
         for (var i = 0; i < list.length; i++) {
             if (list[i].name == name) {
@@ -133,7 +135,12 @@ export class DragonAnimationUpdate {
         var frame = 0;
 
         var timeBegin = Date.now();
-        this.canvas = document.getElementById("canvas_" + this.name_elem);
+        console.log(this.canvas);
+        if (this.canvas == null) {
+            this.canvas = document.getElementById("canvas_" + this.name_elem);
+        } else {
+            console.log(this.canvas);
+        }
 
         var playFrames = () => {
             if (!this.playing) {
@@ -182,19 +189,20 @@ export class DragonAnimationUpdate {
             obj;
         slot.forEach((item, i) => {
             obj = item.display[0];
-            if (!!this.images[obj.name].data && this.images[obj.name].data.optimize == "sprite_manager") {
-                arrCanvas.push({
-                    img: this.images[obj.name].node,
-                    config_elem: this.images[obj.name].data.config,
-                    pos: this.getImagePosition(obj.name, obj.transform),
-                    optimize: "sprite_manager",
-                });
-            } else {
-                arrCanvas.push({
-                    img: this.images[obj.name].node,
-                    pos: this.getImagePosition(obj.name, obj.transform),
-                });
-            }
+
+            // if (!!this.images[obj.name].data && this.images[obj.name].data.optimize == "sprite_manager") {
+            //     arrCanvas.push({
+            //         img: this.images[obj.name].node,
+            //         config_elem: this.images[obj.name].data.config,
+            //         pos: this.getImagePosition(obj.name, obj.transform),
+            //         optimize: "sprite_manager",
+            //     });
+            // } else {
+            arrCanvas.push({
+                img: this.images[obj.name].node,
+                pos: this.getImagePosition(obj.name, obj.transform),
+            });
+            // }
         });
 
         if (this.canvas != null) {

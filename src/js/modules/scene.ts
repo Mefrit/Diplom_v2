@@ -1,6 +1,7 @@
 import { Person } from "./person";
 import { ViewScene } from "../viewScene";
 import { Collection } from "./person_collection";
+import { DragonAnimationUpdate } from "../lib/dragon";
 export class Scene {
     loader: any;
     canvas: any;
@@ -10,10 +11,13 @@ export class Scene {
     chosePerson: boolean;
     curentPerson: any;
     view: any;
-    constructor(loader, arrImg, ai) {
+    config_skins: any;
+    skins: any;
+    constructor(loader, arrImg, config_skins, ai) {
         this.loader = loader;
         this.chosePerson = false;
-
+        this.skins = {};
+        this.config_skins = config_skins;
         this.collectionPersons = new Collection(arrImg);
         //  arrImg.map(elem => {
         //     return new Person(elem);
@@ -118,11 +122,47 @@ export class Scene {
         }
     }
     setAIperson() {}
+    loadDragon() {
+        let obj = this,
+            image_domcache = [];
+        this.config_skins.forEach((skin) => {
+            console.log(skin);
+            image_domcache = [];
+            skin.children.forEach((elem) => {
+                this.loader.loadJSON(elem.src_json);
+
+                elem.src_images.forEach((img) => {
+                    // console.log(img.path);
+                    obj.loader.loadElement(img.path);
+                });
+            });
+        });
+    }
     play() {
         this.renderArena();
+        let cache_skins = [],
+            tmp: any = {};
         this.loader.loadElement("./src/images/rip.png");
         this.loader.load(this.collectionPersons);
+        this.loadDragon();
         this.loader.onReady(() => {
+            this.config_skins.forEach((skin) => {
+                tmp.cahce_image = [];
+                skin.children.forEach((elem) => {
+                    // this.loader.loadJSON(elem.src_json);
+                    tmp.name = elem.name;
+                    tmp.src_json = elem.src_json;
+                    elem.src_images.forEach((img) => {
+                        // console.log(img.name, this.loader.get(img.path));
+                        tmp.cahce_image[img.name] = { node: this.loader.get(img.path) };
+                    });
+                    // // console.log(this.loader.get(elem.src_json));
+                    cache_skins.push(tmp);
+                });
+            });
+
+            console.log(cache_skins);
+
             this.collectionPersons.collection.forEach((elem: any) => {
                 let img = this.loader.get(elem.person.url);
                 let cnvsElem = document.createElement("canvas");
@@ -135,6 +175,25 @@ export class Scene {
                 }
                 elem.initDomPerson(cnvsElem);
                 // когда будем делать графику будет сложнее, тк от этого аподхода придется избавиться
+                cache_skins.forEach((skin) => {
+                    if (elem.person.evil && elem.person.class == "fighter") {
+                        console.log("ele11111m", elem);
+                        var dragon = new DragonAnimationUpdate(
+                            this.loader.get(skin.src_json),
+                            skin.cahce_image,
+                            skin.name
+                        );
+                        dragon.show();
+                        dragon.updateCanvas(elem.domPerson);
+                        // dragon.play();
+                        elem.setAnimation(dragon);
+                    }
+                    // var dragon = new DragonAnimationUpdate(result.data, element.children, obj.name);
+                    // dragon.show();
+                    // dragon;
+                });
+
+                // elem.initDragonAnimatoin();
                 elem.initImage(img);
                 document.getElementById("scene").appendChild(cnvsElem);
             });

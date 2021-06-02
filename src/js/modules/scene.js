@@ -1,9 +1,9 @@
-define(["require", "exports", "../viewScene", "./person_collection"], function (require, exports, viewScene_1, person_collection_1) {
+define(["require", "exports", "../viewScene", "./person_collection", "../lib/dragon"], function (require, exports, viewScene_1, person_collection_1, dragon_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Scene = void 0;
     var Scene = (function () {
-        function Scene(loader, arrImg, ai) {
+        function Scene(loader, arrImg, config_skins, ai) {
             var _this = this;
             this.onBlock = function (event) {
                 var block = event.target, posX, posY;
@@ -72,6 +72,8 @@ define(["require", "exports", "../viewScene", "./person_collection"], function (
             };
             this.loader = loader;
             this.chosePerson = false;
+            this.skins = {};
+            this.config_skins = config_skins;
             this.collectionPersons = new person_collection_1.Collection(arrImg);
             this.view = new viewScene_1.ViewScene(this.collectionPersons, this.loader);
             this.curentPerson = undefined;
@@ -106,12 +108,40 @@ define(["require", "exports", "../viewScene", "./person_collection"], function (
             }
         };
         Scene.prototype.setAIperson = function () { };
+        Scene.prototype.loadDragon = function () {
+            var _this = this;
+            var obj = this, image_domcache = [];
+            this.config_skins.forEach(function (skin) {
+                console.log(skin);
+                image_domcache = [];
+                skin.children.forEach(function (elem) {
+                    _this.loader.loadJSON(elem.src_json);
+                    elem.src_images.forEach(function (img) {
+                        obj.loader.loadElement(img.path);
+                    });
+                });
+            });
+        };
         Scene.prototype.play = function () {
             var _this = this;
             this.renderArena();
+            var cache_skins = [], tmp = {};
             this.loader.loadElement("./src/images/rip.png");
             this.loader.load(this.collectionPersons);
+            this.loadDragon();
             this.loader.onReady(function () {
+                _this.config_skins.forEach(function (skin) {
+                    tmp.cahce_image = [];
+                    skin.children.forEach(function (elem) {
+                        tmp.name = elem.name;
+                        tmp.src_json = elem.src_json;
+                        elem.src_images.forEach(function (img) {
+                            tmp.cahce_image[img.name] = { node: _this.loader.get(img.path) };
+                        });
+                        cache_skins.push(tmp);
+                    });
+                });
+                console.log(cache_skins);
                 _this.collectionPersons.collection.forEach(function (elem) {
                     var img = _this.loader.get(elem.person.url);
                     var cnvsElem = document.createElement("canvas");
@@ -123,6 +153,15 @@ define(["require", "exports", "../viewScene", "./person_collection"], function (
                         cnvsElem.onclick = _this.contactPersons;
                     }
                     elem.initDomPerson(cnvsElem);
+                    cache_skins.forEach(function (skin) {
+                        if (elem.person.evil && elem.person.class == "fighter") {
+                            console.log("ele11111m", elem);
+                            var dragon = new dragon_1.DragonAnimationUpdate(_this.loader.get(skin.src_json), skin.cahce_image, skin.name);
+                            dragon.show();
+                            dragon.updateCanvas(elem.domPerson);
+                            elem.setAnimation(dragon);
+                        }
+                    });
                     elem.initImage(img);
                     document.getElementById("scene").appendChild(cnvsElem);
                 });

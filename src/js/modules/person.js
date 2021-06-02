@@ -9,6 +9,7 @@ define(["require", "exports"], function (require, exports) {
             this.y = person.y;
             this.moveAction = false;
             this.domPerson = undefined;
+            this.animation = [];
             this.coordPrevPoint = {};
             this.image = undefined;
         }
@@ -17,6 +18,9 @@ define(["require", "exports"], function (require, exports) {
         };
         Person.prototype.getDoomObj = function () {
             return this.domPerson;
+        };
+        Person.prototype.setAnimation = function (animation) {
+            this.animation.push(animation);
         };
         Person.prototype.initImage = function (image) {
             this.image = image;

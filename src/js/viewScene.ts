@@ -76,22 +76,27 @@ export class ViewScene {
     };
     drawImage(ctx, img) {
         let width, height, coef;
+        if (img) {
+            if (img.width > 200) {
+                coef = 150 / parseFloat(img.width);
+                width = img.width * coef;
+                height = img.height * coef;
+            } else {
+                width = img.width;
+                height = img.height;
+            }
 
-        if (img.width > 200) {
-            coef = 150 / parseFloat(img.width);
-            width = img.width * coef;
-            height = img.height * coef;
+            ctx.drawImage(img, 0, 0, width + 150, height);
+            ctx.scale(-1, 1);
+            ctx.restore();
         } else {
-            width = img.width;
-            height = img.height;
+            console.log("fail in load image");
         }
 
-        ctx.drawImage(img, 0, 0, width + 150, height);
-        ctx.scale(-1, 1);
-        ctx.restore();
         return ctx;
     }
     renderDragon(name) {
+        //
         new DragonAnimationUpdate(result.data, element.children, name);
     }
     clearPrev(canvas, loader) {

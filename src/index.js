@@ -3,7 +3,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
     Object.defineProperty(exports, "__esModule", { value: true });
     var ROOT = document.getElementById("root");
     ReactDOM.render(React.createElement("h1", null, "Hellen"), ROOT);
-    var loader = new loader_1.ImageDownloader();
+    var loader = new loader_1.Downloader();
     var arrPersons = [
         {
             url: "./src/images/hola_1.png",
@@ -106,6 +106,26 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             id: 7,
         },
     ];
+    var config_skins = [
+        {
+            class: "evil_fighter",
+            children: [{
+                    src_json: "./src/images/dragon/knight1/knight1.json",
+                    src_images: [
+                        { name: "1_body_", path: "./src/images/dragon/knight1/images/1_body_.png" },
+                        { name: "1_head_", path: "./src/images/dragon/knight1/images/1_head_.png" },
+                        { name: "1_left_arm_", path: "./src/images/dragon/knight1/images/1_left_arm_.png" },
+                        { name: "1_left_lag_", path: "./src/images/dragon/knight1/images/1_left_lag_.png" },
+                        { name: "1_right_arm_", path: "./src/images/dragon/knight1/images/1_right_arm_.png" },
+                        { name: "1_right_lag_", path: "./src/images/dragon/knight1/images/1_right_lag_.png" },
+                        { name: "1_shield_", path: "./src/images/dragon/knight1/images/1_shield_.png" },
+                        { name: "1_spear_", path: "./src/images/dragon/knight1/images/1_spear_.png" }
+                    ],
+                    name: "atacke",
+                    scale: 0.8
+                }]
+        }
+    ];
     var Director = (function () {
         function Director(loader, arrPersons) {
             var _this = this;
@@ -113,7 +133,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
                 _this.ai.step();
             };
             this.ai = new ai_1.Ai([]);
-            this.scene = new scene_1.Scene(loader, arrPersons, this.ai);
+            this.scene = new scene_1.Scene(loader, arrPersons, config_skins, this.ai);
             this.ai.initScene(this.scene);
             this.start();
         }
