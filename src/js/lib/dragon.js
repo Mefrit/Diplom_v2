@@ -15,12 +15,37 @@ define(["require", "exports"], function (require, exports) {
         return ((y2 - y1) / total) * t + y1;
     }
     var DragonAnimationUpdate = (function () {
-        function DragonAnimationUpdate(data, images, name_elem) {
+        function DragonAnimationUpdate(data, images, name_elem, unit) {
+            var _this = this;
+            this.drawHealth = function (ctx, unit) {
+                var img;
+                ctx.moveTo(20, 10);
+                ctx.lineWidth = 65;
+                if (typeof unit != "undefined") {
+                    if (unit.getHealth() <= 10) {
+                        ctx.strokeStyle = "red";
+                        _this.killUnit(_this.unit);
+                        ctx.clearRect(0, 0, 1000, 1000);
+                    }
+                    else {
+                        ctx.strokeStyle = "#2E8B57";
+                    }
+                }
+                else {
+                    _this.killUnit(_this.unit);
+                }
+                ctx.lineTo(unit.getHealth() * 10, 20);
+                ctx.stroke();
+            };
             this.images = images;
             this.playing = false;
             this.data = data;
+            console.log(name_elem);
             this.name_elem = name_elem;
             this.canvas = null;
+            this.unit = unit;
+            this.damage = 10;
+            this.die = false;
         }
         DragonAnimationUpdate.prototype.updateCanvas = function (canvas) {
             this.canvas = canvas;
@@ -34,7 +59,7 @@ define(["require", "exports"], function (require, exports) {
             return false;
         };
         DragonAnimationUpdate.prototype.getBoneState = function (bone) {
-            var st = { x: 0, y: 0, skX: 0 };
+            var st = { x: 0, y: 0, skX: 0, skY: 0 };
             if (bone.transform) {
                 st.x += bone.transform.x || 0;
                 st.y += bone.transform.y || 0;
@@ -114,12 +139,10 @@ define(["require", "exports"], function (require, exports) {
             var fps = this.data.frameRate;
             var frame = 0;
             var timeBegin = Date.now();
-            console.log(this.canvas);
             if (this.canvas == null) {
                 this.canvas = document.getElementById("canvas_" + this.name_elem);
             }
             else {
-                console.log(this.canvas);
             }
             var playFrames = function () {
                 if (!_this.playing) {
@@ -152,6 +175,24 @@ define(["require", "exports"], function (require, exports) {
             };
             requestAnimationFrame(playFrames);
         };
+        DragonAnimationUpdate.prototype.killUnit = function (unit) {
+            if (!this.die) {
+                this.die = true;
+                this.playing = false;
+                if (unit.person.evil && unit.person.class == "fighter") {
+                    unit.playAnimation("die_fighter");
+                    setTimeout(function () {
+                        unit.stopAnimation("die_fighter");
+                    }, 810);
+                }
+                if (!unit.person.evil && unit.person.class == "archer") {
+                    unit.playAnimation("elf_archer_die");
+                    setTimeout(function () {
+                        unit.stopAnimation("elf_archer_die");
+                    }, 810);
+                }
+            }
+        };
         DragonAnimationUpdate.prototype.showSkin = function (slot) {
             var _this = this;
             slot = slot.reverse();
@@ -164,8 +205,8 @@ define(["require", "exports"], function (require, exports) {
                 });
             });
             if (this.canvas != null) {
-                this.canvas.width = 1200;
-                this.canvas.height = 800;
+                this.canvas.width = 1250;
+                this.canvas.height = 1300;
                 ctx = this.canvas.getContext("2d");
                 arrCanvas.sort(function (elem1, elem2) {
                     if (elem1.pos.z > elem2.pos.z) {
@@ -176,16 +217,12 @@ define(["require", "exports"], function (require, exports) {
                     }
                 });
                 ctx.clearRect(0, 0, 2000, 1000);
+                this.drawHealth(ctx, this.unit);
                 arrCanvas.forEach(function (elem) {
                     ctx.save();
-                    ctx.translate(elem.pos.x + 400, elem.pos.y + 400);
+                    ctx.translate(elem.pos.x + 590, elem.pos.y + 820);
                     ctx.rotate((elem.pos.skX * Math.PI) / 180);
-                    if (elem.optimize == "sprite_manager") {
-                        ctx.drawImage(elem.img, elem.config_elem.x, elem.config_elem.y, elem.config_elem.width, elem.config_elem.height, -elem.config_elem.width / 2, -elem.config_elem.height / 2, elem.config_elem.width, elem.config_elem.height);
-                    }
-                    else {
-                        ctx.drawImage(elem.img, -elem.img.width / 2, -elem.img.height / 2);
-                    }
+                    ctx.drawImage(elem.img, -elem.img.width / 2, -elem.img.height / 2);
                     ctx.restore();
                 });
             }

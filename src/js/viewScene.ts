@@ -28,7 +28,7 @@ export class ViewScene {
         ctx = cnvsElem.getContext("2d");
 
         this.drawImage(ctx, img);
-        this.drawHealth(ctx, elem);
+        this.changeHealth(ctx, elem);
         return cnvsElem;
     };
     renderElement = (element) => {
@@ -37,7 +37,7 @@ export class ViewScene {
         // element.style.left = pos_dif_x + "px";
         // element.style.top = pos_dif_y + "px";
     };
-    drawHealth = (ctx, elem, damage = 0) => {
+    changeHealth = (ctx, elem, damage = 0) => {
         let obj, img;
         this.arrObjPersons.getCollection().forEach((elemCollection) => {
             if (elemCollection.getId() == elem.person.id) {
@@ -45,24 +45,24 @@ export class ViewScene {
             }
         });
 
-        ctx.moveTo(20, 20);
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = "green";
+        // ctx.moveTo(20, 20);
+        // ctx.lineWidth = 5;
+        // ctx.strokeStyle = "green";
+        // console.log("changeHealth", obj.getHealth(), damage);
         if (damage != 0) {
-            // console.log(obj.getHealth(), obj.domPerson);
-            if (obj.getHealth() >= 10) {
-                obj.setHealth(obj.getHealth() - damage);
-            } else {
-                ctx.strokeStyle = "red";
-                // docume   nt.getelement
-
-                ctx.clearRect(0, 0, 1000, 1000);
-                img = this.loader.get("./src/images/rip.png");
-
-                this.renderPlayer(obj.getDoomObj(), obj, img);
+            if (typeof obj != "undefined") {
+                if (obj.getHealth() >= 10) {
+                    obj.setHealth(obj.getHealth() - damage);
+                } else {
+                    // ctx.strokeStyle = "red";
+                    // // docume   nt.getelement
+                    // ctx.clearRect(0, 0, 1000, 1000);
+                    // img = this.loader.get("./src/images/rip.png");
+                    // this.renderPlayer(obj.getDoomObj(), obj, img);
+                }
             }
-            ctx.lineTo(obj.getHealth() * 3, 20);
-            ctx.stroke();
+            // ctx.lineTo(obj.getHealth() * 3, 20);
+            // ctx.stroke();
         }
     };
     contactPersonsView = (canvas, img, damage = 5) => {
@@ -72,7 +72,8 @@ export class ViewScene {
         ctx.clearRect(0, 0, 1000, 1000);
         this.drawImage(ctx, img);
         id = { id: canvas.getAttribute("data-id") };
-        this.drawHealth(ctx, { person: id }, damage);
+
+        this.changeHealth(ctx, { person: id }, damage);
     };
     drawImage(ctx, img) {
         let width, height, coef;
@@ -117,7 +118,7 @@ export class ViewScene {
         img = loader.get(canvas.getAttribute("data-image"));
         this.drawImage(ctx, img);
         id = { id: canvas.getAttribute("data-id") };
-        this.drawHealth(ctx, { person: id });
+        this.changeHealth(ctx, { person: id });
     }
     showAvailabeMovies(canvas) {
         let posX = canvas.style.left.split("px")[0],

@@ -1,0 +1,106 @@
+{
+    "imagePath": "evil_archer_default_tex.png",
+    "width": 2048,
+    "height": 1024,
+    "name": "evil_archer_default",
+    "SubTexture": [
+        {
+            "width": 205,
+            "y": 240,
+            "height": 237,
+            "name": "3_right_leg",
+            "x": 524
+        },
+        {
+            "frameWidth": 366,
+            "y": 499,
+            "frameX": 0,
+            "frameHeight": 470,
+            "frameY": -1,
+            "width": 366,
+            "height": 468,
+            "name": "quiver",
+            "x": 1
+        },
+        {
+            "frameWidth": 206,
+            "y": 1,
+            "frameX": 0,
+            "frameHeight": 237,
+            "frameY": 0,
+            "width": 205,
+            "height": 237,
+            "name": "3_left_leg",
+            "x": 524
+        },
+        {
+            "frameWidth": 280,
+            "y": 750,
+            "frameX": -1,
+            "frameHeight": 248,
+            "frameY": 0,
+            "width": 279,
+            "height": 248,
+            "name": "3_left_arm",
+            "x": 735
+        },
+        {
+            "width": 364,
+            "y": 499,
+            "height": 423,
+            "name": "3_body",
+            "x": 369
+        },
+        {
+            "frameWidth": 521,
+            "y": 1,
+            "frameX": 0,
+            "frameHeight": 497,
+            "frameY": 0,
+            "width": 521,
+            "height": 496,
+            "name": "3_head",
+            "x": 1
+        },
+        {
+            "width": 247,
+            "y": 1,
+            "height": 570,
+            "name": "bow_2",
+            "x": 735
+        },
+        {
+            "frameWidth": 395,
+            "y": 573,
+            "frameX": 0,
+            "frameHeight": 176,
+            "frameY": 0,
+            "width": 395,
+            "height": 175,
+            "name": "aкrow",
+            "x": 735
+        },
+        {
+            "frameWidth": 167,
+            "y": 750,
+            "frameX": 0,
+            "frameHeight": 187,
+            "frameY": 0,
+            "width": 167,
+            "height": 186,
+            "name": "3_right_arm_2",
+            "x": 1199
+        },
+        {
+            "frameWidth": 182,
+            "y": 750,
+            "frameX": 0,
+            "frameHeight": 207,
+            "frameY": 0,
+            "width": 181,
+            "height": 207,
+            "name": "3_right_arm_1",
+            "x": 1016
+        }
+    ]
+}

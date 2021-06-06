@@ -36,7 +36,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
                 res = _this.moveCarefully(_this.unit, nearEnemie, "fighter", cache);
                 if (res.findEnime == true) {
-                    attakedEnemie = _this.findEnemieForAtake(res.enemie);
                     _this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, _this.unit.person.damage);
                     checkArcherPosition = _this.checkArcherPosition(res.enemie);
                     if (checkArcherPosition.result && !_this.unit.moveAction) {
@@ -51,7 +50,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         FightIfYouCan.prototype.atackeChosenUnit = function (cache_unit, enemie) {
             var _this = this;
             return new Promise(function (resolve, reject) {
-                var coord, res, attakedEnemie, checkArcherPosition = { result: false, point: {} }, archers = _this.unit_collection.getAiArchers();
+                var coord, res, animation, attakedEnemie, checkArcherPosition = { result: false, point: {} }, archers = _this.unit_collection.getAiArchers();
                 coord = { x: enemie.person.x, y: enemie.person.y };
                 if (_this.checkArchersPosition()) {
                     checkArcherPosition = _this.checkArcherPosition(enemie);
@@ -62,20 +61,34 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     _this.getDistanceBetweenUnits(_this.unit, enemie) < 4) {
                     _this.moveTo(_this.unit, checkArcherPosition.point);
                     if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1) {
+                        console.log("this.unit1", _this.unit);
+                        _this.unit.stopAnimation("default_fighter");
+                        _this.unit.playAnimation("atacke_fighter");
+                        console.log("animation111111", _this.unit.getAnimation("atacke"));
+                        setTimeout(function () {
+                            _this.unit.stopAnimation("atacke_fighter");
+                            _this.unit.playAnimation("default_fighter");
+                        }, 750);
                         _this.view.contactPersonsView(enemie.domPerson, enemie.image, _this.unit.person.damage);
                     }
                 }
                 else {
                     res = _this.moveCarefully(_this.unit, enemie, "fighter", cache_unit);
                     if (res.findEnime == true) {
-                        attakedEnemie = res.enemie;
+                        console.log("this.unit2", _this.unit);
+                        _this.unit.stopAnimation("default_fighter");
+                        _this.unit.playAnimation("atacke_fighter");
+                        setTimeout(function () {
+                            _this.unit.stopAnimation("atacke_fighter");
+                            _this.unit.playAnimation("default_fighter");
+                        }, 750);
                         _this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, _this.unit.person.damage);
                     }
                 }
                 _this.unit.setMoveAction(false);
                 setTimeout(function () {
                     resolve("Promise3");
-                }, 120);
+                }, 500);
             });
         };
         FightIfYouCan.prototype.findEnemieForAtake = function (enemie) {

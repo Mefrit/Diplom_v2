@@ -23,14 +23,14 @@ define(["require", "exports", "./lib/dragon"], function (require, exports, drago
                 cnvsElem.style.height = 130 + "px";
                 ctx = cnvsElem.getContext("2d");
                 _this.drawImage(ctx, img);
-                _this.drawHealth(ctx, elem);
+                _this.changeHealth(ctx, elem);
                 return cnvsElem;
             };
             this.renderElement = function (element) {
                 element.domPerson.style.left = element.getX() * 120 + "px";
                 element.domPerson.style.top = element.getY() * 120 + "px";
             };
-            this.drawHealth = function (ctx, elem, damage) {
+            this.changeHealth = function (ctx, elem, damage) {
                 if (damage === void 0) { damage = 0; }
                 var obj, img;
                 _this.arrObjPersons.getCollection().forEach(function (elemCollection) {
@@ -38,21 +38,14 @@ define(["require", "exports", "./lib/dragon"], function (require, exports, drago
                         obj = elemCollection;
                     }
                 });
-                ctx.moveTo(20, 20);
-                ctx.lineWidth = 5;
-                ctx.strokeStyle = "green";
                 if (damage != 0) {
-                    if (obj.getHealth() >= 10) {
-                        obj.setHealth(obj.getHealth() - damage);
+                    if (typeof obj != "undefined") {
+                        if (obj.getHealth() >= 10) {
+                            obj.setHealth(obj.getHealth() - damage);
+                        }
+                        else {
+                        }
                     }
-                    else {
-                        ctx.strokeStyle = "red";
-                        ctx.clearRect(0, 0, 1000, 1000);
-                        img = _this.loader.get("./src/images/rip.png");
-                        _this.renderPlayer(obj.getDoomObj(), obj, img);
-                    }
-                    ctx.lineTo(obj.getHealth() * 3, 20);
-                    ctx.stroke();
                 }
             };
             this.contactPersonsView = function (canvas, img, damage) {
@@ -62,7 +55,7 @@ define(["require", "exports", "./lib/dragon"], function (require, exports, drago
                 ctx.clearRect(0, 0, 1000, 1000);
                 _this.drawImage(ctx, img);
                 id = { id: canvas.getAttribute("data-id") };
-                _this.drawHealth(ctx, { person: id }, damage);
+                _this.changeHealth(ctx, { person: id }, damage);
             };
             this.arrObjPersons = arrObjPlayers;
             this.loader = loader;
@@ -104,7 +97,7 @@ define(["require", "exports", "./lib/dragon"], function (require, exports, drago
             img = loader.get(canvas.getAttribute("data-image"));
             this.drawImage(ctx, img);
             id = { id: canvas.getAttribute("data-id") };
-            this.drawHealth(ctx, { person: id });
+            this.changeHealth(ctx, { person: id });
         };
         ViewScene.prototype.showAvailabeMovies = function (canvas) {
             var posX = canvas.style.left.split("px")[0], posY = canvas.style.top.split("px")[0], arrBlocks = document.getElementsByClassName("sence__block"), radius, posXblock, posYblock;

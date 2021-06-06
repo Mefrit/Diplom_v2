@@ -12,15 +12,30 @@ define(["require", "exports"], function (require, exports) {
             this.animation = [];
             this.coordPrevPoint = {};
             this.image = undefined;
+            this.interval_animation;
         }
         Person.prototype.initDomPerson = function (domPerson) {
             this.domPerson = domPerson;
         };
+        Person.prototype.randomInteger = function (min, max) {
+            var rand = min - 0.5 + Math.random() * (max - min + 1);
+            return Math.round(rand);
+        };
         Person.prototype.getDoomObj = function () {
             return this.domPerson;
         };
-        Person.prototype.setAnimation = function (animation) {
-            this.animation.push(animation);
+        Person.prototype.setAnimation = function (name, animation) {
+            this.animation[name] = animation;
+        };
+        Person.prototype.getAnimation = function (name) {
+            return this.animation[name];
+        };
+        Person.prototype.playAnimation = function (name) {
+            console.log(name);
+            this.animation[name].play();
+        };
+        Person.prototype.stopAnimation = function (name) {
+            this.animation[name].stop();
         };
         Person.prototype.initImage = function (image) {
             this.image = image;

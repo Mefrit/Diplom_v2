@@ -106,7 +106,7 @@ export class Scene {
             block,
             posX = 0,
             posY = 0;
-        for (let j = 0; j < 8; j++) {
+        for (let j = 0; j < 7; j++) {
             for (let i = 0; i < 12; i++) {
                 block = document.createElement("img");
                 block.addEventListener("mouseout", this.onOutBlock);
@@ -126,14 +126,14 @@ export class Scene {
         let obj = this,
             image_domcache = [];
         this.config_skins.forEach((skin) => {
-            console.log(skin);
             image_domcache = [];
             skin.children.forEach((elem) => {
                 this.loader.loadJSON(elem.src_json);
 
                 elem.src_images.forEach((img) => {
-                    // console.log(img.path);
-                    obj.loader.loadElement(img.path);
+                    if (typeof obj.loader.get(img.path) == "undefined") {
+                        obj.loader.loadElement(img.path);
+                    }
                 });
             });
         });
@@ -145,23 +145,24 @@ export class Scene {
         this.loader.loadElement("./src/images/rip.png");
         this.loader.load(this.collectionPersons);
         this.loadDragon();
+
         this.loader.onReady(() => {
             this.config_skins.forEach((skin) => {
-                tmp.cahce_image = [];
                 skin.children.forEach((elem) => {
                     // this.loader.loadJSON(elem.src_json);
+
+                    tmp.cahce_image = [];
                     tmp.name = elem.name;
                     tmp.src_json = elem.src_json;
+                    tmp.class = elem.class;
                     elem.src_images.forEach((img) => {
-                        // console.log(img.name, this.loader.get(img.path));
                         tmp.cahce_image[img.name] = { node: this.loader.get(img.path) };
                     });
-                    // // console.log(this.loader.get(elem.src_json));
+
                     cache_skins.push(tmp);
+                    tmp = {};
                 });
             });
-
-            console.log(cache_skins);
 
             this.collectionPersons.collection.forEach((elem: any) => {
                 let img = this.loader.get(elem.person.url);
@@ -176,17 +177,81 @@ export class Scene {
                 elem.initDomPerson(cnvsElem);
                 // когда будем делать графику будет сложнее, тк от этого аподхода придется избавиться
                 cache_skins.forEach((skin) => {
-                    if (elem.person.evil && elem.person.class == "fighter") {
-                        console.log("ele11111m", elem);
-                        var dragon = new DragonAnimationUpdate(
-                            this.loader.get(skin.src_json),
-                            skin.cahce_image,
-                            skin.name
-                        );
-                        dragon.show();
-                        dragon.updateCanvas(elem.domPerson);
-                        // dragon.play();
-                        elem.setAnimation(dragon);
+                    // if (elem.person.evil) {
+                    //     console.log("ele11111m", skin, elem);
+                    //     var dragon = new DragonAnimationUpdate(
+                    //         this.loader.get(skin.src_json),
+                    //         skin.cahce_image,
+                    //         skin.name,
+                    // elem.person.id
+                    //     );
+                    //     if (skin.class == "evil_fighter" && elem.person.class == "fighter") {
+                    //         dragon.show();
+                    //         dragon.updateCanvas(elem.domPerson);
+                    //         if (skin.name == "default_fighter" && elem.person.class == "fighter") {
+                    //             dragon.play();
+                    //         }
+                    //         elem.setAnimation(skin.name, dragon);
+                    //     }
+                    // }
+                    if (elem.person.evil) {
+                        if (skin.class == "evil_fighter" && elem.person.class == "fighter") {
+                            var dragon = new DragonAnimationUpdate(
+                                this.loader.get(skin.src_json),
+                                skin.cahce_image,
+                                skin.name,
+                                elem
+                            );
+                            dragon.updateCanvas(elem.domPerson);
+                            if (skin.name == "default_fighter") {
+                                dragon.play();
+                            }
+                            elem.setAnimation(skin.name, dragon);
+                        }
+                        if (skin.class == "evil_archer" && elem.person.class == "archer") {
+                            // console.log("ele11111m", skin, elem);
+                            // console.log("skin.cahce_image", skin.cahce_image);
+                            var dragon = new DragonAnimationUpdate(
+                                this.loader.get(skin.src_json),
+                                skin.cahce_image,
+                                skin.name,
+                                elem
+                            );
+                            dragon.updateCanvas(elem.domPerson);
+                            if (skin.name == "default_archer") {
+                                dragon.play();
+                            }
+                            elem.setAnimation(skin.name, dragon);
+                        }
+                    } else {
+                        if (skin.class == "elf_fighter" && elem.person.class == "fighter") {
+                            var dragon = new DragonAnimationUpdate(
+                                this.loader.get(skin.src_json),
+                                skin.cahce_image,
+                                skin.name,
+                                elem
+                            );
+                            dragon.updateCanvas(elem.domPerson);
+                            if (skin.name == "elf_fighter_default") {
+                                dragon.play();
+                            }
+                            elem.setAnimation(skin.name, dragon);
+                        }
+                        if (skin.class == "elf_archer" && elem.person.class == "archer") {
+                            console.log("ele11111m", skin, elem);
+                            console.log("skin.cahce_image", skin.cahce_image);
+                            var dragon = new DragonAnimationUpdate(
+                                this.loader.get(skin.src_json),
+                                skin.cahce_image,
+                                skin.name,
+                                elem
+                            );
+                            dragon.updateCanvas(elem.domPerson);
+                            if (skin.name == "elf_archer_default") {
+                                dragon.play();
+                            }
+                            elem.setAnimation(skin.name, dragon);
+                        }
                     }
                     // var dragon = new DragonAnimationUpdate(result.data, element.children, obj.name);
                     // dragon.show();

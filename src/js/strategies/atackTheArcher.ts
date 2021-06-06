@@ -39,6 +39,14 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     }
 
     atakeArcher(enemie) {
+        this.unit.stopAnimation("default_archer");
+        this.unit.playAnimation("atacke_archer");
+
+        // animation.stop();
+        setTimeout(() => {
+            this.unit.stopAnimation("atacke_archer");
+            this.unit.playAnimation("default_archer");
+        }, 800);
         this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
     }
     tryAtakeArcher(resCheck, enemie) {

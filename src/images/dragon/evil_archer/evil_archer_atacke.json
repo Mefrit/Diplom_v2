@@ -1,0 +1,687 @@
+{
+    "frameRate": 24,
+    "isGlobal": 0,
+    "armature": [
+        {
+            "defaultActions": [
+                {
+                    "gotoAndPlay": "animtion0"
+                }
+            ],
+            "type": "Armature",
+            "name": "Armature",
+            "aabb": {
+                "width": 707.472377106162,
+                "y": -570.7025286139506,
+                "height": 904.0728694622735,
+                "x": -345.67507003839364
+            },
+            "skin": [
+                {
+                    "name": "",
+                    "slot": [
+                        {
+                            "display": [
+                                {
+                                    "path": "bow_2",
+                                    "type": "image",
+                                    "name": "bow_2",
+                                    "transform": {
+                                        "skY": -89.2101,
+                                        "y": 61.8309,
+                                        "skX": -89.2101,
+                                        "x": -23.4931
+                                    }
+                                }
+                            ],
+                            "name": "bow_2"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "3_head",
+                                    "type": "image",
+                                    "name": "3_head",
+                                    "transform": {
+                                        "y": -322.2025,
+                                        "x": 9.5527
+                                    }
+                                }
+                            ],
+                            "name": "3_head"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "3_right_leg",
+                                    "type": "image",
+                                    "name": "3_right_leg",
+                                    "transform": {
+                                        "y": 214.8304,
+                                        "x": 88.5547
+                                    }
+                                }
+                            ],
+                            "name": "3_right_leg"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "3_body",
+                                    "type": "image",
+                                    "name": "3_body",
+                                    "transform": {
+                                        "skY": -0.9556,
+                                        "y": 91.6724,
+                                        "skX": -0.9556,
+                                        "x": -9.5725
+                                    }
+                                }
+                            ],
+                            "name": "3_body"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "3_left_arm",
+                                    "type": "image",
+                                    "name": "3_left_arm",
+                                    "transform": {
+                                        "skY": -40.801,
+                                        "y": -6.929,
+                                        "skX": -40.801,
+                                        "x": 108.291
+                                    }
+                                }
+                            ],
+                            "name": "3_left_arm"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "quiver",
+                                    "type": "image",
+                                    "name": "quiver",
+                                    "transform": {
+                                        "y": -120.6572,
+                                        "x": -162.6751
+                                    }
+                                }
+                            ],
+                            "name": "quiver"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "3_left_leg",
+                                    "type": "image",
+                                    "name": "3_left_leg",
+                                    "transform": {
+                                        "y": 214.8703,
+                                        "x": -27.2738
+                                    }
+                                }
+                            ],
+                            "name": "3_left_leg"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "aкrow",
+                                    "type": "image",
+                                    "name": "aкrow",
+                                    "transform": {
+                                        "skY": 21.9201,
+                                        "y": 7.9998,
+                                        "skX": 21.9201,
+                                        "x": 171.6303
+                                    }
+                                }
+                            ],
+                            "name": "aкrow"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "3_right_arm_2",
+                                    "type": "image",
+                                    "name": "3_right_arm_2",
+                                    "transform": {
+                                        "skY": -49.1948,
+                                        "y": -4.2053,
+                                        "skX": -49.1948,
+                                        "x": 108.2934
+                                    }
+                                }
+                            ],
+                            "name": "3_right_arm_2"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "3_right_arm_1",
+                                    "type": "image",
+                                    "name": "3_right_arm_1",
+                                    "transform": {
+                                        "skY": -128.3638,
+                                        "y": 10.2513,
+                                        "skX": -128.3638,
+                                        "x": 67.3894
+                                    }
+                                }
+                            ],
+                            "name": "3_right_arm_1"
+                        }
+                    ]
+                }
+            ],
+            "ik": [],
+            "animation": [
+                {
+                    "ffd": [],
+                    "frame": [],
+                    "ik": [],
+                    "bone": [
+                        {
+                            "frame": [
+                                {
+                                    "duration": 20,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "root"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 20,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "3_body"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 20,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "3_body1"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 4,
+                                    "transform": {},
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": -13.2588,
+                                        "skX": -13.2588
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 3,
+                                    "transform": {
+                                        "skY": -51.1118,
+                                        "skX": -51.1118
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 5,
+                                    "transform": {
+                                        "skY": -9.5802,
+                                        "skX": -9.5802
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": -9.5802,
+                                        "skX": -9.5802
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": -2.5921,
+                                        "skX": -2.5921
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "3_right_arm_1"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 2,
+                                    "transform": {},
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 4,
+                                    "transform": {
+                                        "skY": -24.9999,
+                                        "skX": -24.9999
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": -21.7285,
+                                        "skX": -21.7285
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 8,
+                                    "transform": {
+                                        "skY": -34.9838,
+                                        "skX": -34.9838
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 3,
+                                    "transform": {
+                                        "skY": -34.9838,
+                                        "skX": -34.9838
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "3_right_arm_2"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 2,
+                                    "transform": {},
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 3,
+                                    "transform": {
+                                        "skY": 40.2827,
+                                        "skX": 40.2827
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 63.9807,
+                                        "skX": 63.9807
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 116.2249,
+                                        "skX": 116.2249
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 107.0933,
+                                        "skX": 107.0933
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 97.2281,
+                                        "skX": 97.2281
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 78.9465,
+                                        "skX": 78.9465
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 77.8601,
+                                        "skX": 77.8601
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 77.2527,
+                                        "skX": 77.2527
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 77.6466,
+                                        "skX": 77.6466
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 77.2868,
+                                        "skX": 77.2868
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 75.1621,
+                                        "skX": 75.1621
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 1,
+                                    "transform": {
+                                        "skY": 71.8317,
+                                        "skX": 71.8317
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": 61.124,
+                                        "skX": 61.124
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": 23.7685,
+                                        "skX": 23.7685
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 0,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "aкrow"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 20,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "3_body2"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 4,
+                                    "transform": {},
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": -15.119,
+                                        "skX": -15.119
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 9,
+                                    "transform": {
+                                        "skY": -28.8839,
+                                        "skX": -28.8839
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 3,
+                                    "transform": {
+                                        "skY": -28.8839,
+                                        "skX": -28.8839
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "3_left_arm"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "duration": 4,
+                                    "transform": {},
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {
+                                        "skY": 14.2138,
+                                        "skX": 14.2138
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 9,
+                                    "transform": {
+                                        "skY": 27.2735,
+                                        "skX": 27.2735
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 3,
+                                    "transform": {
+                                        "skY": 27.2735,
+                                        "skX": 27.2735
+                                    },
+                                    "tweenEasing": 0
+                                },
+                                {
+                                    "duration": 2,
+                                    "transform": {}
+                                }
+                            ],
+                            "name": "bow_2"
+                        }
+                    ],
+                    "duration": 20,
+                    "playTimes": 0,
+                    "name": "animtion0",
+                    "slot": []
+                }
+            ],
+            "bone": [
+                {
+                    "name": "root",
+                    "transform": {}
+                },
+                {
+                    "length": 275,
+                    "transform": {
+                        "skY": -97.4453,
+                        "y": 149,
+                        "skX": -97.4453,
+                        "x": 31.45
+                    },
+                    "parent": "root",
+                    "name": "3_body"
+                },
+                {
+                    "length": 67,
+                    "transform": {
+                        "skY": -91.4418,
+                        "y": -2.8986,
+                        "skX": -91.4418,
+                        "x": 269.1448
+                    },
+                    "parent": "3_body",
+                    "name": "3_body1"
+                },
+                {
+                    "length": 128,
+                    "transform": {
+                        "skY": -42.749,
+                        "skX": -42.749,
+                        "x": 67.966
+                    },
+                    "parent": "3_body1",
+                    "name": "3_right_arm_1"
+                },
+                {
+                    "length": 125,
+                    "transform": {
+                        "skY": -170.1572,
+                        "y": -11.6717,
+                        "skX": -170.1572,
+                        "x": -6.677
+                    },
+                    "parent": "3_body1",
+                    "name": "3_body2"
+                },
+                {
+                    "length": 172,
+                    "transform": {
+                        "skY": -83.3638,
+                        "y": -1.9898,
+                        "skX": -83.3638,
+                        "x": 124.2404
+                    },
+                    "parent": "3_right_arm_1",
+                    "name": "3_right_arm_2"
+                },
+                {
+                    "length": 202,
+                    "transform": {
+                        "skY": 39.8454,
+                        "skX": 39.8454,
+                        "x": 125.9175
+                    },
+                    "parent": "3_body2",
+                    "name": "3_left_arm"
+                },
+                {
+                    "length": 322,
+                    "transform": {
+                        "skY": -94.4766,
+                        "skX": -94.4766,
+                        "x": 172.1098
+                    },
+                    "parent": "3_right_arm_2",
+                    "name": "aкrow"
+                },
+                {
+                    "length": 130,
+                    "transform": {
+                        "skY": 48.4091,
+                        "y": -12.9873,
+                        "skX": 48.4091,
+                        "x": 216.5962
+                    },
+                    "parent": "3_left_arm",
+                    "name": "bow_2"
+                }
+            ],
+            "frameRate": 24,
+            "slot": [
+                {
+                    "color": {},
+                    "name": "3_right_leg",
+                    "parent": "root"
+                },
+                {
+                    "z": 1,
+                    "color": {},
+                    "name": "quiver",
+                    "parent": "root"
+                },
+                {
+                    "z": 2,
+                    "color": {},
+                    "name": "3_left_leg",
+                    "parent": "root"
+                },
+                {
+                    "z": 3,
+                    "color": {},
+                    "name": "3_left_arm",
+                    "parent": "3_left_arm"
+                },
+                {
+                    "z": 4,
+                    "color": {},
+                    "name": "3_body",
+                    "parent": "3_body2"
+                },
+                {
+                    "z": 5,
+                    "color": {},
+                    "name": "3_head",
+                    "parent": "root"
+                },
+                {
+                    "z": 6,
+                    "color": {},
+                    "name": "bow_2",
+                    "parent": "bow_2"
+                },
+                {
+                    "z": 7,
+                    "color": {},
+                    "name": "aкrow",
+                    "parent": "aкrow"
+                },
+                {
+                    "z": 8,
+                    "color": {},
+                    "name": "3_right_arm_2",
+                    "parent": "3_right_arm_2"
+                },
+                {
+                    "z": 9,
+                    "color": {},
+                    "name": "3_right_arm_1",
+                    "parent": "3_right_arm_1"
+                }
+            ]
+        }
+    ],
+    "name": "evil_archer_atacke",
+    "version": "5.0"
+}

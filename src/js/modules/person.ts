@@ -7,7 +7,7 @@ export class Person {
     x: any;
     y: any;
     coordPrevPoint: any; // координаты предыдущей точки
-
+    interval_animation: any;
     animation: any[];
     domPerson: any;
     image: any; // картинка персонажа
@@ -20,15 +20,37 @@ export class Person {
         this.animation = [];
         this.coordPrevPoint = {};
         this.image = undefined;
+        this.interval_animation;
     }
     initDomPerson(domPerson) {
         this.domPerson = domPerson;
     }
+    randomInteger(min, max) {
+        // получить случайное число от (min-0.5) до (max+0.5)
+        let rand = min - 0.5 + Math.random() * (max - min + 1);
+        return Math.round(rand);
+    }
     getDoomObj() {
         return this.domPerson;
     }
-    setAnimation(animation) {
-        this.animation.push(animation);
+    setAnimation(name, animation) {
+        this.animation[name] = animation;
+    }
+    getAnimation(name) {
+        return this.animation[name];
+    }
+    playAnimation(name) {
+        console.log(name);
+        this.animation[name].play();
+        // this.interval_animation = setTimeout(() => {
+        //     this.animation[name].stop();
+        //     setTimeout(() => {
+        //         this.playAnimation(name);
+        //     }, this.randomInteger(2, 4) * 1000);
+        // }, this.randomInteger(2, 4) * 1000);
+    }
+    stopAnimation(name) {
+        this.animation[name].stop();
     }
     initImage(image) {
         this.image = image;

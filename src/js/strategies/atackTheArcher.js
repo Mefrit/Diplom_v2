@@ -45,6 +45,13 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             return { total: result, cache: cache_assessment };
         };
         AtackTheArcher.prototype.atakeArcher = function (enemie) {
+            var _this = this;
+            this.unit.stopAnimation("default_archer");
+            this.unit.playAnimation("atacke_archer");
+            setTimeout(function () {
+                _this.unit.stopAnimation("atacke_archer");
+                _this.unit.playAnimation("default_archer");
+            }, 800);
             this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
         };
         AtackTheArcher.prototype.tryAtakeArcher = function (resCheck, enemie) {

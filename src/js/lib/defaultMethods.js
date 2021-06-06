@@ -199,7 +199,7 @@ define(["require", "exports"], function (require, exports) {
             if (cahceCoord === void 0) { cahceCoord = []; }
             return cahceCoord.filter(function (elem) {
                 if (elem.x >= 0 && elem.x < 12) {
-                    if (elem.y >= 0 && elem.y < 8) {
+                    if (elem.y >= 0 && elem.y < 7) {
                         if (_this.unit.x == elem.x && _this.unit.y == elem.y) {
                             return elem;
                         }

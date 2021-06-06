@@ -144,7 +144,7 @@ export class DefaultMethodsStrategy {
     deleteExcessCoord(cahceCoord = []) {
         return cahceCoord.filter((elem) => {
             if (elem.x >= 0 && elem.x < 12) {
-                if (elem.y >= 0 && elem.y < 8) {
+                if (elem.y >= 0 && elem.y < 7) {
                     if (this.unit.x == elem.x && this.unit.y == elem.y) {
                         return elem;
                     }

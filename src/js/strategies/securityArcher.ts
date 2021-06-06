@@ -47,7 +47,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                     pos_security.y = near_archer.y;
                 } else {
                     // что бы они не были все в нижней части
-                    if (this.unit.y + 1 < 8 && this.randomInteger(-2, 1) > 0) {
+                    if (this.unit.y + 1 < 7 && this.randomInteger(-2, 1) > 0) {
                         if (this.unit.y > pos_security.y) {
                             pos_security.y = near_archer.y + 1;
                         }

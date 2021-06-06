@@ -16,12 +16,25 @@ function lerp(y1, y2, total, t) {
 
 export class DragonAnimationUpdate {
     data: any; // json из dragon, images
-    constructor(data, images, name_elem) {
+    images: any[];
+    playing: boolean;
+    canvas: any;
+    name_elem: string;
+    unit: any;
+    id_unit: number;
+    unit_collection: any;
+    damage: number;
+    die: boolean;
+    constructor(data, images, name_elem, unit) {
         this.images = images;
         this.playing = false;
         this.data = data;
+        console.log(name_elem);
         this.name_elem = name_elem;
         this.canvas = null;
+        this.unit = unit;
+        this.damage = 10;
+        this.die = false;
     }
     updateCanvas(canvas) {
         this.canvas = canvas;
@@ -36,7 +49,7 @@ export class DragonAnimationUpdate {
     }
 
     getBoneState(bone) {
-        var st = { x: 0, y: 0, skX: 0 };
+        var st: any = { x: 0, y: 0, skX: 0, skY: 0 };
         if (bone.transform) {
             st.x += bone.transform.x || 0;
             st.y += bone.transform.y || 0;
@@ -135,11 +148,10 @@ export class DragonAnimationUpdate {
         var frame = 0;
 
         var timeBegin = Date.now();
-        console.log(this.canvas);
+
         if (this.canvas == null) {
             this.canvas = document.getElementById("canvas_" + this.name_elem);
         } else {
-            console.log(this.canvas);
         }
 
         var playFrames = () => {
@@ -158,7 +170,7 @@ export class DragonAnimationUpdate {
                 var boneObject = this.getObject(name, boneList);
                 var frames = bone.frame;
 
-                var [index, sum] = this.getFrameIndex(frames, frame);
+                var [index, sum]: any = this.getFrameIndex(frames, frame);
 
                 var stateBegin = frames[index].transform;
                 if (index + 1 < frames.length) {
@@ -182,32 +194,106 @@ export class DragonAnimationUpdate {
         };
         requestAnimationFrame(playFrames);
     }
+    killUnit(unit) {
+        if (!this.die) {
+            this.die = true;
+            this.playing = false;
+            if (unit.person.evil && unit.person.class == "fighter") {
+                // unit.stopAnimation(this.name_elem);
+                unit.playAnimation("die_fighter");
+
+                // console.log("animation111111", this.unit.getAnimation("atacke"));
+                // animation.stop();
+                setTimeout(() => {
+                    unit.stopAnimation("die_fighter");
+                }, 810);
+            }
+            if (!unit.person.evil && unit.person.class == "archer") {
+                // unit.stopAnimation(this.name_elem);
+                unit.playAnimation("elf_archer_die");
+
+                // console.log("animation111111", this.unit.getAnimation("atacke"));
+                // animation.stop();
+                setTimeout(() => {
+                    unit.stopAnimation("elf_archer_die");
+                }, 810);
+            }
+        }
+        // console.log(unit);
+    }
+    drawHealth = (ctx, unit) => {
+        let img;
+
+        // console.log("unit", unit, unit.getHealth());
+        ctx.moveTo(20, 10);
+        // ctx.translate(590, 820);
+        ctx.lineWidth = 65;
+
+        // console.log(unit.getHealth(), typeof unit != "undefined");
+        if (typeof unit != "undefined") {
+            // console.log(unit.getHealth());
+            if (unit.getHealth() <= 10) {
+                // unit.setHealth(unit.getHealth());
+
+                ctx.strokeStyle = "red";
+                // docume   nt.getelement
+                // if (this.unit.evil && this.unit.person.class == "fighter") {
+                //     this.unit.stopAnimation("default_fighter");
+                //     this.unit.playAnimation("die_fighter");
+                //     // console.log("animation111111", this.unit.getAnimation("atacke"));
+                //     // animation.stop();
+                //     setTimeout(() => {
+                //         this.unit.stopAnimation("die_fighter");
+                //     }, 750);
+                // }
+                this.killUnit(this.unit);
+
+                ctx.clearRect(0, 0, 1000, 1000);
+                // img = this.loader.get("./src/images/rip.png");
+
+                // this.renderPlayer(obj.getDoomObj(), obj, img);
+            } else {
+                ctx.strokeStyle = "#2E8B57";
+            }
+        } else {
+            // ctx.strokeStyle = "red";
+            // docume   nt.getelement
+            this.killUnit(this.unit);
+
+            // ctx.clearRect(0, 0, 1000, 1000);
+        }
+        // if (unit.getHealth() >= 10) {
+        //     // unit.setHealth(unit.getHealth());
+        // } else {
+        //     ctx.strokeStyle = "red";
+        //     // docume   nt.getelement
+
+        //     ctx.clearRect(0, 0, 1000, 1000);
+        //     // img = this.loader.get("./src/images/rip.png");
+
+        //     // this.renderPlayer(obj.getDoomObj(), obj, img);
+        // }
+        ctx.lineTo(unit.getHealth() * 10, 20);
+        ctx.stroke();
+    };
     showSkin(slot) {
         slot = slot.reverse();
+        // console.log(this.unit);
         let arrCanvas = [],
             ctx,
             obj;
         slot.forEach((item, i) => {
             obj = item.display[0];
 
-            // if (!!this.images[obj.name].data && this.images[obj.name].data.optimize == "sprite_manager") {
-            //     arrCanvas.push({
-            //         img: this.images[obj.name].node,
-            //         config_elem: this.images[obj.name].data.config,
-            //         pos: this.getImagePosition(obj.name, obj.transform),
-            //         optimize: "sprite_manager",
-            //     });
-            // } else {
             arrCanvas.push({
                 img: this.images[obj.name].node,
                 pos: this.getImagePosition(obj.name, obj.transform),
             });
-            // }
         });
 
         if (this.canvas != null) {
-            this.canvas.width = 1200;
-            this.canvas.height = 800;
+            this.canvas.width = 1250;
+            this.canvas.height = 1300;
             ctx = this.canvas.getContext("2d");
             arrCanvas.sort(function(elem1, elem2): any {
                 if (elem1.pos.z > elem2.pos.z) {
@@ -217,28 +303,30 @@ export class DragonAnimationUpdate {
                 }
             });
             ctx.clearRect(0, 0, 2000, 1000);
+            this.drawHealth(ctx, this.unit);
 
             arrCanvas.forEach(function(elem) {
                 ctx.save();
 
-                ctx.translate(elem.pos.x + 400, elem.pos.y + 400);
+                ctx.translate(elem.pos.x + 590, elem.pos.y + 820);
                 ctx.rotate((elem.pos.skX * Math.PI) / 180);
 
-                if (elem.optimize == "sprite_manager") {
-                    ctx.drawImage(
-                        elem.img,
-                        elem.config_elem.x,
-                        elem.config_elem.y,
-                        elem.config_elem.width,
-                        elem.config_elem.height,
-                        -elem.config_elem.width / 2,
-                        -elem.config_elem.height / 2,
-                        elem.config_elem.width,
-                        elem.config_elem.height
-                    );
-                } else {
-                    ctx.drawImage(elem.img, -elem.img.width / 2, -elem.img.height / 2);
-                }
+                // if (elem.optimize == "sprite_manager") {
+                //     ctx.drawImage(
+                //         elem.img,
+                //         elem.config_elem.x,
+                //         elem.config_elem.y,
+                //         elem.config_elem.width,
+                //         elem.config_elem.height,
+                //         -elem.config_elem.width / 2,
+                //         -elem.config_elem.height / 2,
+                //         elem.config_elem.width,
+                //         elem.config_elem.height
+                //     );
+                // } else {
+                // ctx.scale(1, -1);
+                ctx.drawImage(elem.img, -elem.img.width / 2, -elem.img.height / 2);
+                // }
 
                 ctx.restore();
             });

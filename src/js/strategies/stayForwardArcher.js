@@ -45,7 +45,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                         pos_security.y = near_archer.y;
                     }
                     else {
-                        if (_this.unit.y + 1 < 8 && _this.randomInteger(-2, 1) > 0) {
+                        if (_this.unit.y + 1 < 7 && _this.randomInteger(-2, 1) > 0) {
                             if (_this.unit.y > pos_security.y) {
                                 pos_security.y = near_archer.y + 1;
                             }
