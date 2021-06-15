@@ -113,18 +113,18 @@ define(["require", "exports", "./lib/dragon"], function (require, exports, drago
             block.classList.add("sence__block");
             block.style.left = posX + "px";
             block.style.top = posY + "px";
-            var random = this.randomInteger(0, 15);
+            var random = this.randomInteger(0, 18);
             block.src = "src/images/block3.png";
             if (random < 7) {
                 block.src = "src/images/block3.png";
             }
-            if (random >= 7 && random <= 13) {
+            if (random >= 7 && random <= 16) {
                 block.src = "src/images/block2.png";
             }
-            if (random == 14) {
+            if (random == 18) {
                 block.src = "src/images/block1.png";
             }
-            if (random == 15) {
+            if (random == 17) {
                 block.src = "src/images/block4.png";
             }
             return block;

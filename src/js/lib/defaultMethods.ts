@@ -400,7 +400,7 @@ export class DefaultMethodsStrategy {
         // првоеряет по хорошему, что юнит не стоит на позиции атаки лучника
         let result = false;
         units_purpose.forEach((element) => {
-            console.log("result", result);
+            // console.log("result", result);
         });
     }
     // автоматический путь к задангным координатам без учета возможных опасностей
@@ -708,7 +708,7 @@ export class DefaultMethodsStrategy {
 
         arr_up = this.findFreeLine(arr_up);
         arr_down = this.findFreeLine(arr_down);
-        console.log("a!!!!!!!!!!rr_up", arr_up, arr_down, coord.domPerson, direction);
+
         // arr_down = this.deleteExcessCoord(arr_arr_downup);
         // if (
         //     this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&

@@ -76,7 +76,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         result += 8 * Math.abs(80 - enemie.person.health);
                     }
                 });
-                enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+                enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
                 if (curent_unit.isArchers()) {
                     cache_enemies = _this.getEnemyInField({
                         x: curent_unit.person.x,
@@ -98,7 +98,17 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 }
                 else {
                     if (enemies_near_3.length > 0) {
-                        cache.units_purpose.push({ enemie: _this.getBestEnemie(enemies_near_3, curent_unit), id: curent_unit.person.id });
+                        best_enemie = _this.getBestEnemie(enemies_near_3, curent_unit);
+                        cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+                        if (_this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
+                            result += 500;
+                        }
+                        if (best_enemie.person.health > curent_unit.person.health) {
+                            result -= 300;
+                        }
+                        else {
+                            result += 300;
+                        }
                     }
                 }
             });

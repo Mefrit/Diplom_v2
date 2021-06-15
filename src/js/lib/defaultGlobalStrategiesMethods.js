@@ -25,26 +25,29 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         };
         DefaultGlobalMethodsStrategy.prototype.getBestEnemie = function (cache_enemies, unit) {
             var _this = this;
-            var best_enemie = cache_enemies[0], distance_best, tmp, res_x, res_y, find_archer = false, resCheck;
+            var best_enemie = cache_enemies[0], distance_best, tmp, res_x, res_y, find_archer = false, resCheck, have_best_choise = false;
             distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
             cache_enemies.forEach(function (elem) {
-                tmp = _this.getDistanceBetweenUnits(elem, unit).toFixed(0);
-                if (tmp < distance_best) {
-                    if (best_enemie.x != elem.x ||
-                        (best_enemie.y != elem.y && _this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)) {
-                        best_enemie = elem;
-                        distance_best = tmp;
-                    }
-                }
-                if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
-                    if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-                        if (_this.isArchers(elem)) {
+                if (!have_best_choise) {
+                    tmp = _this.getDistanceBetweenUnits(elem, unit).toFixed(0);
+                    if (tmp < distance_best) {
+                        if (best_enemie.x != elem.x ||
+                            (best_enemie.y != elem.y && _this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)) {
                             best_enemie = elem;
-                            find_archer = true;
+                            distance_best = tmp;
                         }
-                        else {
-                            if (best_enemie.person.health < elem.person.health) {
+                    }
+                    if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
+                        if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+                            if (_this.isArchers(elem)) {
                                 best_enemie = elem;
+                                find_archer = true;
+                            }
+                            else {
+                                if (unit.person.damage > elem.person.health) {
+                                    best_enemie = elem;
+                                    have_best_choise = true;
+                                }
                             }
                         }
                     }

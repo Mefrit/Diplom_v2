@@ -63,6 +63,26 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             health: 50,
             id: 6,
         },
+        {
+            url: "./src/images/vinny.png",
+            x: 2,
+            y: 3,
+            evil: true,
+            class: "archer",
+            damage: 10,
+            health: 50,
+            id: 5,
+        },
+        {
+            url: "./src/images/person2_2.png",
+            x: 3,
+            y: 2,
+            evil: true,
+            class: "fighter",
+            damage: 10,
+            health: 50,
+            id: 4,
+        },
     ];
     var config_skins = [
         {

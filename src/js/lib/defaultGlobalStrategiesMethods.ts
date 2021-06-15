@@ -14,35 +14,40 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
             res_x,
             res_y,
             find_archer = false,
-            resCheck;
+            resCheck,
+            have_best_choise = false;
 
         distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
 
         cache_enemies.forEach((elem) => {
-            tmp = this.getDistanceBetweenUnits(elem, unit).toFixed(0);
+            if (!have_best_choise) {
+                tmp = this.getDistanceBetweenUnits(elem, unit).toFixed(0);
 
-            // && !find_archer
-            if (tmp < distance_best) {
-                if (
-                    best_enemie.x != elem.x ||
-                    (best_enemie.y != elem.y && this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)
-                ) {
-                    // if (elem.person.health < best_enemie.person.health) {
-                    best_enemie = elem;
-                    distance_best = tmp;
-                    // }
-                }
-            }
-            // console.log("tmp",tmp,distance_best,elem.domPerson);
-            if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
-                // чтобы не врывался в толпу врагов ии
-                if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-                    if (this.isArchers(elem)) {
+                // && !find_archer
+                if (tmp < distance_best) {
+                    if (
+                        best_enemie.x != elem.x ||
+                        (best_enemie.y != elem.y && this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)
+                    ) {
+                        // if (elem.person.health < best_enemie.person.health) {
                         best_enemie = elem;
-                        find_archer = true;
-                    } else {
-                        if (best_enemie.person.health < elem.person.health) {
+                        distance_best = tmp;
+                        // }
+                    }
+                }
+                // console.log("tmp",tmp,distance_best,elem.domPerson);
+                if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
+                    // чтобы не врывался в толпу врагов ии
+                    if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+                        if (this.isArchers(elem)) {
                             best_enemie = elem;
+                            find_archer = true;
+                        } else {
+                            // if (best_enemie.person.health > elem.person.health) {
+                            if (unit.person.damage > elem.person.health) {
+                                best_enemie = elem;
+                                have_best_choise = true;
+                            }
                         }
                     }
                 }

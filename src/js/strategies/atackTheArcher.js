@@ -116,9 +116,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
             var res = this.checkFreeWay2Atack(enemie, this.unit, "x");
-            console.log("cgot2AttackePosition heckFreeWay2Atack res", enemie.domPerson, res);
             var coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-            console.log(" got2AttackePosition getCoordForAtacke coord", coord);
             if (res.free) {
                 return this.moveAutoStepStupid(this.unit, coord, "archer");
             }

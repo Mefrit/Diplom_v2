@@ -111,11 +111,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
     }
     got2AttackePosition(enemie) {
-        // console.log(
-        //     "this.getCoordForAtacke ===========>>>> ",
-        //     this.getCoordForAtacke(this.unit, enemie),
-        //     this.parent_strategy
-        // );
         if (this.parent_strategy == "UndercoverArcherAttack") {
             return this.moveAutoStepStupid(
                 this.unit,
@@ -125,9 +120,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
 
         let res = this.checkFreeWay2Atack(enemie, this.unit, "x");
-        console.log("cgot2AttackePosition heckFreeWay2Atack res", enemie.domPerson, res);
+
         let coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-        console.log(" got2AttackePosition getCoordForAtacke coord", coord);
         if (res.free) {
             return this.moveAutoStepStupid(this.unit, coord, "archer");
         } else {

@@ -414,7 +414,6 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.checkUnitNotStatyOnArhcersAtacke = function (unit, units_purpose, cache_archers) {
             var result = false;
             units_purpose.forEach(function (element) {
-                console.log("result", result);
             });
         };
         DefaultMethodsStrategy.prototype.isArchers = function (unit) {
@@ -544,7 +543,6 @@ define(["require", "exports"], function (require, exports) {
             }
             arr_up = this.findFreeLine(arr_up);
             arr_down = this.findFreeLine(arr_down);
-            console.log("a!!!!!!!!!!rr_up", arr_up, arr_down, coord.domPerson, direction);
             return arr_up.length > arr_down.length ? arr_up[arr_up.length - 1] : arr_down[arr_down.length - 1];
         };
         DefaultMethodsStrategy.prototype.findFreeLine = function (cache) {
