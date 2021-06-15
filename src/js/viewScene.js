@@ -113,8 +113,25 @@ define(["require", "exports", "./lib/dragon"], function (require, exports, drago
             block.classList.add("sence__block");
             block.style.left = posX + "px";
             block.style.top = posY + "px";
-            block.src = "src/images/block2.png";
+            var random = this.randomInteger(0, 15);
+            block.src = "src/images/block3.png";
+            if (random < 7) {
+                block.src = "src/images/block3.png";
+            }
+            if (random >= 7 && random <= 13) {
+                block.src = "src/images/block2.png";
+            }
+            if (random == 14) {
+                block.src = "src/images/block1.png";
+            }
+            if (random == 15) {
+                block.src = "src/images/block4.png";
+            }
             return block;
+        };
+        ViewScene.prototype.randomInteger = function (min, max) {
+            var rand = min - 0.5 + Math.random() * (max - min + 1);
+            return Math.round(rand);
         };
         ViewScene.prototype.showCurentUnit = function (domPerson) {
             domPerson.classList.add("block__free");

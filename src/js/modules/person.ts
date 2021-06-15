@@ -40,14 +40,7 @@ export class Person {
         return this.animation[name];
     }
     playAnimation(name) {
-        console.log(name);
         this.animation[name].play();
-        // this.interval_animation = setTimeout(() => {
-        //     this.animation[name].stop();
-        //     setTimeout(() => {
-        //         this.playAnimation(name);
-        //     }, this.randomInteger(2, 4) * 1000);
-        // }, this.randomInteger(2, 4) * 1000);
     }
     stopAnimation(name) {
         this.animation[name].stop();

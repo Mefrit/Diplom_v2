@@ -64,14 +64,9 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             xLineCondition = false;
             yLineCondition = false;
         }
-        console.log(
-            "yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0",
-            yLineCondition,
-            xLineCondition,
-            resCheck.arrayPoit
-        );
+        // console.log(yLineCondition, "||", xLineCondition, "||", resCheck.arrayPoit.length);
         if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
-            console.log(Math.abs(this.unit.x - enemie.x), Math.abs(this.unit.y - enemie.y));
+            // console.log(Math.abs(this.unit.x - enemie.x), Math.abs(this.unit.y - enemie.y));
             if (Math.abs(this.unit.x - enemie.x) >= Math.abs(this.unit.y - enemie.y)) {
                 // поиск атаки по горизонтале
                 if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
@@ -82,10 +77,12 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                         this.moveAutoStepStupid(this.unit, enemie, "archer");
                     }
                 }
-
-                this.atakeArcher(enemie);
+                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                    this.atakeArcher(enemie);
+                } else {
+                    res.result = false;
+                }
             } else {
-                console.log("HERE");
                 // поиск атаки по вертикали
                 let new_x, new_y;
                 if (!this.unit.moveAction) {
@@ -95,7 +92,11 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                         this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
                     }
                 }
-                this.atakeArcher(enemie);
+                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                    this.atakeArcher(enemie);
+                } else {
+                    res.result = false;
+                }
             }
             // проверка на тикать от сюда
         } else {
@@ -110,20 +111,28 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
     }
     got2AttackePosition(enemie) {
-        console.log(
-            "this.getCoordForAtacke ===========>>>> ",
-            this.getCoordForAtacke(this.unit, enemie),
-            this.parent_strategy
-        );
+        // console.log(
+        //     "this.getCoordForAtacke ===========>>>> ",
+        //     this.getCoordForAtacke(this.unit, enemie),
+        //     this.parent_strategy
+        // );
         if (this.parent_strategy == "UndercoverArcherAttack") {
             return this.moveAutoStepStupid(
                 this.unit,
-                this.getCoordForAtacke(this.unit, enemie, "StayForwardArcher"),
+                this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"),
                 "fighter"
             );
         }
-        // console.log("this.getCoordForAtacke(this.unit, enemie,", this.getCoordForAtacke(this.unit, enemie, "default"));
-        return this.moveAutoStepStupid(this.unit, this.getCoordForAtacke(this.unit, enemie, "default"), "archer");
+
+        let res = this.checkFreeWay2Atack(enemie, this.unit, "x");
+        console.log("cgot2AttackePosition heckFreeWay2Atack res", enemie.domPerson, res);
+        let coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
+        console.log(" got2AttackePosition getCoordForAtacke coord", coord);
+        if (res.free) {
+            return this.moveAutoStepStupid(this.unit, coord, "archer");
+        } else {
+            return this.moveAutoStepStupid(this.unit, coord, "fighter");
+        }
     }
     findPointAtackArcher(enemie) {
         let maxX = Math.abs(enemie.person.x - this.unit.person.x),
@@ -181,6 +190,9 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     }
     atackeChosenUnit(cache, enemie) {
         return new Promise((resolve, reject) => {
+            if (enemie.isNotDied()) {
+                enemie = this.findNearestEnemies(this.unit);
+            }
             this.findPointAtackArcher(enemie);
             setTimeout(() => {
                 resolve("Promise5");

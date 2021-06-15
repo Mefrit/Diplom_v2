@@ -55,16 +55,17 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (_this.checkArchersPosition()) {
                     checkArcherPosition = _this.checkArcherPosition(enemie);
                 }
+                if (enemie.isNotDied()) {
+                    enemie = _this.findNearestEnemies(_this.unit);
+                }
                 if (archers.length != 0 &&
                     checkArcherPosition.result &&
                     !_this.unit.moveAction &&
                     _this.getDistanceBetweenUnits(_this.unit, enemie) < 4) {
                     _this.moveTo(_this.unit, checkArcherPosition.point);
                     if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1) {
-                        console.log("this.unit1", _this.unit);
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
-                        console.log("animation111111", _this.unit.getAnimation("atacke"));
                         setTimeout(function () {
                             _this.unit.stopAnimation("atacke_fighter");
                             _this.unit.playAnimation("default_fighter");

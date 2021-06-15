@@ -10,13 +10,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                 if (_this.canvas != undefined) {
                     posX = Math.abs(parseInt(_this.canvas.style.left.split("px")[0]) - _this.getCoordFromStyle(block.style.left));
                     posY = Math.abs(parseInt(_this.canvas.style.top.split("px")[0]) - _this.getCoordFromStyle(block.style.top));
-                    document.getElementById("block_information").innerHTML =
-                        "<h1>x:" +
-                            _this.getCoordFromStyle(block.style.left) / 120 +
-                            " y:" +
-                            _this.getCoordFromStyle(block.style.top) / 120 +
-                            "</h1>";
-                    if (posX < 190 && posY < 190) {
+                    if (posX < 290 && posY < 290) {
                         block.classList.add("block__free");
                     }
                     else {
@@ -75,8 +69,10 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             this.skins = {};
             this.config_skins = config_skins;
             this.collectionPersons = new person_collection_1.Collection(arrImg);
+            this.wall_blocks = [];
             this.view = new viewScene_1.ViewScene(this.collectionPersons, this.loader);
             this.curentPerson = undefined;
+            this.water_blocks = [];
             this.ai = ai;
             this.ai.initView(this.view);
             this.ai.initPersons(this.collectionPersons, this.syncUnit);
@@ -91,15 +87,26 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
         Scene.prototype.renderElement = function (element) {
             this.view.renderElement(element);
         };
+        Scene.prototype.get = function (name) {
+            return this[name];
+        };
         Scene.prototype.renderArena = function () {
-            var scence = document.getElementById("scene"), block, posX = 0, posY = 0;
-            for (var j = 0; j < 7; j++) {
+            var scence = document.getElementById("scene"), block, posX = 0, posY = 0, position_block;
+            for (var j = 0; j < 8; j++) {
                 for (var i = 0; i < 12; i++) {
                     block = document.createElement("img");
                     block.addEventListener("mouseout", this.onOutBlock);
                     block.addEventListener("mouseover", this.onBlock);
                     block.addEventListener("click", this.onMove);
                     block = this.view.renderBlockView(block, posX, posY, i, j);
+                    if (block.src.indexOf("block1.png") != -1) {
+                        position_block = block.getAttribute("data-coord").split(";");
+                        this.wall_blocks.push({ x: position_block[0], y: position_block[1] });
+                    }
+                    if (block.src.indexOf("block4.png") != -1) {
+                        position_block = block.getAttribute("data-coord").split(";");
+                        this.water_blocks.push({ x: position_block[0], y: position_block[1] });
+                    }
                     scence.appendChild(block);
                     posX += 120;
                 }
@@ -184,8 +191,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                                 elem.setAnimation(skin.name, dragon);
                             }
                             if (skin.class == "elf_archer" && elem.person.class == "archer") {
-                                console.log("ele11111m", skin, elem);
-                                console.log("skin.cahce_image", skin.cahce_image);
                                 var dragon = new dragon_1.DragonAnimationUpdate(_this.loader.get(skin.src_json), skin.cahce_image, skin.name, elem);
                                 dragon.updateCanvas(elem.domPerson);
                                 if (skin.name == "elf_archer_default") {

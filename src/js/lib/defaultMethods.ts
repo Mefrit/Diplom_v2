@@ -140,15 +140,32 @@ export class DefaultMethodsStrategy {
 
         return nearEnemies;
     }
+    checkFreeCoordWalls(cache, unit) {
+        let result = false;
+        cache.forEach((element) => {
+            if (element.x == unit.x && element.y == unit.y) {
+                result = true;
+            }
+        });
+        return result;
+    }
     //указывает на лучшую  точку
     deleteExcessCoord(cahceCoord = []) {
+        // console.log("this.scene", this.scene.get("wall_locks"));
+        let wall_blocks = this.scene.get("wall_blocks"),
+            water_blocks = this.scene.get("water_blocks");
         return cahceCoord.filter((elem) => {
             if (elem.x >= 0 && elem.x < 12) {
-                if (elem.y >= 0 && elem.y < 7) {
+                if (elem.y >= 0 && elem.y < 8) {
                     if (this.unit.x == elem.x && this.unit.y == elem.y) {
                         return elem;
                     }
-                    if (this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y })) {
+                    // console.log(this.checkFreeCoordWalls(wall_blocks, elem));
+                    if (
+                        this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
+                        !this.checkFreeCoordWalls(wall_blocks, elem) &&
+                        !this.checkFreeCoordWalls(water_blocks, elem)
+                    ) {
                         return elem;
                     }
                 }
@@ -398,9 +415,6 @@ export class DefaultMethodsStrategy {
             came_from = {},
             frontier: any = [], //граница
             cost_so_far = [],
-            max_x,
-            max_y,
-            res_check,
             new_cost,
             priority,
             bestPoint,
@@ -411,10 +425,17 @@ export class DefaultMethodsStrategy {
 
         pointsNear = this.getNeighbors({ x: unit.person.x, y: unit.person.y }, type);
         pointsNear = this.deleteExcessCoord(pointsNear);
+
         if (!obj2go.hasOwnProperty("domPerson")) {
             pointsNear.push({
                 x: unit.x,
                 y: unit.y,
+            });
+        }
+        if (type == "stupid" && this.getDistanceBetweenUnits(obj2go, unit) < 3) {
+            pointsNear.push({
+                x: obj2go.x,
+                y: obj2go.y,
             });
         }
         pointsNear.forEach((next, index, arr) => {
@@ -544,6 +565,7 @@ export class DefaultMethodsStrategy {
     checkFreePointsArcher(points, type = "fighter", curent_unit = this.unit) {
         let res = { free: true, deleteLastPoint: false, runAway: false };
         //    alert("points"+ points+curent_unit.person.id);
+        let wall_blocks = this.scene.get("wall_blocks");
         this.unit_collection.getCollection().forEach((unit) => {
             for (let i = 0; i < points.length; i++) {
                 if (points[i].x < 0 || points[i].x > 11) {
@@ -554,17 +576,25 @@ export class DefaultMethodsStrategy {
                 }
                 if (unit.x == points[i].x && points[i].y == unit.y) {
                     if (unit.person.id != curent_unit.person.id) {
-                        if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
-                            res.runAway = true;
-                        }
+                        // if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
+                        //     res.runAway = true;
+                        // }
 
                         res.free = false;
                     } else {
                         res.deleteLastPoint = true;
                     }
                 }
+                // console.log(this.checkFreeCoordWalls(wall_blocks, points[i]));
+                if (this.checkFreeCoordWalls(wall_blocks, points[i])) {
+                    res.free = false;
+                }
             }
         });
+        if (this.getEnemyInField(curent_unit, 5).length > 0) {
+            res.runAway = true;
+        }
+
         return res;
     }
     getCoordForArcher(unit, enemie) {
@@ -593,56 +623,124 @@ export class DefaultMethodsStrategy {
         cache_points = this.deleteExcessCoord(cache_points);
         return cache_points;
     }
-    //выбрать более крутую позицию для атаки с учетом своих юнитов
-    getCoordForAtacke(unit, enemie, type = "default") {
+    getCoordForAtackeForrwarArcher(unit, enemie, type = "default", free = true) {
         let friend_2 = this.getFriendsInField(unit, 2),
             enemy = this.findNearestEnemies(unit, []),
             coord = { x: enemie.x, y: enemie.y - 1 };
-        if (friend_2.length > 0) {
-            // нужно задавть на +1 координат , тк лучник никогда в плотную не подойдет
-            friend_2.forEach((element) => {
-                // maxX = Math.abs(enemie.person.x - this.unit.person.x);
-                // maxY = Math.abs(enemie.person.y - this.unit.person.y);
-                // if (maxY > maxX) {
-                //     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
-                // }
-                // else {
-                //     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
-                // }
-                if (type == "StayForwardArcher") {
-                    if (element.x == unit.x || element.y == unit.y) {
+
+        friend_2.forEach((element) => {
+            if (type == "StayForwardArcher") {
+                if (element.x == unit.x || element.y == unit.y) {
+                    if (
+                        this.unit_collection.checkFreeCoord({ x: element.x + 1, y: element.y }) &&
+                        this.getDistanceBetweenUnits({ x: element.x + 1, y: element.y }, enemy) > 1
+                    ) {
+                        coord = { x: element.x + 2, y: element.y };
+                    } else {
                         if (
-                            this.unit_collection.checkFreeCoord({ x: element.x + 1, y: element.y }) &&
-                            this.getDistanceBetweenUnits({ x: element.x + 1, y: element.y }, enemy) > 1
+                            this.unit_collection.checkFreeCoord({ x: element.x, y: element.y + 1 }) &&
+                            this.getDistanceBetweenUnits({ x: element.x, y: element.y + 1 }, enemy) > 1
                         ) {
-                            coord = { x: element.x + 2, y: element.y };
+                            coord = { x: element.x, y: element.y + 2 };
                         } else {
                             if (
-                                this.unit_collection.checkFreeCoord({ x: element.x, y: element.y + 1 }) &&
-                                this.getDistanceBetweenUnits({ x: element.x, y: element.y + 1 }, enemy) > 1
+                                this.unit_collection.checkFreeCoord({ x: element.x, y: element.y - 1 }) &&
+                                this.getDistanceBetweenUnits({ x: element.x, y: element.y - 1 }, enemy) > 1
                             ) {
-                                coord = { x: element.x, y: element.y + 2 };
-                            } else {
-                                if (
-                                    this.unit_collection.checkFreeCoord({ x: element.x, y: element.y - 1 }) &&
-                                    this.getDistanceBetweenUnits({ x: element.x, y: element.y - 1 }, enemy) > 1
-                                ) {
-                                    coord = { x: element.x, y: element.y - 2 };
-                                }
+                                coord = { x: element.x, y: element.y - 2 };
                             }
                         }
                     }
-                } else {
-                    coord = { x: enemie.x + 1, y: enemie.y };
-                    if (enemie.x < unit.x) {
-                        coord = { x: enemie.x - 1, y: enemie.y };
-                    } else {
-                        coord = { x: enemie.x + 1, y: enemie.y };
-                    }
                 }
-            });
+            }
+        });
+        return coord;
+    }
+    //выбрать более крутую позицию для атаки с учетом своих юнитов
+    getCoordForAtacke(unit, enemie, type = "default", free = true) {
+        // console.log(enemie);
+        let friend_2 = this.getFriendsInField(unit, 2),
+            enemy,
+            res,
+            coord = { x: enemie.x, y: enemie.y - 1 };
+
+        if (free) {
+            // if (enemie.x < unit.x) {
+            //     coord = { x: enemie.x - 1, y: enemie.y };
+            // } else {
+            //     coord = { x: enemie.x + 1, y: enemie.y };
+            // }
+            coord = this.maxFreeLineForArcher(enemie, "x");
+        } else {
+            coord = this.maxFreeLineForArcher(enemie, "y");
+            // if (enemie.y > 4) {
+            //     coord = { x: enemie.x, y: 0 };
+            // } else {
+            //     coord = { x: enemie.x, y: 7 };
+            // }
         }
         return coord;
+    }
+    maxFreeLineForArcher(coord, direction) {
+        let arr_up = [],
+            arr_down = [];
+
+        if (direction == "y") {
+            // console.log(
+            //     "coord.ycoord.ycoord.ycoord.ycoord.ycoord.ycoord.ycoord.ycoord.ycoord.ycoord.ycoord.y",
+            //     coord.y,
+            //     coord.y >= 0
+            // );
+            for (let i = coord.y - 1; i >= 0; i--) {
+                arr_up.push({ x: coord.x, y: i });
+            }
+            for (let i = coord.y + 1; i <= 8; i++) {
+                arr_down.push({ x: coord.x, y: i });
+            }
+        } else {
+            for (let i = 0; i < coord.x; i++) {
+                arr_up.push({ x: i, y: coord.y });
+            }
+            for (let i = coord.x + 1; i <= 12; i++) {
+                arr_down.push({ x: i, y: coord.y });
+            }
+        }
+
+        arr_up = this.findFreeLine(arr_up);
+        arr_down = this.findFreeLine(arr_down);
+        console.log("a!!!!!!!!!!rr_up", arr_up, arr_down, coord.domPerson, direction);
+        // arr_down = this.deleteExcessCoord(arr_arr_downup);
+        // if (
+        //     this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
+        //     !this.checkFreeCoordWalls(wall_blocks, elem)
+        // ) {
+        //     return elem;
+        // }
+        return arr_up.length > arr_down.length ? arr_up[arr_up.length - 1] : arr_down[arr_down.length - 1];
+    }
+    findFreeLine(cache) {
+        let wall_blocks = this.scene.get("wall_blocks");
+        let water_blocks = this.scene.get("water_blocks");
+        let new_cache = [],
+            find_closed_area = false;
+        cache.forEach((elem, index, arr) => {
+            if (
+                this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
+                !this.checkFreeCoordWalls(wall_blocks, elem) &&
+                !find_closed_area
+            ) {
+                if (index == arr.length - 1) {
+                    if (!this.checkFreeCoordWalls(water_blocks, elem)) {
+                        new_cache.push(elem);
+                    }
+                } else {
+                    new_cache.push(elem);
+                }
+            } else {
+                find_closed_area = true;
+            }
+        });
+        return new_cache;
     }
     // получить всех врагов какойто либбо области
     // getEnemyInField(coord_unit, field_step) {
@@ -667,15 +765,6 @@ export class DefaultMethodsStrategy {
             }
         });
     }
-    // getFriendsInField(coord_unit, field_step) {
-    //     return this.unit_collection.getAICollection().filter((elem) => {
-    //         // console.log(coord_unit, elem, this.checkPersonNear(coord_unit, elem, field_step));
-    //         if (this.checkPersonNear(coord_unit, elem, field_step)) {
-    //             return elem;
-    //         }
-    //     });
-    // }
-
     getArchersInField(coord_unit, field_step) {
         return this.unit_collection.getAICollection().filter((elem) => {
             if (elem.person.class == "archer") {

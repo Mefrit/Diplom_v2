@@ -45,12 +45,12 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     y: elem.person.y
                 }, 3);
                 result += enemies_near_archers.length * 2200;
-                result += elem.person.health * 10;
+                result += (100 - elem.person.health) * 100;
                 enemies_near_archers = _this.getEnemyInField({
                     x: elem.person.x,
                     y: elem.person.y
                 }, 2);
-                result += enemies_near_archers.length * 3200;
+                result += enemies_near_archers.length * 6200;
             });
             console.log("ProtectArchers ==> ", Math.round(result));
             return { total: Math.round(result), cache: cache };

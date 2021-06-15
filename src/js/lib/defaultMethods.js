@@ -15,7 +15,7 @@ define(["require", "exports"], function (require, exports) {
             this.moveAutoStepStupid = function (unit, obj2go, type) {
                 if (type === void 0) { type = "fighter"; }
                 var pointsNear, res = { findEnime: false, enemie: obj2go, type: type };
-                var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {}, frontier = [], cost_so_far = [], max_x, max_y, res_check, new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
+                var current = { id: 0, x: unit.person.x, y: unit.person.y }, came_from = {}, frontier = [], cost_so_far = [], new_cost, priority, bestPoint, coefProximity = type == "archer" ? 1 : 2;
                 came_from[0] = NaN;
                 cost_so_far[0] = 0;
                 pointsNear = _this.getNeighbors({ x: unit.person.x, y: unit.person.y }, type);
@@ -24,6 +24,12 @@ define(["require", "exports"], function (require, exports) {
                     pointsNear.push({
                         x: unit.x,
                         y: unit.y,
+                    });
+                }
+                if (type == "stupid" && _this.getDistanceBetweenUnits(obj2go, unit) < 3) {
+                    pointsNear.push({
+                        x: obj2go.x,
+                        y: obj2go.y,
                     });
                 }
                 pointsNear.forEach(function (next, index, arr) {
@@ -194,16 +200,28 @@ define(["require", "exports"], function (require, exports) {
             });
             return nearEnemies;
         };
+        DefaultMethodsStrategy.prototype.checkFreeCoordWalls = function (cache, unit) {
+            var result = false;
+            cache.forEach(function (element) {
+                if (element.x == unit.x && element.y == unit.y) {
+                    result = true;
+                }
+            });
+            return result;
+        };
         DefaultMethodsStrategy.prototype.deleteExcessCoord = function (cahceCoord) {
             var _this = this;
             if (cahceCoord === void 0) { cahceCoord = []; }
+            var wall_blocks = this.scene.get("wall_blocks"), water_blocks = this.scene.get("water_blocks");
             return cahceCoord.filter(function (elem) {
                 if (elem.x >= 0 && elem.x < 12) {
-                    if (elem.y >= 0 && elem.y < 7) {
+                    if (elem.y >= 0 && elem.y < 8) {
                         if (_this.unit.x == elem.x && _this.unit.y == elem.y) {
                             return elem;
                         }
-                        if (_this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y })) {
+                        if (_this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
+                            !_this.checkFreeCoordWalls(wall_blocks, elem) &&
+                            !_this.checkFreeCoordWalls(water_blocks, elem)) {
                             return elem;
                         }
                     }
@@ -409,9 +427,11 @@ define(["require", "exports"], function (require, exports) {
             return Math.abs(current.x - person.x) < coefProximity && Math.abs(current.y - person.y) < coefProximity;
         };
         DefaultMethodsStrategy.prototype.checkFreePointsArcher = function (points, type, curent_unit) {
+            var _this = this;
             if (type === void 0) { type = "fighter"; }
             if (curent_unit === void 0) { curent_unit = this.unit; }
             var res = { free: true, deleteLastPoint: false, runAway: false };
+            var wall_blocks = this.scene.get("wall_blocks");
             this.unit_collection.getCollection().forEach(function (unit) {
                 for (var i = 0; i < points.length; i++) {
                     if (points[i].x < 0 || points[i].x > 11) {
@@ -422,17 +442,20 @@ define(["require", "exports"], function (require, exports) {
                     }
                     if (unit.x == points[i].x && points[i].y == unit.y) {
                         if (unit.person.id != curent_unit.person.id) {
-                            if (!unit.person.evil && Math.abs(unit.x - points[i].x) < 3) {
-                                res.runAway = true;
-                            }
                             res.free = false;
                         }
                         else {
                             res.deleteLastPoint = true;
                         }
                     }
+                    if (_this.checkFreeCoordWalls(wall_blocks, points[i])) {
+                        res.free = false;
+                    }
                 }
             });
+            if (this.getEnemyInField(curent_unit, 5).length > 0) {
+                res.runAway = true;
+            }
             return res;
         };
         DefaultMethodsStrategy.prototype.getCoordForArcher = function (unit, enemie) {
@@ -460,44 +483,93 @@ define(["require", "exports"], function (require, exports) {
             cache_points = this.deleteExcessCoord(cache_points);
             return cache_points;
         };
-        DefaultMethodsStrategy.prototype.getCoordForAtacke = function (unit, enemie, type) {
+        DefaultMethodsStrategy.prototype.getCoordForAtackeForrwarArcher = function (unit, enemie, type, free) {
             var _this = this;
             if (type === void 0) { type = "default"; }
+            if (free === void 0) { free = true; }
             var friend_2 = this.getFriendsInField(unit, 2), enemy = this.findNearestEnemies(unit, []), coord = { x: enemie.x, y: enemie.y - 1 };
-            if (friend_2.length > 0) {
-                friend_2.forEach(function (element) {
-                    if (type == "StayForwardArcher") {
-                        if (element.x == unit.x || element.y == unit.y) {
-                            if (_this.unit_collection.checkFreeCoord({ x: element.x + 1, y: element.y }) &&
-                                _this.getDistanceBetweenUnits({ x: element.x + 1, y: element.y }, enemy) > 1) {
-                                coord = { x: element.x + 2, y: element.y };
+            friend_2.forEach(function (element) {
+                if (type == "StayForwardArcher") {
+                    if (element.x == unit.x || element.y == unit.y) {
+                        if (_this.unit_collection.checkFreeCoord({ x: element.x + 1, y: element.y }) &&
+                            _this.getDistanceBetweenUnits({ x: element.x + 1, y: element.y }, enemy) > 1) {
+                            coord = { x: element.x + 2, y: element.y };
+                        }
+                        else {
+                            if (_this.unit_collection.checkFreeCoord({ x: element.x, y: element.y + 1 }) &&
+                                _this.getDistanceBetweenUnits({ x: element.x, y: element.y + 1 }, enemy) > 1) {
+                                coord = { x: element.x, y: element.y + 2 };
                             }
                             else {
-                                if (_this.unit_collection.checkFreeCoord({ x: element.x, y: element.y + 1 }) &&
-                                    _this.getDistanceBetweenUnits({ x: element.x, y: element.y + 1 }, enemy) > 1) {
-                                    coord = { x: element.x, y: element.y + 2 };
-                                }
-                                else {
-                                    if (_this.unit_collection.checkFreeCoord({ x: element.x, y: element.y - 1 }) &&
-                                        _this.getDistanceBetweenUnits({ x: element.x, y: element.y - 1 }, enemy) > 1) {
-                                        coord = { x: element.x, y: element.y - 2 };
-                                    }
+                                if (_this.unit_collection.checkFreeCoord({ x: element.x, y: element.y - 1 }) &&
+                                    _this.getDistanceBetweenUnits({ x: element.x, y: element.y - 1 }, enemy) > 1) {
+                                    coord = { x: element.x, y: element.y - 2 };
                                 }
                             }
+                        }
+                    }
+                }
+            });
+            return coord;
+        };
+        DefaultMethodsStrategy.prototype.getCoordForAtacke = function (unit, enemie, type, free) {
+            if (type === void 0) { type = "default"; }
+            if (free === void 0) { free = true; }
+            var friend_2 = this.getFriendsInField(unit, 2), enemy, res, coord = { x: enemie.x, y: enemie.y - 1 };
+            if (free) {
+                coord = this.maxFreeLineForArcher(enemie, "x");
+            }
+            else {
+                coord = this.maxFreeLineForArcher(enemie, "y");
+            }
+            return coord;
+        };
+        DefaultMethodsStrategy.prototype.maxFreeLineForArcher = function (coord, direction) {
+            var arr_up = [], arr_down = [];
+            if (direction == "y") {
+                for (var i = coord.y - 1; i >= 0; i--) {
+                    arr_up.push({ x: coord.x, y: i });
+                }
+                for (var i = coord.y + 1; i <= 8; i++) {
+                    arr_down.push({ x: coord.x, y: i });
+                }
+            }
+            else {
+                for (var i = 0; i < coord.x; i++) {
+                    arr_up.push({ x: i, y: coord.y });
+                }
+                for (var i = coord.x + 1; i <= 12; i++) {
+                    arr_down.push({ x: i, y: coord.y });
+                }
+            }
+            arr_up = this.findFreeLine(arr_up);
+            arr_down = this.findFreeLine(arr_down);
+            console.log("a!!!!!!!!!!rr_up", arr_up, arr_down, coord.domPerson, direction);
+            return arr_up.length > arr_down.length ? arr_up[arr_up.length - 1] : arr_down[arr_down.length - 1];
+        };
+        DefaultMethodsStrategy.prototype.findFreeLine = function (cache) {
+            var _this = this;
+            var wall_blocks = this.scene.get("wall_blocks");
+            var water_blocks = this.scene.get("water_blocks");
+            var new_cache = [], find_closed_area = false;
+            cache.forEach(function (elem, index, arr) {
+                if (_this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
+                    !_this.checkFreeCoordWalls(wall_blocks, elem) &&
+                    !find_closed_area) {
+                    if (index == arr.length - 1) {
+                        if (!_this.checkFreeCoordWalls(water_blocks, elem)) {
+                            new_cache.push(elem);
                         }
                     }
                     else {
-                        coord = { x: enemie.x + 1, y: enemie.y };
-                        if (enemie.x < unit.x) {
-                            coord = { x: enemie.x - 1, y: enemie.y };
-                        }
-                        else {
-                            coord = { x: enemie.x + 1, y: enemie.y };
-                        }
+                        new_cache.push(elem);
                     }
-                });
-            }
-            return coord;
+                }
+                else {
+                    find_closed_area = true;
+                }
+            });
+            return new_cache;
         };
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {
             var _this = this;

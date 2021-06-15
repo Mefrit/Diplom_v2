@@ -31,7 +31,6 @@ define(["require", "exports"], function (require, exports) {
             return this.animation[name];
         };
         Person.prototype.playAnimation = function (name) {
-            console.log(name);
             this.animation[name].play();
         };
         Person.prototype.stopAnimation = function (name) {

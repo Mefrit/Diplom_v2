@@ -66,9 +66,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 xLineCondition = false;
                 yLineCondition = false;
             }
-            console.log("yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0", yLineCondition, xLineCondition, resCheck.arrayPoit);
             if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
-                console.log(Math.abs(this.unit.x - enemie.x), Math.abs(this.unit.y - enemie.y));
                 if (Math.abs(this.unit.x - enemie.x) >= Math.abs(this.unit.y - enemie.y)) {
                     if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
                         this.moveAutoStepStupid(this.unit, enemie, "archer");
@@ -78,10 +76,14 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                             this.moveAutoStepStupid(this.unit, enemie, "archer");
                         }
                     }
-                    this.atakeArcher(enemie);
+                    if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                        this.atakeArcher(enemie);
+                    }
+                    else {
+                        res.result = false;
+                    }
                 }
                 else {
-                    console.log("HERE");
                     var new_x = void 0, new_y = void 0;
                     if (!this.unit.moveAction) {
                         if (enemie.person.y < 3) {
@@ -91,7 +93,12 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                             this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
                         }
                     }
-                    this.atakeArcher(enemie);
+                    if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                        this.atakeArcher(enemie);
+                    }
+                    else {
+                        res.result = false;
+                    }
                 }
             }
             else {
@@ -105,11 +112,19 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
         };
         AtackTheArcher.prototype.got2AttackePosition = function (enemie) {
-            console.log("this.getCoordForAtacke ===========>>>> ", this.getCoordForAtacke(this.unit, enemie), this.parent_strategy);
             if (this.parent_strategy == "UndercoverArcherAttack") {
-                return this.moveAutoStepStupid(this.unit, this.getCoordForAtacke(this.unit, enemie, "StayForwardArcher"), "fighter");
+                return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
-            return this.moveAutoStepStupid(this.unit, this.getCoordForAtacke(this.unit, enemie, "default"), "archer");
+            var res = this.checkFreeWay2Atack(enemie, this.unit, "x");
+            console.log("cgot2AttackePosition heckFreeWay2Atack res", enemie.domPerson, res);
+            var coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
+            console.log(" got2AttackePosition getCoordForAtacke coord", coord);
+            if (res.free) {
+                return this.moveAutoStepStupid(this.unit, coord, "archer");
+            }
+            else {
+                return this.moveAutoStepStupid(this.unit, coord, "fighter");
+            }
         };
         AtackTheArcher.prototype.findPointAtackArcher = function (enemie) {
             var maxX = Math.abs(enemie.person.x - this.unit.person.x), maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;
@@ -165,6 +180,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         AtackTheArcher.prototype.atackeChosenUnit = function (cache, enemie) {
             var _this = this;
             return new Promise(function (resolve, reject) {
+                if (enemie.isNotDied()) {
+                    enemie = _this.findNearestEnemies(_this.unit);
+                }
                 _this.findPointAtackArcher(enemie);
                 setTimeout(function () {
                     resolve("Promise5");

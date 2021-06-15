@@ -3,27 +3,111 @@ html {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    width: 100%;
-    background-color: rgb(39, 39, 39);
+    width: 90%;
+    /* background-color: rgb(39, 39, 39); */
+    /* background: url("../images/game_background_2.png");
+     */
+    background-image: url("../images/background_3.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+.liana {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 600px;
+    z-index: 10;
+}
+.liana__left {
+    left: -210px;
+    top: 210px;
+    transform: rotate(30deg);
+}
+.liana__right {
+    left: 1390px;
+    top: 210px;
+    transform: rotate(30deg);
 }
 .background {
     /* background-image: url("../images/back.jpg"); */
+}
+.container {
+    /* height: 100vh; */
+    /* position: absolute;
+    left: 0;
+    top: 0; */
+    /* padding: 30px; */
+    width: 100%;
+    /* display: flex; */
+    /* flex-direction: row;
+    position: absolute;
+    justify-content: space-between; */
+
+    height: auto;
+}
+.btn_group {
+    /* display: flex; */
+    flex-direction: column;
+    width: auto;
+    align-items: baseline;
+    max-width: 300px;
+    margin-top: 80px;
+    margin-left: 30px;
 }
 .scene {
     position: relative;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 1550px;
+    /* height: 80vh; */
     /* max-width:1280px; */
-    margin: 0;
-    height: 90vh;
+    /* margin: 80px auto; */
+    margin-left: 190px;
+    margin-top: 80px;
+    height: 80px;
+    border-radius: 20px;
+    /* display: block; */
 }
-.button {
-    float: left;
+.btn__out {
+}
+.btn {
+    /* float: left;
     position: relative;
     top: 1002px;
-    left: 100px;
+    left: 100px; */
+
+    font-size: 0.8vw;
+    font-weight: 700;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    padding: 0.8em 1em calc(0.8em + 3px);
+    border-radius: 3px;
+    background: rgb(64, 199, 129);
+    box-shadow: 0 -3px rgb(53, 167, 110) inset;
+    transition: 0.2s;
+    /* margin-right: 150px; */
+    margin-top: 685px;
+    margin-left: 20px;
+    /* max-width: 150px; */
+    height: 80px;
+    border-radius: 70px;
+    z-index: 100;
+    text-align: center;
 }
+.btn__step {
+    background: rgb(53, 167, 110);
+    box-shadow: 0 -3px rgb(53, 167, 110) inset;
+}
+.btn:hover {
+    background: rgb(53, 167, 110);
+}
+/* .btn:active {
+    background: rgb(33, 147, 90);
+    box-shadow: 0 3px rgb(33, 147, 90) inset;
+} */
 .sence__block {
     /* background-image: url("../images/block.png") ; */
     /* float: left; */
@@ -31,7 +115,9 @@ html {
     width: 120px;
     height: 120px;
     border-radius: 15px;
+    z-index: 90;
     padding: 3px;
+    border: 1px solid black;
 }
 .sence__block:hover {
     box-shadow: 0px 0px 20px white;
@@ -56,7 +142,7 @@ html {
 }
 .person {
     position: absolute;
-
+    z-index: 100;
     width: 20px;
     height: 20px;
     float: left;

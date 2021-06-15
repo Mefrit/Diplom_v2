@@ -69,9 +69,9 @@ export class UndercoverArcherAttack extends DefaultGlobalMethodsStrategy {
                     result -= 500;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 5 * Math.abs(80 - enemie.person.health);
+                    result += 2 * Math.abs(80 - enemie.person.health);
                 } else {
-                    result += 3 * Math.abs(80 - enemie.person.health);
+                    result += 10 * Math.abs(80 - enemie.person.health);
                 }
             });
 
@@ -109,7 +109,7 @@ export class UndercoverArcherAttack extends DefaultGlobalMethodsStrategy {
                 }
             }
         });
-        console.log("UndercoverArcherAttack", Math.round(result));
+        console.log("UndercoverArcherAttack => > ", Math.round(result));
         return { total: Math.round(result), cache: cache };
     }
     createMytantStrategy() {}

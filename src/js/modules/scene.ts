@@ -13,18 +13,21 @@ export class Scene {
     view: any;
     config_skins: any;
     skins: any;
+    water_blocks: any[];
+    wall_blocks: any[]; // кеш стен
     constructor(loader, arrImg, config_skins, ai) {
         this.loader = loader;
         this.chosePerson = false;
         this.skins = {};
         this.config_skins = config_skins;
         this.collectionPersons = new Collection(arrImg);
+        this.wall_blocks = [];
         //  arrImg.map(elem => {
         //     return new Person(elem);
         // });
         this.view = new ViewScene(this.collectionPersons, this.loader);
         this.curentPerson = undefined;
-
+        this.water_blocks = [];
         this.ai = ai;
         this.ai.initView(this.view);
         this.ai.initPersons(this.collectionPersons, this.syncUnit);
@@ -45,14 +48,14 @@ export class Scene {
             posY = Math.abs(parseInt(this.canvas.style.top.split("px")[0]) - this.getCoordFromStyle(block.style.top));
             // let coord_block = document.createElement("h1");
             // coord_block.innerText = "x:" + block.style.left + " y:" + block.style.top;
-            document.getElementById("block_information").innerHTML =
-                "<h1>x:" +
-                this.getCoordFromStyle(block.style.left) / 120 +
-                " y:" +
-                this.getCoordFromStyle(block.style.top) / 120 +
-                "</h1>";
+            // document.getElementById("block_information").innerHTML =
+            //     "<h1>x:" +
+            //     this.getCoordFromStyle(block.style.left) / 120 +
+            //     " y:" +
+            //     this.getCoordFromStyle(block.style.top) / 120 +
+            //     "</h1>";
 
-            if (posX < 190 && posY < 190) {
+            if (posX < 290 && posY < 290) {
                 block.classList.add("block__free");
             } else {
                 block.classList.add("block__nonFree");
@@ -101,12 +104,16 @@ export class Scene {
     renderElement(element) {
         this.view.renderElement(element);
     }
+    get(name) {
+        return this[name];
+    }
     renderArena() {
         let scence = document.getElementById("scene"),
             block,
             posX = 0,
-            posY = 0;
-        for (let j = 0; j < 7; j++) {
+            posY = 0,
+            position_block;
+        for (let j = 0; j < 8; j++) {
             for (let i = 0; i < 12; i++) {
                 block = document.createElement("img");
                 block.addEventListener("mouseout", this.onOutBlock);
@@ -114,6 +121,14 @@ export class Scene {
                 block.addEventListener("click", this.onMove);
 
                 block = this.view.renderBlockView(block, posX, posY, i, j);
+                if (block.src.indexOf("block1.png") != -1) {
+                    position_block = block.getAttribute("data-coord").split(";");
+                    this.wall_blocks.push({ x: position_block[0], y: position_block[1] });
+                }
+                if (block.src.indexOf("block4.png") != -1) {
+                    position_block = block.getAttribute("data-coord").split(";");
+                    this.water_blocks.push({ x: position_block[0], y: position_block[1] });
+                } // console.log(block.src);
                 scence.appendChild(block);
                 posX += 120;
             }
@@ -177,23 +192,6 @@ export class Scene {
                 elem.initDomPerson(cnvsElem);
                 // когда будем делать графику будет сложнее, тк от этого аподхода придется избавиться
                 cache_skins.forEach((skin) => {
-                    // if (elem.person.evil) {
-                    //     console.log("ele11111m", skin, elem);
-                    //     var dragon = new DragonAnimationUpdate(
-                    //         this.loader.get(skin.src_json),
-                    //         skin.cahce_image,
-                    //         skin.name,
-                    // elem.person.id
-                    //     );
-                    //     if (skin.class == "evil_fighter" && elem.person.class == "fighter") {
-                    //         dragon.show();
-                    //         dragon.updateCanvas(elem.domPerson);
-                    //         if (skin.name == "default_fighter" && elem.person.class == "fighter") {
-                    //             dragon.play();
-                    //         }
-                    //         elem.setAnimation(skin.name, dragon);
-                    //     }
-                    // }
                     if (elem.person.evil) {
                         if (skin.class == "evil_fighter" && elem.person.class == "fighter") {
                             var dragon = new DragonAnimationUpdate(
@@ -206,11 +204,20 @@ export class Scene {
                             if (skin.name == "default_fighter") {
                                 dragon.play();
                             }
+                            // setTimeout(() => {
+                            //     elem.stopAnimation("default_fighter");
+                            //     elem.playAnimation("atacke_fighter");
+                            //     setTimeout(() => {
+                            //         elem.stopAnimation("atacke_fighter");
+                            //         elem.playAnimation("die_fighter");
+                            //         setTimeout(() => {
+                            //             elem.stopAnimation("die_fighter");
+                            //         }, 800);
+                            //     }, 4000);
+                            // }, 7000);
                             elem.setAnimation(skin.name, dragon);
                         }
                         if (skin.class == "evil_archer" && elem.person.class == "archer") {
-                            // console.log("ele11111m", skin, elem);
-                            // console.log("skin.cahce_image", skin.cahce_image);
                             var dragon = new DragonAnimationUpdate(
                                 this.loader.get(skin.src_json),
                                 skin.cahce_image,
@@ -221,6 +228,17 @@ export class Scene {
                             if (skin.name == "default_archer") {
                                 dragon.play();
                             }
+                            // setTimeout(() => {
+                            //     elem.stopAnimation("default_archer");
+                            //     elem.playAnimation("atacke_archer");
+                            //     setTimeout(() => {
+                            //         elem.stopAnimation("atacke_archer");
+                            //         elem.playAnimation("evil_archer_die");
+                            //         setTimeout(() => {
+                            //             elem.stopAnimation("evil_archer_die");
+                            //         }, 750);
+                            //     }, 4000);
+                            // }, 7000);
                             elem.setAnimation(skin.name, dragon);
                         }
                     } else {
@@ -238,8 +256,6 @@ export class Scene {
                             elem.setAnimation(skin.name, dragon);
                         }
                         if (skin.class == "elf_archer" && elem.person.class == "archer") {
-                            console.log("ele11111m", skin, elem);
-                            console.log("skin.cahce_image", skin.cahce_image);
                             var dragon = new DragonAnimationUpdate(
                                 this.loader.get(skin.src_json),
                                 skin.cahce_image,
@@ -253,9 +269,6 @@ export class Scene {
                             elem.setAnimation(skin.name, dragon);
                         }
                     }
-                    // var dragon = new DragonAnimationUpdate(result.data, element.children, obj.name);
-                    // dragon.show();
-                    // dragon;
                 });
 
                 // elem.initDragonAnimatoin();

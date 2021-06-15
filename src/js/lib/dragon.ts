@@ -29,7 +29,6 @@ export class DragonAnimationUpdate {
         this.images = images;
         this.playing = false;
         this.data = data;
-        console.log(name_elem);
         this.name_elem = name_elem;
         this.canvas = null;
         this.unit = unit;
@@ -202,50 +201,47 @@ export class DragonAnimationUpdate {
                 // unit.stopAnimation(this.name_elem);
                 unit.playAnimation("die_fighter");
 
-                // console.log("animation111111", this.unit.getAnimation("atacke"));
-                // animation.stop();
                 setTimeout(() => {
                     unit.stopAnimation("die_fighter");
                 }, 810);
+            }
+            if (unit.person.evil && unit.person.class == "archer") {
+                // unit.stopAnimation(this.name_elem);
+                unit.playAnimation("evil_archer_die");
+
+                setTimeout(() => {
+                    unit.stopAnimation("evil_archer_die");
+                }, 750);
             }
             if (!unit.person.evil && unit.person.class == "archer") {
                 // unit.stopAnimation(this.name_elem);
                 unit.playAnimation("elf_archer_die");
 
-                // console.log("animation111111", this.unit.getAnimation("atacke"));
-                // animation.stop();
                 setTimeout(() => {
                     unit.stopAnimation("elf_archer_die");
-                }, 810);
+                }, 710);
+            }
+            if (!unit.person.evil && unit.person.class == "fighter") {
+                // unit.stopAnimation(this.name_elem);
+                unit.playAnimation("elf_fighter_die");
+                setTimeout(() => {
+                    unit.stopAnimation("elf_fighter_die");
+                }, 660);
             }
         }
-        // console.log(unit);
     }
     drawHealth = (ctx, unit) => {
         let img;
 
-        // console.log("unit", unit, unit.getHealth());
         ctx.moveTo(20, 10);
         // ctx.translate(590, 820);
         ctx.lineWidth = 65;
-
-        // console.log(unit.getHealth(), typeof unit != "undefined");
         if (typeof unit != "undefined") {
-            // console.log(unit.getHealth());
             if (unit.getHealth() <= 10) {
                 // unit.setHealth(unit.getHealth());
 
                 ctx.strokeStyle = "red";
-                // docume   nt.getelement
-                // if (this.unit.evil && this.unit.person.class == "fighter") {
-                //     this.unit.stopAnimation("default_fighter");
-                //     this.unit.playAnimation("die_fighter");
-                //     // console.log("animation111111", this.unit.getAnimation("atacke"));
-                //     // animation.stop();
-                //     setTimeout(() => {
-                //         this.unit.stopAnimation("die_fighter");
-                //     }, 750);
-                // }
+
                 this.killUnit(this.unit);
 
                 ctx.clearRect(0, 0, 1000, 1000);
@@ -253,7 +249,7 @@ export class DragonAnimationUpdate {
 
                 // this.renderPlayer(obj.getDoomObj(), obj, img);
             } else {
-                ctx.strokeStyle = "#2E8B57";
+                ctx.strokeStyle = "#5db96a";
             }
         } else {
             // ctx.strokeStyle = "red";
@@ -278,7 +274,7 @@ export class DragonAnimationUpdate {
     };
     showSkin(slot) {
         slot = slot.reverse();
-        // console.log(this.unit);
+
         let arrCanvas = [],
             ctx,
             obj;
@@ -293,7 +289,7 @@ export class DragonAnimationUpdate {
 
         if (this.canvas != null) {
             this.canvas.width = 1250;
-            this.canvas.height = 1300;
+            this.canvas.height = 1400;
             ctx = this.canvas.getContext("2d");
             arrCanvas.sort(function(elem1, elem2): any {
                 if (elem1.pos.z > elem2.pos.z) {
@@ -308,7 +304,7 @@ export class DragonAnimationUpdate {
             arrCanvas.forEach(function(elem) {
                 ctx.save();
 
-                ctx.translate(elem.pos.x + 590, elem.pos.y + 820);
+                ctx.translate(elem.pos.x + 590, elem.pos.y + 840);
                 ctx.rotate((elem.pos.skX * Math.PI) / 180);
 
                 // if (elem.optimize == "sprite_manager") {

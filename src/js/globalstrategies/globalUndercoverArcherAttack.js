@@ -75,10 +75,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         result -= 500;
                     }
                     if (curent_unit.person.class == "archer") {
-                        result += 5 * Math.abs(80 - enemie.person.health);
+                        result += 2 * Math.abs(80 - enemie.person.health);
                     }
                     else {
-                        result += 3 * Math.abs(80 - enemie.person.health);
+                        result += 10 * Math.abs(80 - enemie.person.health);
                     }
                 });
                 if (curent_unit.isArchers()) {
@@ -113,7 +113,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }
                 }
             });
-            console.log("UndercoverArcherAttack", Math.round(result));
+            console.log("UndercoverArcherAttack => > ", Math.round(result));
             return { total: Math.round(result), cache: cache };
         };
         UndercoverArcherAttack.prototype.createMytantStrategy = function () { };

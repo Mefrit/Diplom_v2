@@ -28,7 +28,7 @@ define(["require", "exports"], function (require, exports) {
                         ctx.clearRect(0, 0, 1000, 1000);
                     }
                     else {
-                        ctx.strokeStyle = "#2E8B57";
+                        ctx.strokeStyle = "#5db96a";
                     }
                 }
                 else {
@@ -40,7 +40,6 @@ define(["require", "exports"], function (require, exports) {
             this.images = images;
             this.playing = false;
             this.data = data;
-            console.log(name_elem);
             this.name_elem = name_elem;
             this.canvas = null;
             this.unit = unit;
@@ -185,11 +184,23 @@ define(["require", "exports"], function (require, exports) {
                         unit.stopAnimation("die_fighter");
                     }, 810);
                 }
+                if (unit.person.evil && unit.person.class == "archer") {
+                    unit.playAnimation("evil_archer_die");
+                    setTimeout(function () {
+                        unit.stopAnimation("evil_archer_die");
+                    }, 750);
+                }
                 if (!unit.person.evil && unit.person.class == "archer") {
                     unit.playAnimation("elf_archer_die");
                     setTimeout(function () {
                         unit.stopAnimation("elf_archer_die");
-                    }, 810);
+                    }, 710);
+                }
+                if (!unit.person.evil && unit.person.class == "fighter") {
+                    unit.playAnimation("elf_fighter_die");
+                    setTimeout(function () {
+                        unit.stopAnimation("elf_fighter_die");
+                    }, 660);
                 }
             }
         };
@@ -206,7 +217,7 @@ define(["require", "exports"], function (require, exports) {
             });
             if (this.canvas != null) {
                 this.canvas.width = 1250;
-                this.canvas.height = 1300;
+                this.canvas.height = 1400;
                 ctx = this.canvas.getContext("2d");
                 arrCanvas.sort(function (elem1, elem2) {
                     if (elem1.pos.z > elem2.pos.z) {
@@ -220,7 +231,7 @@ define(["require", "exports"], function (require, exports) {
                 this.drawHealth(ctx, this.unit);
                 arrCanvas.forEach(function (elem) {
                     ctx.save();
-                    ctx.translate(elem.pos.x + 590, elem.pos.y + 820);
+                    ctx.translate(elem.pos.x + 590, elem.pos.y + 840);
                     ctx.rotate((elem.pos.skX * Math.PI) / 180);
                     ctx.drawImage(elem.img, -elem.img.width / 2, -elem.img.height / 2);
                     ctx.restore();

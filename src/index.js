@@ -1,33 +1,41 @@
-define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules/ai", "./js/modules/scene"], function (require, exports, React, ReactDOM, loader_1, ai_1, scene_1) {
+define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/scene"], function (require, exports, loader_1, ai_1, scene_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var ROOT = document.getElementById("root");
-    ReactDOM.render(React.createElement("h1", null, "Hellen"), ROOT);
     var loader = new loader_1.Downloader();
     var arrPersons = [
         {
+            url: "./src/images/hola_1.png",
+            x: 9,
+            y: 4,
+            evil: false,
+            class: "fighter",
+            damage: 15,
+            health: 20,
+            id: 0,
+        },
+        {
             url: "./src/images/kind_archer2.png",
-            x: 8,
-            y: 3,
+            x: 10,
+            y: 4,
             evil: false,
             class: "archer",
             damage: 10,
-            health: 20,
+            health: 50,
             id: 1,
         },
         {
             url: "./src/images/hola3.png",
-            x: 6,
+            x: 11,
             y: 3,
             evil: false,
             class: "fighter",
             damage: 10,
-            health: 80,
+            health: 30,
             id: 35,
         },
         {
             url: "./src/images/hola2.png",
-            x: 6,
+            x: 10,
             y: 2,
             evil: false,
             class: "fighter",
@@ -38,7 +46,7 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
         {
             url: "./src/images/kind_archer.png",
             x: 10,
-            y: 4,
+            y: 5,
             evil: false,
             class: "archer",
             damage: 10,
@@ -51,49 +59,9 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             y: 3,
             evil: true,
             class: "archer",
-            damage: 19,
+            damage: 30,
             health: 50,
             id: 6,
-        },
-        {
-            url: "./src/images/vinny.png",
-            x: 2,
-            y: 3,
-            evil: true,
-            class: "archer",
-            damage: 10,
-            health: 50,
-            id: 5,
-        },
-        {
-            url: "./src/images/person2_2.png",
-            x: 5,
-            y: 5,
-            evil: true,
-            class: "fighter",
-            damage: 10,
-            health: 50,
-            id: 4,
-        },
-        {
-            url: "./src/images/person2_1.png",
-            x: 0,
-            y: 4,
-            evil: true,
-            class: "fighter",
-            damage: 10,
-            health: 50,
-            id: 8,
-        },
-        {
-            url: "./src/images/person2.png",
-            x: 3,
-            y: 4,
-            evil: true,
-            class: "fighter",
-            damage: 7,
-            health: 80,
-            id: 7,
         },
     ];
     var config_skins = [
@@ -153,6 +121,24 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             class: "evil_archer",
             children: [
                 {
+                    src_json: "./src/images/dragon/evil_archer/evil_archer_die.json",
+                    src_images: [
+                        { name: "quiver", path: "./src/images/dragon/evil_archer/images/quiver.png" },
+                        { name: "3_left_leg", path: "./src/images/dragon/evil_archer/images/3_left_leg.png" },
+                        { name: "3_left_arm", path: "./src/images/dragon/evil_archer/images/3_left_arm.png" },
+                        { name: "3_head", path: "./src/images/dragon/evil_archer/images/3_head.png" },
+                        { name: "aкrow", path: "./src/images/dragon/evil_archer/images/aкrow.png" },
+                        { name: "3_right_arm_2", path: "./src/images/dragon/evil_archer/images/3_right_arm_2.png" },
+                        { name: "3_right_arm_1", path: "./src/images/dragon/evil_archer/images/3_right_arm_1.png" },
+                        { name: "3_body", path: "./src/images/dragon/evil_archer/images/3_body.png" },
+                        { name: "3_right_leg", path: "./src/images/dragon/evil_archer/images/3_right_leg.png" },
+                        { name: "bow_2", path: "./src/images/dragon/evil_archer/images/bow_2.png" }
+                    ],
+                    name: "evil_archer_die",
+                    class: "evil_archer",
+                    scale: 0.8
+                },
+                {
                     src_json: "./src/images/dragon/evil_archer/evil_archer_atacke.json",
                     src_images: [
                         { name: "quiver", path: "./src/images/dragon/evil_archer/images/quiver.png" },
@@ -194,8 +180,23 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             class: "elf_fighter",
             children: [
                 {
+                    src_json: "./src/images/dragon/elf_fighter/elf_fighter_die.json",
+                    src_images: [
+                        { name: "2_leg_left", path: "./src/images/dragon/elf_fighter/images/2_leg_left.png" },
+                        { name: "2_leg_right", path: "./src/images/dragon/elf_fighter/images/2_leg_right.png" },
+                        { name: "2_arm_left", path: "./src/images/dragon/elf_fighter/images/2_arm_left.png" },
+                        { name: "2_body", path: "./src/images/dragon/elf_fighter/images/2_body.png" },
+                        { name: "2_head", path: "./src/images/dragon/elf_fighter/images/2_head.png" },
+                        { name: "sword", path: "./src/images/dragon/elf_fighter/images/sword.png" },
+                        { name: "2_arm_right", path: "./src/images/dragon/elf_fighter/images/2_arm_right.png" },
+                    ],
+                    name: "elf_fighter_die",
                     class: "elf_fighter",
-                    src_json: "./src/images/dragon/elf_fighter/evil_archer_default.json",
+                    scale: 0.8
+                },
+                {
+                    class: "elf_fighter",
+                    src_json: "./src/images/dragon/elf_fighter/elf_fighter_default.json",
                     src_images: [
                         { name: "2_leg_left", path: "./src/images/dragon/elf_fighter/images/2_leg_left.png" },
                         { name: "2_leg_right", path: "./src/images/dragon/elf_fighter/images/2_leg_right.png" },
@@ -266,12 +267,9 @@ define(["require", "exports", "react", "react-dom", "./js/loader", "./js/modules
             this.start();
         }
         Director.prototype.start = function () {
-            var play = document.createElement("input");
-            play.type = "button";
-            play.classList.add("button");
-            play.value = "Ход соперника";
+            var play = document.getElementById("play_btn");
             play.addEventListener("click", this.startAI);
-            document.getElementById("scene").appendChild(play);
+            document.getElementById("container").appendChild(play);
         };
         return Director;
     }());

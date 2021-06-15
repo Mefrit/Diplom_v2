@@ -141,9 +141,44 @@ export class ViewScene {
         block.classList.add("sence__block");
         block.style.left = posX + "px";
         block.style.top = posY + "px";
-        block.src = "src/images/block2.png";
+        let random = this.randomInteger(0, 15);
+        block.src = "src/images/block3.png";
+
+        // if (i == 6 && j == 3) {
+        //     block.src = "src/images/block3.png";
+        // }
+        // if (i == 7 && j == 7) {
+        //     block.src = "src/images/block1.png";
+        // }
+        // if (i == 7 && j == 6) {
+        //     block.src = "src/images/block1.png";
+        // }
+        // if (i == 7 && j == 1) {
+        //     block.src = "src/images/block4.png";
+        // }
+        // if (i == 6 && j == 3) {
+        //     block.src = "src/images/block1.png";
+        // }
+
+        if (random < 7) {
+            block.src = "src/images/block3.png";
+        }
+        if (random >= 7 && random <= 13) {
+            block.src = "src/images/block2.png";
+        }
+        if (random == 14) {
+            block.src = "src/images/block1.png";
+        }
+        if (random == 15) {
+            block.src = "src/images/block4.png";
+        }
 
         return block;
+    }
+    randomInteger(min, max) {
+        // получить случайное число от (min-0.5) до (max+0.5)
+        let rand = min - 0.5 + Math.random() * (max - min + 1);
+        return Math.round(rand);
     }
     showCurentUnit(domPerson) {
         // Fix Me сделать адекватный выбор

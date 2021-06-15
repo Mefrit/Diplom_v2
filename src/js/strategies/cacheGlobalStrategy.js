@@ -2,5 +2,7 @@ define(["require", "exports", "../globalstrategies/globalSmartAgro"], function (
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.cacheGlobalAI = void 0;
-    exports.cacheGlobalAI = [globalSmartAgro_1.SmartAgro];
+    exports.cacheGlobalAI = [
+        globalSmartAgro_1.SmartAgro,
+    ];
 });
