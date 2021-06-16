@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DragonAnimationUpdate = void 0;
     function rotate(pos, angle) {
         var a = (angle / 180) * Math.PI;
         var ca = Math.cos(a);

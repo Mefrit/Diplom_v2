@@ -21,7 +21,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -76,7 +75,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         result += 8 * Math.abs(80 - enemie.person.health);
                     }
                 });
-                enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
+                enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
                 if (curent_unit.isArchers()) {
                     cache_enemies = _this.getEnemyInField({
                         x: curent_unit.person.x,
@@ -94,6 +93,8 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     else {
                         best_enemie = _this.findNearestEnemies(curent_unit);
                     }
+                    console.log("countEnemyWnenMoveToEnemy => ", _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
+                    result += 200 * _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
@@ -102,6 +103,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                         if (_this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
                             result += 500;
+                        }
+                        else {
+                            console.log("countEnemyWnenMoveToEnemy => ", _this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie));
+                            result -= 200 * _this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
                         }
                         if (best_enemie.person.health > curent_unit.person.health) {
                             result -= 300;

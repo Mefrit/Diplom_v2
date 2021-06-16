@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GoAwayIfManyEnemies = void 0;
     var GoAwayIfManyEnemies = (function (_super) {
         __extends(GoAwayIfManyEnemies, _super);
         function GoAwayIfManyEnemies(props) {

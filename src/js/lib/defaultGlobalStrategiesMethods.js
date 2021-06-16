@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "./defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultGlobalMethodsStrategy = void 0;
     var DefaultGlobalMethodsStrategy = (function (_super) {
         __extends(DefaultGlobalMethodsStrategy, _super);
         function DefaultGlobalMethodsStrategy(props) {
@@ -73,6 +72,49 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                     return elem;
                 }
             });
+        };
+        DefaultGlobalMethodsStrategy.prototype.getAllDangersEnemyBetweenUnits = function (unit1, unit2) {
+            var start = { x: unit1.x, y: unit1.y }, end = { x: unit2.x, y: unit2.y };
+            var arr_step_points = [], step_x, step_y, i = 0, enemy = 0;
+            if (unit2.x < unit1.x && unit2.y < unit1.y) {
+                start = { x: unit2.x, y: unit2.y }, end = { x: unit1.x, y: unit1.y };
+            }
+            step_x = parseInt(start.x);
+            step_y = parseInt(start.y);
+            while (true) {
+                if (this.getDistanceBetweenUnits({ x: step_x, y: step_y }, end) < 3 || i == 50) {
+                    break;
+                }
+                if (step_x < end.x) {
+                    step_x++;
+                }
+                if (step_y < end.y) {
+                    step_y++;
+                }
+                i++;
+                enemy += this.getEnemyInField({ x: step_x, y: step_y }, 3).length;
+            }
+            enemy += this.getEnemyInField(end, 3).length;
+            return enemy;
+        };
+        DefaultGlobalMethodsStrategy.prototype.countEnemyWnenMoveToEnemy = function (unit, enemy) {
+            var start = { x: unit.x, y: unit.y }, step_x, step_y;
+            if (this.getDistanceBetweenUnits(start, enemy) < 3) {
+                return this.getEnemyInField(start, 3).length;
+            }
+            if (enemy.x < unit.x) {
+                step_x += unit.x - 2;
+            }
+            else {
+                step_x += unit.x - 2;
+            }
+            if (enemy.y < unit.y) {
+                step_y += unit.y - 2;
+            }
+            else {
+                step_y += unit.y + 2;
+            }
+            return this.getEnemyInField({ x: step_x, y: step_y }, 3).length;
         };
         DefaultGlobalMethodsStrategy.prototype.getEnemieFromCachePurpose = function (cache_purpose, id) {
             var result = cache_purpose.filter(function (elem) {
