@@ -64,15 +64,13 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             xLineCondition = false;
             yLineCondition = false;
         }
-        // console.log(yLineCondition, "||", xLineCondition, "||", resCheck.arrayPoit.length);
+
         if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
-            // console.log(Math.abs(this.unit.x - enemie.x), Math.abs(this.unit.y - enemie.y));
             if (Math.abs(this.unit.x - enemie.x) >= Math.abs(this.unit.y - enemie.y)) {
                 // поиск атаки по горизонтале
                 if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
                     this.moveAutoStepStupid(this.unit, enemie, "archer");
                 } else {
-                    // if (Math.abs(this.unit.y - enemie.y) < 3 && this.unit.y != enemie.y && !this.unit.moveAction) {
                     if (Math.abs(this.unit.y - enemie.y) < 3 && this.unit.y != enemie.y && !this.unit.moveAction) {
                         this.moveAutoStepStupid(this.unit, enemie, "archer");
                     }
@@ -142,7 +140,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         if (resCheck.free) {
             res = this.tryAtakeArcher(resCheck, enemie);
             if (!res.result) {
-                this.moveCarefully(this.unit, enemie, "archer", {});
+                // this.moveCarefully(this.unit, enemie, "archer", {});
+                this.got2AttackePosition(enemie);
                 maxX = Math.abs(enemie.person.x - this.unit.person.x);
                 maxY = Math.abs(enemie.person.y - this.unit.person.y);
 

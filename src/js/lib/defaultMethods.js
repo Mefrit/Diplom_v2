@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -518,6 +519,7 @@ define(["require", "exports"], function (require, exports) {
                 coord = this.maxFreeLineForArcher(enemie, "x");
             }
             else {
+                console.log("maxFreeLineForArcher", this.maxFreeLineForArcher(enemie, "y"), enemie, unit);
                 coord = this.maxFreeLineForArcher(enemie, "y");
             }
             return coord;

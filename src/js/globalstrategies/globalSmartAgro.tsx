@@ -34,7 +34,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         return reverse ? [...ai_units].reverse() : ai_units;
     }
     assessment(cache: any = {}) {
-        let result = 1000, min_health = 200, enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
+        let result = 1000, cache_died = [], enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
         // ввести кеш, тех мест где приблизительно будут находиться друзья,
         // ..когда пойжут мочить врагов
         // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
@@ -73,6 +73,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 if (cache_enemies.length > 0) {
                     // вопрос, когда лучше удалять этих чуваков?
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                    cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
                     if (cache_enemies.length > 0) {
                         best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
                     } else {
@@ -81,20 +82,32 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 } else {
                     best_enemie = this.findNearestEnemies(curent_unit);
                 }
-                console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
+                // console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
                 result += 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
+                // console.log("cache_died archer", curent_unit.person.damage, (best_enemie.person.health - 10), this.getDistanceBetweenUnits(curent_unit, best_enemie));
+                if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
+                    cache_died.push(best_enemie);
+
+                }
+
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
             } else {
                 if (enemies_near_3.length > 0) {
-                    best_enemie = this.getBestEnemie(enemies_near_3, curent_unit)
+                    enemies_near_3 = this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);
+                    best_enemie = this.getBestEnemie(enemies_near_3, curent_unit);
+                    // console.log("cache_died fighter", curent_unit.person.damage, best_enemie.person.health, this.getDistanceBetweenUnits(curent_unit, best_enemie));
+                    if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {
 
+                        cache_died.push(best_enemie);
+
+                    }
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
 
                     if (this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
                         result += 500;
                     } else {
                         /// просчитать риски, возникающие на пути к врагу
-                        console.log("countEnemyWnenMoveToEnemy => ", this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie));
+                        // console.log("countEnemyWnenMoveToEnemy => ", this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie));
                         result -= 200 * this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
                     }
                     if (best_enemie.person.health > curent_unit.person.health) {
@@ -108,7 +121,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             }
 
         });
-        console.log("Smart Agro", Math.round(result));
+        console.log("Smart Agro", Math.round(result), cache);
         return { total: Math.round(result), cache: cache };
     }
 

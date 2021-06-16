@@ -1,6 +1,7 @@
 define(["require", "exports", "./lib/dragon"], function (require, exports, dragon_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.ViewScene = void 0;
     var ViewScene = (function () {
         function ViewScene(arrObjPlayers, loader) {
             var _this = this;
@@ -112,18 +113,18 @@ define(["require", "exports", "./lib/dragon"], function (require, exports, drago
             block.classList.add("sence__block");
             block.style.left = posX + "px";
             block.style.top = posY + "px";
-            var random = this.randomInteger(0, 18);
+            var random = this.randomInteger(0, 25);
             block.src = "src/images/block3.png";
             if (random < 7) {
                 block.src = "src/images/block3.png";
             }
-            if (random >= 7 && random <= 16) {
+            if (random >= 7 && random <= 23) {
                 block.src = "src/images/block2.png";
             }
-            if (random == 18) {
+            if (random == 25) {
                 block.src = "src/images/block1.png";
             }
-            if (random == 17) {
+            if (random == 24) {
                 block.src = "src/images/block4.png";
             }
             return block;

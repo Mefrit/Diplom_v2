@@ -120,7 +120,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 if (res.findEnime == true) {
                     // attakedEnemie = res.enemie;
                     // запуск анимации атаки
-                    console.log("this.unit2", this.unit);
+
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
                     // console.log("animation111111", this.unit.getAnimation("atacke"));

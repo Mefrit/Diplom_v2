@@ -406,7 +406,7 @@ export class DefaultMethodsStrategy {
     // автоматический путь к задангным координатам без учета возможных опасностей
     moveAutoStepStupid = (unit, obj2go, type = "fighter") => {
         // нужн окак то придумать, что бы можно было обходить препятствия и строить оптимальный путь
-
+        // console.log(unit, obj2go);
         // хранит путь до точки
         let pointsNear,
             res = { findEnime: false, enemie: obj2go, type: type };
@@ -672,12 +672,8 @@ export class DefaultMethodsStrategy {
             // }
             coord = this.maxFreeLineForArcher(enemie, "x");
         } else {
+            console.log("maxFreeLineForArcher", this.maxFreeLineForArcher(enemie, "y"), enemie, unit);
             coord = this.maxFreeLineForArcher(enemie, "y");
-            // if (enemie.y > 4) {
-            //     coord = { x: enemie.x, y: 0 };
-            // } else {
-            //     coord = { x: enemie.x, y: 7 };
-            // }
         }
         return coord;
     }

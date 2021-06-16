@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FightIfYouCan = void 0;
     var FightIfYouCan = (function (_super) {
         __extends(FightIfYouCan, _super);
         function FightIfYouCan(props) {
@@ -75,7 +76,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 else {
                     res = _this.moveCarefully(_this.unit, enemie, "fighter", cache_unit);
                     if (res.findEnime == true) {
-                        console.log("this.unit2", _this.unit);
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         setTimeout(function () {

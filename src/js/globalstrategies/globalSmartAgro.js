@@ -21,6 +21,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -51,7 +52,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         SmartAgro.prototype.assessment = function (cache) {
             var _this = this;
             if (cache === void 0) { cache = {}; }
-            var result = 1000, min_health = 200, enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
+            var result = 1000, cache_died = [], enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
             this.ai_units.forEach(function (curent_unit) {
                 if (curent_unit.person.health < 30) {
                     result -= 400;
@@ -83,6 +84,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }, 5);
                     if (cache_enemies.length > 0) {
                         cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                        cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
                         if (cache_enemies.length > 0) {
                             best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
                         }
@@ -93,19 +95,24 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     else {
                         best_enemie = _this.findNearestEnemies(curent_unit);
                     }
-                    console.log("countEnemyWnenMoveToEnemy => ", _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
                     result += 200 * _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
+                    if (curent_unit.person.damage >= (best_enemie.person.health - 10) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
+                        cache_died.push(best_enemie);
+                    }
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
                     if (enemies_near_3.length > 0) {
+                        enemies_near_3 = _this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);
                         best_enemie = _this.getBestEnemie(enemies_near_3, curent_unit);
+                        if (curent_unit.person.damage >= (best_enemie.person.health - 10) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {
+                            cache_died.push(best_enemie);
+                        }
                         cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                         if (_this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
                             result += 500;
                         }
                         else {
-                            console.log("countEnemyWnenMoveToEnemy => ", _this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie));
                             result -= 200 * _this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
                         }
                         if (best_enemie.person.health > curent_unit.person.health) {
@@ -117,7 +124,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }
                 }
             });
-            console.log("Smart Agro", Math.round(result));
+            console.log("Smart Agro", Math.round(result), cache);
             return { total: Math.round(result), cache: cache };
         };
         SmartAgro.prototype.startMove = function (cache_unit, index) {
