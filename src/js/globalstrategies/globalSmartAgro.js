@@ -81,8 +81,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     cache_enemies = _this.getEnemyInField({
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
-                    }, 5);
+                    }, 8);
                     if (cache_enemies.length > 0) {
+                        console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                         cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                         cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
                         if (cache_enemies.length > 0) {

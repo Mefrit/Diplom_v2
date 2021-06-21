@@ -11,40 +11,46 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
         var best_enemie = cache_enemies[0],
             distance_best,
             tmp,
-            res_x,
-            res_y,
-            find_archer = false,
-            resCheck,
             have_best_choise = false;
 
-        distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
+        distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
 
         cache_enemies.forEach((elem) => {
             if (!have_best_choise) {
-                tmp = this.getDistanceBetweenUnits(elem, unit).toFixed(0);
+                tmp = Math.round(this.getDistanceBetweenUnits(elem, unit));
 
-                // && !find_archer
-                if (tmp < distance_best) {
+                if (tmp <= distance_best) {
                     if (
                         best_enemie.x != elem.x ||
                         (best_enemie.y != elem.y && this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)
                     ) {
-                        // if (elem.person.health < best_enemie.person.health) {
                         best_enemie = elem;
                         distance_best = tmp;
-                        // }
                     }
                 }
-                // console.log("tmp",tmp,distance_best,elem.domPerson);
-                if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
+
+                if (tmp == distance_best) {
                     // чтобы не врывался в толпу врагов ии
                     if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
                         if (this.isArchers(elem)) {
                             best_enemie = elem;
-                            find_archer = true;
                         } else {
                             // if (best_enemie.person.health > elem.person.health) {
                             if (unit.person.damage > elem.person.health) {
+                                best_enemie = elem;
+                            }
+                        }
+                    }
+                    if (elem.x == unit.x || elem.y == unit.y) {
+                        best_enemie = elem;
+                        if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+                            have_best_choise = true;
+                        }
+                    }
+                } else {
+                    if (Math.abs(tmp - distance_best) <= 2.5) {
+                        if (elem.x == unit.x && elem.y == unit.y && this.isArchers(unit)) {
+                            if (best_enemie.x != unit.x || best_enemie.y != unit.y) {
                                 best_enemie = elem;
                                 have_best_choise = true;
                             }
@@ -77,16 +83,20 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     }
     // примерное количесвто опасных врагов
     getAllDangersEnemyBetweenUnits(unit1, unit2) {
-        let start = { x: unit1.x, y: unit1.y }, end = { x: unit2.x, y: unit2.y };
+        let start = { x: unit1.x, y: unit1.y },
+            end = { x: unit2.x, y: unit2.y };
         // getDistanceBetweenUnits
         // getPointsField
-        let arr_step_points = [], step_x, step_y, i = 0, enemy = 0;
+        let step_x,
+            step_y,
+            i = 0,
+            enemy = 0;
         if (unit2.x < unit1.x && unit2.y < unit1.y) {
-            start = { x: unit2.x, y: unit2.y }, end = { x: unit1.x, y: unit1.y };
+            (start = { x: unit2.x, y: unit2.y }), (end = { x: unit1.x, y: unit1.y });
         }
         step_x = parseInt(start.x);
         step_y = parseInt(start.y);
-        // console.log(start, step_y, step_x);
+
         while (true) {
             if (this.getDistanceBetweenUnits({ x: step_x, y: step_y }, end) < 3 || i == 50) {
                 break;
@@ -99,15 +109,15 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
             }
             i++;
             enemy += this.getEnemyInField({ x: step_x, y: step_y }, 3).length;
-
         }
         enemy += this.getEnemyInField(end, 3).length;
 
         return enemy;
-
     }
     countEnemyWnenMoveToEnemy(unit, enemy) {
-        let start = { x: unit.x, y: unit.y }, step_x, step_y;
+        let start = { x: unit.x, y: unit.y },
+            step_x,
+            step_y;
         if (this.getDistanceBetweenUnits(start, enemy) < 3) {
             return this.getEnemyInField(start, 3).length;
         }
@@ -145,12 +155,22 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     }
 
     sortArchersFirst(cacheAi) {
-        return cacheAi.sort((prev, next) => {
-            if (prev.person.class == "archer") {
-                return -1;
-            } else {
-                return 1;
-            }
-        });
+        let res = cacheAi.sort((prev, next) => {
+                if (prev.person.class == "archer") {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }),
+            tmp;
+        if (cacheAi.length < 2) {
+            return res;
+        }
+        if (this.getEnemyInField(res[1], 5) > this.getEnemyInField(res[0], 5)) {
+            tmp = res[1];
+            res[1] = res[0];
+            res[0] = tmp;
+        }
+        return res;
     }
 }

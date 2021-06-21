@@ -101,10 +101,9 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             ) {
                 this.moveTo(this.unit, checkArcherPosition.point);
                 if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1) {
-                    // console.log("this.unit1", this.unit);
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
-                    // console.log("animation111111", this.unit.getAnimation("atacke"));
+
                     // animation.stop();
                     setTimeout(() => {
                         this.unit.stopAnimation("atacke_fighter");
@@ -123,7 +122,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
 
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
-                    // console.log("animation111111", this.unit.getAnimation("atacke"));
+
                     // animation.stop();
                     setTimeout(() => {
                         this.unit.stopAnimation("atacke_fighter");
@@ -136,7 +135,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
 
             setTimeout(() => {
                 resolve("Promise3");
-            }, 500);
+            }, 300);
         });
     }
     findEnemieForAtake(enemie) {

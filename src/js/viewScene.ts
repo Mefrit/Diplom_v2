@@ -141,7 +141,7 @@ export class ViewScene {
         block.classList.add("sence__block");
         block.style.left = posX + "px";
         block.style.top = posY + "px";
-        let random = this.randomInteger(0, 25);
+        let random = this.randomInteger(0, 30);
         block.src = "src/images/block3.png";
 
         // if (i == 6 && j == 3) {
@@ -166,13 +166,18 @@ export class ViewScene {
         if (random >= 7 && random <= 23) {
             block.src = "src/images/block2.png";
         }
-        if (random == 25) {
+        if (random == 29) {
             block.src = "src/images/block1.png";
         }
-        if (random == 24) {
+        if (random == 30) {
             block.src = "src/images/block4.png";
         }
-
+        if (i == 8 && j == 4) {
+            block.src = "src/images/block1.png";
+        }
+        if (i == 4 && j == 3) {
+            block.src = "src/images/block1.png";
+        }
         return block;
     }
     randomInteger(min, max) {

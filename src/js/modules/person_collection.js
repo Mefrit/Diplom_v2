@@ -35,8 +35,8 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
         Collection.prototype.checkFreeCoord = function (coord) {
             var res = true;
             this.collection.forEach(function (element) {
-                if (!element.isNotDied()) {
-                    if (element.x == coord.x && element.y == coord.y) {
+                if (element.x == coord.x && element.y == coord.y) {
+                    if (!element.isNotDied()) {
                         res = false;
                     }
                 }

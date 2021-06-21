@@ -83,10 +83,10 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
                     }
                 }
             }
-
+            this.unit.setMoveAction(false);
             setTimeout(() => {
                 resolve("Promise2");
-            }, 220);
+            }, 320);
         });
         // this.findNearestEnemies(this.unit)
         // мы нашли ближайшего врага и лучника, следует двигаться к позиции стрельбы лучника,

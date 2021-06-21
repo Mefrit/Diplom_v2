@@ -109,6 +109,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
     }
     got2AttackePosition(enemie) {
+        console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
         if (this.parent_strategy == "UndercoverArcherAttack") {
             return this.moveAutoStepStupid(
                 this.unit,
@@ -116,12 +117,17 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 "fighter"
             );
         }
+        let res = this.checkFreeWay2Atack(enemie, this.unit, "x"),
+            coord;
+        if (this.getDistanceBetweenUnits(enemie, this.unit) > 5) {
+            return this.moveAutoStepStupid(this.unit, enemie, "archer");
+        }
+        coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
 
-        let res = this.checkFreeWay2Atack(enemie, this.unit, "x");
-
-        let coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-        if (res.free) {
-            return this.moveAutoStepStupid(this.unit, coord, "archer");
+        if (coord) {
+            // return this.moveAutoStepStupid(this.unit, coord, "archer");
+            console.log("coord", coord);
+            return this.moveAutoStepStupid(this.unit, coord, "stupid");
         } else {
             return this.moveAutoStepStupid(this.unit, coord, "fighter");
         }
@@ -138,10 +144,14 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
 
         if (resCheck.free) {
+            this.got2AttackePosition(enemie);
             res = this.tryAtakeArcher(resCheck, enemie);
             if (!res.result) {
                 // this.moveCarefully(this.unit, enemie, "archer", {});
-                this.got2AttackePosition(enemie);
+                console.log("0", this.unit);
+                if (!this.unit.moveAction) {
+                    this.got2AttackePosition(enemie);
+                }
                 maxX = Math.abs(enemie.person.x - this.unit.person.x);
                 maxY = Math.abs(enemie.person.y - this.unit.person.y);
 
@@ -155,7 +165,10 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 }
             }
         } else {
-            this.got2AttackePosition(enemie);
+            console.log("1", this.unit);
+            if (!this.unit.moveAction) {
+                this.got2AttackePosition(enemie);
+            }
             maxX = Math.abs(enemie.person.x - this.unit.person.x);
             maxY = Math.abs(enemie.person.y - this.unit.person.y);
 
@@ -175,7 +188,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             this.last_enemie = enemie;
 
             this.findPointAtackArcher(enemie);
-
+            this.unit.setMoveAction(false);
             setTimeout(() => {
                 resolve("Promise");
             }, 520);
@@ -186,10 +199,12 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             if (enemie.isNotDied()) {
                 enemie = this.findNearestEnemies(this.unit);
             }
+            console.log("atackeChosenUnit");
             this.findPointAtackArcher(enemie);
+            this.unit.setMoveAction(false);
             setTimeout(() => {
                 resolve("Promise5");
-            }, 120);
+            }, 320);
         });
     }
 }

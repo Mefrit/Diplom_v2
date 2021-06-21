@@ -112,13 +112,18 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
         };
         AtackTheArcher.prototype.got2AttackePosition = function (enemie) {
+            console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
             if (this.parent_strategy == "UndercoverArcherAttack") {
                 return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
-            var res = this.checkFreeWay2Atack(enemie, this.unit, "x");
-            var coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-            if (res.free) {
-                return this.moveAutoStepStupid(this.unit, coord, "archer");
+            var res = this.checkFreeWay2Atack(enemie, this.unit, "x"), coord;
+            if (this.getDistanceBetweenUnits(enemie, this.unit) > 5) {
+                return this.moveAutoStepStupid(this.unit, enemie, "archer");
+            }
+            coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
+            if (coord) {
+                console.log("coord", coord);
+                return this.moveAutoStepStupid(this.unit, coord, "stupid");
             }
             else {
                 return this.moveAutoStepStupid(this.unit, coord, "fighter");
@@ -133,9 +138,13 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
             }
             if (resCheck.free) {
+                this.got2AttackePosition(enemie);
                 res = this.tryAtakeArcher(resCheck, enemie);
                 if (!res.result) {
-                    this.got2AttackePosition(enemie);
+                    console.log("0", this.unit);
+                    if (!this.unit.moveAction) {
+                        this.got2AttackePosition(enemie);
+                    }
                     maxX = Math.abs(enemie.person.x - this.unit.person.x);
                     maxY = Math.abs(enemie.person.y - this.unit.person.y);
                     if (maxY > maxX) {
@@ -150,7 +159,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
             }
             else {
-                this.got2AttackePosition(enemie);
+                console.log("1", this.unit);
+                if (!this.unit.moveAction) {
+                    this.got2AttackePosition(enemie);
+                }
                 maxX = Math.abs(enemie.person.x - this.unit.person.x);
                 maxY = Math.abs(enemie.person.y - this.unit.person.y);
                 if (maxY > maxX) {
@@ -170,6 +182,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 var enemie = _this.findNearestEnemies(_this.unit);
                 _this.last_enemie = enemie;
                 _this.findPointAtackArcher(enemie);
+                _this.unit.setMoveAction(false);
                 setTimeout(function () {
                     resolve("Promise");
                 }, 520);
@@ -181,10 +194,12 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (enemie.isNotDied()) {
                     enemie = _this.findNearestEnemies(_this.unit);
                 }
+                console.log("atackeChosenUnit");
                 _this.findPointAtackArcher(enemie);
+                _this.unit.setMoveAction(false);
                 setTimeout(function () {
                     resolve("Promise5");
-                }, 120);
+                }, 320);
             });
         };
         return AtackTheArcher;

@@ -109,6 +109,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
                 nearest_friend = this.getNearFriendsUnit(this.unit, near_friends);
                 this.go2friendsSafety(nearest_friend);
             }
+            this.unit.setMoveAction(false);
             console.log("nearest_friend", nearest_friend);
             setTimeout(() => {
                 resolve("Promise4");

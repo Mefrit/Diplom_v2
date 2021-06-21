@@ -61,7 +61,7 @@ export class Person {
         return this.person.url;
     }
     isNotDied() {
-        return this.person.health <= 10;
+        return this.person.health <= 12;
     }
     getId() {
         return this.person.id;

@@ -103,6 +103,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     nearest_friend = _this.getNearFriendsUnit(_this.unit, near_friends);
                     _this.go2friendsSafety(nearest_friend);
                 }
+                _this.unit.setMoveAction(false);
                 console.log("nearest_friend", nearest_friend);
                 setTimeout(function () {
                     resolve("Promise4");

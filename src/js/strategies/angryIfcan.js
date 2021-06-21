@@ -88,7 +88,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 _this.unit.setMoveAction(false);
                 setTimeout(function () {
                     resolve("Promise3");
-                }, 500);
+                }, 300);
             });
         };
         FightIfYouCan.prototype.findEnemieForAtake = function (enemie) {

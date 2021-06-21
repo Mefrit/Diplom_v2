@@ -25,26 +25,40 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         };
         DefaultGlobalMethodsStrategy.prototype.getBestEnemie = function (cache_enemies, unit) {
             var _this = this;
-            var best_enemie = cache_enemies[0], distance_best, tmp, res_x, res_y, find_archer = false, resCheck, have_best_choise = false;
-            distance_best = this.getDistanceBetweenUnits(best_enemie, unit);
+            var best_enemie = cache_enemies[0], distance_best, tmp, have_best_choise = false;
+            distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
             cache_enemies.forEach(function (elem) {
                 if (!have_best_choise) {
-                    tmp = _this.getDistanceBetweenUnits(elem, unit).toFixed(0);
-                    if (tmp < distance_best) {
+                    tmp = Math.round(_this.getDistanceBetweenUnits(elem, unit));
+                    if (tmp <= distance_best) {
                         if (best_enemie.x != elem.x ||
                             (best_enemie.y != elem.y && _this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)) {
                             best_enemie = elem;
                             distance_best = tmp;
                         }
                     }
-                    if (Math.abs(tmp - distance_best) == 1 || tmp == distance_best) {
+                    if (tmp == distance_best) {
                         if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
                             if (_this.isArchers(elem)) {
                                 best_enemie = elem;
-                                find_archer = true;
                             }
                             else {
                                 if (unit.person.damage > elem.person.health) {
+                                    best_enemie = elem;
+                                }
+                            }
+                        }
+                        if (elem.x == unit.x || elem.y == unit.y) {
+                            best_enemie = elem;
+                            if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+                                have_best_choise = true;
+                            }
+                        }
+                    }
+                    else {
+                        if (Math.abs(tmp - distance_best) <= 2.5) {
+                            if (elem.x == unit.x && elem.y == unit.y && _this.isArchers(unit)) {
+                                if (best_enemie.x != unit.x || best_enemie.y != unit.y) {
                                     best_enemie = elem;
                                     have_best_choise = true;
                                 }
@@ -76,9 +90,9 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         };
         DefaultGlobalMethodsStrategy.prototype.getAllDangersEnemyBetweenUnits = function (unit1, unit2) {
             var start = { x: unit1.x, y: unit1.y }, end = { x: unit2.x, y: unit2.y };
-            var arr_step_points = [], step_x, step_y, i = 0, enemy = 0;
+            var step_x, step_y, i = 0, enemy = 0;
             if (unit2.x < unit1.x && unit2.y < unit1.y) {
-                start = { x: unit2.x, y: unit2.y }, end = { x: unit1.x, y: unit1.y };
+                (start = { x: unit2.x, y: unit2.y }), (end = { x: unit1.x, y: unit1.y });
             }
             step_x = parseInt(start.x);
             step_y = parseInt(start.y);
@@ -138,14 +152,23 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
             return result;
         };
         DefaultGlobalMethodsStrategy.prototype.sortArchersFirst = function (cacheAi) {
-            return cacheAi.sort(function (prev, next) {
+            var res = cacheAi.sort(function (prev, next) {
                 if (prev.person.class == "archer") {
                     return -1;
                 }
                 else {
                     return 1;
                 }
-            });
+            }), tmp;
+            if (cacheAi.length < 2) {
+                return res;
+            }
+            if (this.getEnemyInField(res[1], 5) > this.getEnemyInField(res[0], 5)) {
+                tmp = res[1];
+                res[1] = res[0];
+                res[0] = tmp;
+            }
+            return res;
         };
         return DefaultGlobalMethodsStrategy;
     }(defaultMethods_1.DefaultMethodsStrategy));

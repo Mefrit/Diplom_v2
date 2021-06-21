@@ -61,16 +61,16 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     result += 8 * Math.abs(80 - enemie.person.health);
                 }
             });
-            // enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
             enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
 
             if (curent_unit.isArchers()) {
                 cache_enemies = this.getEnemyInField({
                     x: curent_unit.person.x,
                     y: curent_unit.person.y
-                }, 5);
+                }, 8);
 
                 if (cache_enemies.length > 0) {
+                    console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
@@ -84,7 +84,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 }
                 // console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
                 result += 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
-                // console.log("cache_died archer", curent_unit.person.damage, (best_enemie.person.health - 10), this.getDistanceBetweenUnits(curent_unit, best_enemie));
+
                 if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                     cache_died.push(best_enemie);
 
@@ -162,7 +162,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             unit: unit,
             global_cache: this.global_cache
         });
-        // console.log("best_enemie", cache_unit[index], best_enemie);
+
         ai.atackeChosenUnit(cache_unit, best_enemie).then(() => {
             if (index < cache_unit.length - 1) {
                 this.startMove(cache_unit, index + 1);
@@ -172,6 +172,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
 
     start(cache) {
         this.global_cache = cache;
+
         // ToDO? сделать так что бы программа проверяла в какой
         //  последовательности ходить юнитами, типа если бойцы атаку прикрывают - их 1ми
         this.ai_units = this.sortArchersFirst(this.ai_units);

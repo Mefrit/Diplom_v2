@@ -52,7 +52,7 @@ define(["require", "exports"], function (require, exports) {
             return this.person.url;
         };
         Person.prototype.isNotDied = function () {
-            return this.person.health <= 10;
+            return this.person.health <= 12;
         };
         Person.prototype.getId = function () {
             return this.person.id;

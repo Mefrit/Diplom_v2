@@ -34,8 +34,9 @@ export class Collection {
     checkFreeCoord(coord) {
         let res = true;
         this.collection.forEach((element) => {
-            if (!element.isNotDied()) {
-                if (element.x == coord.x && element.y == coord.y) {
+            if (element.x == coord.x && element.y == coord.y) {
+                if (!element.isNotDied()) {
+                    // console.log("element isNotDied", element);
                     res = false;
                 }
             }
