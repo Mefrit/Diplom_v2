@@ -35,9 +35,12 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                             (best_enemie.y != elem.y && _this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 3)) {
                             best_enemie = elem;
                             distance_best = tmp;
+                            if (elem.x == unit.x || elem.y == unit.y) {
+                                have_best_choise = true;
+                            }
                         }
                     }
-                    if (tmp == distance_best) {
+                    if (tmp == distance_best && !have_best_choise) {
                         if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
                             if (_this.isArchers(elem)) {
                                 best_enemie = elem;
@@ -50,18 +53,19 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                         }
                         if (elem.x == unit.x || elem.y == unit.y) {
                             best_enemie = elem;
-                            if (_this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-                                have_best_choise = true;
-                            }
+                            have_best_choise = true;
                         }
                     }
                     else {
-                        if (Math.abs(tmp - distance_best) <= 2.5) {
-                            if (elem.x == unit.x && elem.y == unit.y && _this.isArchers(unit)) {
-                                if (best_enemie.x != unit.x || best_enemie.y != unit.y) {
-                                    best_enemie = elem;
-                                    have_best_choise = true;
-                                }
+                        if (Math.abs(tmp - distance_best) < 2) {
+                            if ((best_enemie.x == unit.x ||
+                                best_enemie.y == unit.y ||
+                                Math.abs(elem.y - unit.y) == 1 ||
+                                Math.abs(elem.x - unit.x) == 1 ||
+                                elem.person.health - unit.person.damage < 10) &&
+                                _this.getEnemyInField(elem, 2) < 2) {
+                                best_enemie = elem;
+                                have_best_choise = true;
                             }
                         }
                     }
@@ -163,7 +167,7 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
             if (cacheAi.length < 2) {
                 return res;
             }
-            if (this.getEnemyInField(res[1], 5) > this.getEnemyInField(res[0], 5)) {
+            if (this.getEnemyInField(res[1], 5) >= this.getEnemyInField(res[0], 5)) {
                 tmp = res[1];
                 res[1] = res[0];
                 res[0] = tmp;

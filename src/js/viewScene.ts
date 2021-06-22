@@ -98,7 +98,7 @@ export class ViewScene {
     }
     renderDragon(name) {
         //
-        new DragonAnimationUpdate(result.data, element.children, name);
+        // new DragonAnimationUpdate(result.data, element.children, name);
     }
     clearPrev(canvas, loader) {
         let ctx = canvas.getContext("2d"),
@@ -141,7 +141,7 @@ export class ViewScene {
         block.classList.add("sence__block");
         block.style.left = posX + "px";
         block.style.top = posY + "px";
-        let random = this.randomInteger(0, 30);
+        let random = this.randomInteger(0, 40);
         block.src = "src/images/block3.png";
 
         // if (i == 6 && j == 3) {
@@ -159,24 +159,57 @@ export class ViewScene {
         // if (i == 6 && j == 3) {
         //     block.src = "src/images/block1.png";
         // }
-
-        if (random < 7) {
+        block.src = "src/images/block2.png";
+        if (random < 20) {
             block.src = "src/images/block3.png";
         }
-        if (random >= 7 && random <= 23) {
-            block.src = "src/images/block2.png";
-        }
-        if (random == 29) {
-            block.src = "src/images/block1.png";
-        }
-        if (random == 30) {
-            block.src = "src/images/block4.png";
-        }
-        if (i == 8 && j == 4) {
+        // if (random >= 7 && random <= 23) {
+        //     block.src = "src/images/block2.png";
+        // }
+        // if (random == 39) {
+        //     block.src = "src/images/block1.png";
+        // }
+        // if (random == 40) {
+        //     block.src = "src/images/block4.png";
+        // }
+        if (i == 8 && j == 1) {
             block.src = "src/images/block1.png";
         }
         if (i == 4 && j == 3) {
+            block.src = "src/images/block4.png";
+        }
+        if (i == 4 && j == 3) {
+            block.src = "src/images/block4.png";
+        }
+        if (i == 4 && j == 2) {
+            block.src = "src/images/block4.png";
+        }
+        if (i == 4 && j == 1) {
+            block.src = "src/images/block4.png";
+        }
+        if (i == 8 && j == 4) {
+            block.src = "src/images/block4.png";
+        }
+        if (i == 8 && j == 5) {
+            block.src = "src/images/block4.png";
+        }
+        if (i == 8 && j == 6) {
+            block.src = "src/images/block4.png";
+        }
+        if (i == 5 && j == 7) {
             block.src = "src/images/block1.png";
+        }
+        if (i == 2 && j == 2) {
+            block.src = "src/images/block1.png";
+        }
+        if (i == 7 && j == 5) {
+            block.src = "src/images/block1.png";
+        }
+        if (i == 1 && j == 5) {
+            block.src = "src/images/block1.png";
+        }
+        if (i == 2 && j == 5) {
+            block.src = "src/images/block4.png";
         }
         return block;
     }

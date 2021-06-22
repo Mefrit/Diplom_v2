@@ -34,7 +34,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         return reverse ? [...ai_units].reverse() : ai_units;
     }
     assessment(cache: any = {}) {
-        let result = 1000, cache_died = [], enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
+        let result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, enemie_first_archer = undefined;
         // ввести кеш, тех мест где приблизительно будут находиться друзья,
         // ..когда пойжут мочить врагов
         // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
@@ -72,7 +72,13 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 if (cache_enemies.length > 0) {
                     console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
-                    cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                    if (enemie_first_archer) {
+                        if (this.getEnemyInField(enemie_first_archer, 3) != 0) {
+                            cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                        }
+                    }
+
+
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
                     if (cache_enemies.length > 0) {
                         best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
@@ -85,11 +91,10 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 // console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
                 result += 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
 
-                if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
+                if (curent_unit.person.damage >= (best_enemie.person.health - 5) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                     cache_died.push(best_enemie);
-
                 }
-
+                enemie_first_archer = best_enemie;
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
             } else {
                 if (enemies_near_3.length > 0) {

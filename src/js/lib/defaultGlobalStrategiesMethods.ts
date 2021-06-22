@@ -26,10 +26,15 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                     ) {
                         best_enemie = elem;
                         distance_best = tmp;
+                        if (elem.x == unit.x || elem.y == unit.y) {
+                            // if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+                            have_best_choise = true;
+                            // }
+                        }
                     }
                 }
 
-                if (tmp == distance_best) {
+                if (tmp == distance_best && !have_best_choise) {
                     // чтобы не врывался в толпу врагов ии
                     if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
                         if (this.isArchers(elem)) {
@@ -43,17 +48,28 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                     }
                     if (elem.x == unit.x || elem.y == unit.y) {
                         best_enemie = elem;
-                        if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-                            have_best_choise = true;
-                        }
+                        // if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+                        have_best_choise = true;
+                        // }
                     }
                 } else {
-                    if (Math.abs(tmp - distance_best) <= 2.5) {
-                        if (elem.x == unit.x && elem.y == unit.y && this.isArchers(unit)) {
-                            if (best_enemie.x != unit.x || best_enemie.y != unit.y) {
-                                best_enemie = elem;
-                                have_best_choise = true;
-                            }
+                    if (Math.abs(tmp - distance_best) < 2) {
+                        // if (elem.x == unit.x && elem.y == unit.y && this.isArchers(unit)) {
+                        //     if (best_enemie.x != unit.x || best_enemie.y != unit.y) {
+                        //         best_enemie = elem;
+                        //         have_best_choise = true;
+                        //     }
+                        // }
+                        if (
+                            (best_enemie.x == unit.x ||
+                                best_enemie.y == unit.y ||
+                                Math.abs(elem.y - unit.y) == 1 ||
+                                Math.abs(elem.x - unit.x) == 1 ||
+                                elem.person.health - unit.person.damage < 10) &&
+                            this.getEnemyInField(elem, 2) < 2
+                        ) {
+                            best_enemie = elem;
+                            have_best_choise = true;
                         }
                     }
                 }
@@ -166,7 +182,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
         if (cacheAi.length < 2) {
             return res;
         }
-        if (this.getEnemyInField(res[1], 5) > this.getEnemyInField(res[0], 5)) {
+        if (this.getEnemyInField(res[1], 5) >= this.getEnemyInField(res[0], 5)) {
             tmp = res[1];
             res[1] = res[0];
             res[0] = tmp;

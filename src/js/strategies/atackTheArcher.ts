@@ -119,14 +119,14 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
         let res = this.checkFreeWay2Atack(enemie, this.unit, "x"),
             coord;
-        if (this.getDistanceBetweenUnits(enemie, this.unit) > 5) {
+        if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
         }
         coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-
+        console.log("coord11111111111111", coord);
         if (coord) {
             // return this.moveAutoStepStupid(this.unit, coord, "archer");
-            console.log("coord", coord);
+            // console.log("coord2", coord);
             return this.moveAutoStepStupid(this.unit, coord, "stupid");
         } else {
             return this.moveAutoStepStupid(this.unit, coord, "fighter");

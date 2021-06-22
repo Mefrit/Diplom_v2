@@ -35,8 +35,19 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 pos_security.y = near_archer.y;
                 if (Math.abs(_this.unit.x - near_archer.x) != 0 || Math.abs(_this.unit.y - near_archer.y) != 0) {
                     near_enemies = _this.getEnemyInField({ x: _this.unit.x, y: _this.unit.y }, 6);
+                    if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y + 1 })) {
+                        pos_security.y = near_archer.y + 1;
+                    }
+                    else {
+                        if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y - 1 })) {
+                            pos_security.y = near_archer.y - 1;
+                        }
+                        else {
+                            pos_security.y = near_archer.y;
+                        }
+                    }
                     if (near_enemies.length == 0) {
-                        pos_security.x = near_archer.x - 1;
+                        pos_security.x = near_archer.x - 2;
                     }
                     else {
                         near_enemies.forEach(function (elem) {
@@ -47,21 +58,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                                 pos_security.x = near_archer.x - 1;
                             }
                         });
-                    }
-                    if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y })) {
-                        pos_security.y = near_archer.y;
-                    }
-                    else {
-                        if (_this.unit.y + 1 < 8 && _this.randomInteger(-2, 1) > 0) {
-                            if (_this.unit.y > pos_security.y) {
-                                pos_security.y = near_archer.y + 1;
-                            }
-                        }
-                        else {
-                            if (_this.unit.y < pos_security.y) {
-                                pos_security.y = near_archer.y - 1;
-                            }
-                        }
                     }
                     pos_security.near_archer = near_archer;
                     var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");

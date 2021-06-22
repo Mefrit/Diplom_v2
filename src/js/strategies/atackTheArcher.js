@@ -117,12 +117,12 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
             var res = this.checkFreeWay2Atack(enemie, this.unit, "x"), coord;
-            if (this.getDistanceBetweenUnits(enemie, this.unit) > 5) {
+            if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
             coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
+            console.log("coord11111111111111", coord);
             if (coord) {
-                console.log("coord", coord);
                 return this.moveAutoStepStupid(this.unit, coord, "stupid");
             }
             else {

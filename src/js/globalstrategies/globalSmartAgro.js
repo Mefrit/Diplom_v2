@@ -52,7 +52,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         SmartAgro.prototype.assessment = function (cache) {
             var _this = this;
             if (cache === void 0) { cache = {}; }
-            var result = 1000, cache_died = [], enemies_near_4, enemies_near_3, best_enemie, cache_enemies;
+            var result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, enemie_first_archer = undefined;
             this.ai_units.forEach(function (curent_unit) {
                 if (curent_unit.person.health < 30) {
                     result -= 400;
@@ -84,7 +84,11 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }, 8);
                     if (cache_enemies.length > 0) {
                         console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
-                        cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                        if (enemie_first_archer) {
+                            if (_this.getEnemyInField(enemie_first_archer, 3) != 0) {
+                                cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                            }
+                        }
                         cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
                         if (cache_enemies.length > 0) {
                             best_enemie = _this.getBestEnemie(cache_enemies, curent_unit);
@@ -97,9 +101,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         best_enemie = _this.findNearestEnemies(curent_unit);
                     }
                     result += 200 * _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
-                    if (curent_unit.person.damage >= (best_enemie.person.health - 10) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
+                    if (curent_unit.person.damage >= (best_enemie.person.health - 5) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                         cache_died.push(best_enemie);
                     }
+                    enemie_first_archer = best_enemie;
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {

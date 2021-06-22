@@ -172,7 +172,8 @@ export class DefaultMethodsStrategy {
     }
     // type предназначен для того, что бы лучше выбирать точкки для  лучника
     heuristic(a, b, type, enemies = []) {
-        let res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+        let res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y),
+            archers = this.unit_collection.getAiArchers();
         switch (type) {
             case "archer":
                 if (Math.abs(a.x - b.x) < 4) {
@@ -209,7 +210,16 @@ export class DefaultMethodsStrategy {
                 //     res += 1;
                 // }
                 // if (Math.abs(a.x - b.x) > 3) {
+
+                archers.forEach((element) => {
+                    if (element.x == b.x || element.y == b.y) {
+                        res += 4;
+                    }
+                });
                 res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+                if (a.y == b.y && a.x == b.x) {
+                    res -= 1000;
+                }
                 // }
                 break;
         }
@@ -327,9 +337,9 @@ export class DefaultMethodsStrategy {
             result = true;
             archers.forEach((archer) => {
                 if (archer.x == point.x || point.y == archer.y) {
-                    if (this.getDistanceBetweenUnits(point, archer) < 4) {
-                        result = false;
-                    }
+                    // if (this.getDistanceBetweenUnits(point, archer) < 5) {
+                    result = false;
+                    // }
                 }
             });
             if (result) {
@@ -356,7 +366,7 @@ export class DefaultMethodsStrategy {
         }
 
         points = this.deleteExistPointIfArcherNear(points, enemie);
-
+        console.log(" checkArcherPosition points", points, this.unit.domPerson);
         if (points.length == 0) {
             res.result = false;
         } else {
@@ -664,30 +674,34 @@ export class DefaultMethodsStrategy {
                 coord = coord_x;
             }
         }
-        return coord;
+        if (this.getEnemyInField(coord, 3) > 1) {
+            return { x: enemie.x - 3, y: enemie.y };
+        } else {
+            return coord;
+        }
     }
     maxFreeLineForArcher(coord, direction) {
         let arr_up = [],
             arr_down = [];
-        console.log("maxFreeLineForArcher coord", JSON.stringify(coord));
+
         if (direction == "y") {
             for (let i = coord.y - 1; i >= 0; i--) {
-                if (arr_up.length < 6) arr_up.push({ x: coord.x, y: i });
+                if (arr_up.length < 5) arr_up.push({ x: coord.x, y: i });
             }
             for (let i = coord.y + 1; i < 8; i++) {
-                if (arr_down.length < 6) arr_down.push({ x: coord.x, y: i });
+                if (arr_down.length < 5) arr_down.push({ x: coord.x, y: i });
             }
         } else {
             for (let i = coord.x - 1; i >= 0; i--) {
-                if (arr_up.length < 6) {
+                if (arr_up.length < 5) {
                     arr_up.push({ x: i, y: coord.y });
                 }
             }
             for (let i = coord.x + 1; i < 12; i++) {
-                if (arr_down.length < 6) arr_down.push({ x: i, y: coord.y });
+                if (arr_down.length < 5) arr_down.push({ x: i, y: coord.y });
             }
         }
-
+        // console.log("!!!!!!!!11111111", arr_up, arr_down);
         arr_up = this.findFreeLine(arr_up, coord);
         arr_down = this.findFreeLine(arr_down, coord);
         if (arr_up.length == 0 && arr_down.length == 0) {
@@ -698,25 +712,16 @@ export class DefaultMethodsStrategy {
                 if (arr_down.length < 5) arr_down.push({ x: coord.x, y: i });
             }
         }
-        // let tmp = this.checkFreePointsArcher(arr_up, "archer", this.unit);
-        // arr_down = this.deleteExcessCoord(arr_arr_downup);
-        // if (
-        //     this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
-        //     !this.checkFreeCoordWalls(wall_blocks, elem)
-        // ) {
-        //     return elem;
-        // }
-        console.log("!!!!!!!!!!!arr_up arr_down", arr_up, arr_down);
+
+        console.log(arr_up, arr_down);
         if (Math.abs(arr_up.length - arr_down.length) < 2 && (arr_down.length > 3 || arr_up.length > 3)) {
             let tmp_up = this.getPointNearEnemy(arr_up, coord),
                 tmp_down = this.getPointNearEnemy(arr_down, coord);
-            console.log(tmp_up, tmp_down, this.getDistanceBetweenUnits(coord, tmp_down));
+
             return this.getDistanceBetweenUnits(coord, this.unit) < this.getDistanceBetweenUnits(coord, this.unit)
                 ? tmp_down
                 : tmp_up;
         } else {
-            // && tmp.free
-
             return arr_up.length > arr_down.length
                 ? this.getPointNearEnemy(arr_up, coord)
                 : this.getPointNearEnemy(arr_down, coord);
@@ -746,9 +751,10 @@ export class DefaultMethodsStrategy {
         let new_cache = [],
             i = 1,
             find_closed_area = false;
-        console.log("findFreeLine=> ", cache, start_point);
+        console.log(cache);
         while (true) {
             cache = cache.filter((elem, index, arr) => {
+                // console.log(elem, this.unit_collection.checkFreeCoord(elem), this.unit);
                 if (
                     (this.unit_collection.checkFreeCoord(elem) || (this.unit.x == elem.x && this.unit.y == elem.y)) &&
                     !this.checkFreeCoordWalls(wall_blocks, elem) &&
@@ -761,12 +767,7 @@ export class DefaultMethodsStrategy {
                     return true;
                     // }
                 } else {
-                    console.log(
-                        "find_closed_area",
-                        elem,
-                        this.unit_collection.checkFreeCoord(elem),
-                        !this.checkFreeCoordWalls(wall_blocks, elem)
-                    );
+                    if (!find_closed_area) console.log("!!!!!!!!!!!!!!!!!!", elem);
                     find_closed_area = true;
 
                     return true;
@@ -780,7 +781,7 @@ export class DefaultMethodsStrategy {
                 break;
             }
         }
-        console.log("new_cache=======>>>>>>>> ", new_cache);
+        console.log("new_cache=======>>>>>>>> ", " ==>  ", new_cache, start_point);
         // cache.forEach((elem, index, arr) => {
         //     // if (
         //     //     this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
