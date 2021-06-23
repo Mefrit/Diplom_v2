@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -528,19 +527,28 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getCoordForAtacke = function (unit, enemie, type, free) {
             if (type === void 0) { type = "default"; }
             if (free === void 0) { free = true; }
-            var coord_x, coord_y, is_y = false, is_x = false, res, coord = { x: enemie.x - 3, y: enemie.y };
+            var coord_x, coord_y, is_y = 0, is_x = 0, res, coord = { x: enemie.x - 3, y: enemie.y };
             if (!is_y && !is_x) {
                 coord_x = this.maxFreeLineForArcher(enemie, "x");
                 coord_y = this.maxFreeLineForArcher(enemie, "y");
                 console.log("coord_y, coord_x", coord_y, coord_x);
-                if (this.getDistanceBetweenUnits(coord_y, enemie) > this.getDistanceBetweenUnits(coord_x, enemie)) {
+                is_y += this.getDistanceBetweenUnits(coord_y, enemie);
+                is_x += this.getDistanceBetweenUnits(coord_x, enemie);
+                console.log("coord1", coord_x, coord_y, is_x, is_y);
+                is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
+                is_y -= this.getDistanceBetweenUnits(coord_y, unit) * 2;
+                console.log("coord2", coord_x, coord_y, is_x, is_y, this.getEnemyInField(coord_x, 3), this.getEnemyInField(coord_y, 32));
+                is_x -= parseInt(this.getEnemyInField(coord_x, 2).length) * 2;
+                is_y -= parseInt(this.getEnemyInField(coord_y, 2).length) * 2;
+                if (is_y > is_x) {
                     coord = coord_y;
                 }
                 else {
                     coord = coord_x;
                 }
+                console.log("coord3", coord, is_x, is_y, this.getEnemyInField(coord, 3));
             }
-            if (this.getEnemyInField(coord, 3) > 1) {
+            if (this.getEnemyInField(coord, 3) > 2) {
                 return { x: enemie.x - 3, y: enemie.y };
             }
             else {
@@ -551,41 +559,30 @@ define(["require", "exports"], function (require, exports) {
             var arr_up = [], arr_down = [];
             if (direction == "y") {
                 for (var i = coord.y - 1; i >= 0; i--) {
-                    if (arr_up.length < 5)
+                    if (arr_up.length < 4)
                         arr_up.push({ x: coord.x, y: i });
                 }
                 for (var i = coord.y + 1; i < 8; i++) {
-                    if (arr_down.length < 5)
+                    if (arr_down.length < 4)
                         arr_down.push({ x: coord.x, y: i });
                 }
             }
             else {
                 for (var i = coord.x - 1; i >= 0; i--) {
-                    if (arr_up.length < 5) {
+                    if (arr_up.length < 4) {
                         arr_up.push({ x: i, y: coord.y });
                     }
                 }
                 for (var i = coord.x + 1; i < 12; i++) {
-                    if (arr_down.length < 5)
+                    if (arr_down.length < 4)
                         arr_down.push({ x: i, y: coord.y });
                 }
             }
             arr_up = this.findFreeLine(arr_up, coord);
             arr_down = this.findFreeLine(arr_down, coord);
-            if (arr_up.length == 0 && arr_down.length == 0) {
-                for (var i = coord.y - 1; i >= 0; i--) {
-                    if (arr_up.length < 5)
-                        arr_up.push({ x: coord.x, y: i });
-                }
-                for (var i = coord.y + 1; i < 8; i++) {
-                    if (arr_down.length < 5)
-                        arr_down.push({ x: coord.x, y: i });
-                }
-            }
-            console.log(arr_up, arr_down);
-            if (Math.abs(arr_up.length - arr_down.length) < 2 && (arr_down.length > 3 || arr_up.length > 3)) {
+            if (Math.abs(arr_up.length - arr_down.length) < 3 && (arr_down.length > 2 || arr_up.length > 2)) {
                 var tmp_up = this.getPointNearEnemy(arr_up, coord), tmp_down = this.getPointNearEnemy(arr_down, coord);
-                return this.getDistanceBetweenUnits(coord, this.unit) < this.getDistanceBetweenUnits(coord, this.unit)
+                return this.getDistanceBetweenUnits(tmp_down, this.unit) < this.getDistanceBetweenUnits(tmp_up, this.unit)
                     ? tmp_down
                     : tmp_up;
             }
@@ -618,18 +615,22 @@ define(["require", "exports"], function (require, exports) {
             while (true) {
                 cache = cache.filter(function (elem, index, arr) {
                     if ((_this.unit_collection.checkFreeCoord(elem) || (_this.unit.x == elem.x && _this.unit.y == elem.y)) &&
-                        !_this.checkFreeCoordWalls(wall_blocks, elem) &&
                         !find_closed_area) {
+                        console.log(elem, i, _this.checkFreeCoordWalls(wall_blocks, elem));
                         if (_this.getDistanceBetweenUnits(elem, start_point) <= i) {
-                            new_cache.push(elem);
+                            if (_this.checkFreeCoordWalls(wall_blocks, elem)) {
+                                find_closed_area = true;
+                            }
+                            else {
+                                new_cache.push(elem);
+                            }
                             return false;
                         }
-                        return true;
+                        else {
+                            return true;
+                        }
                     }
                     else {
-                        if (!find_closed_area)
-                            console.log("!!!!!!!!!!!!!!!!!!", elem);
-                        find_closed_area = true;
                         return true;
                     }
                 });
@@ -641,7 +642,7 @@ define(["require", "exports"], function (require, exports) {
                     break;
                 }
             }
-            console.log("new_cache=======>>>>>>>> ", " ==>  ", new_cache, start_point);
+            console.log("new_cache=======>>>>>>>> ", " ==>  ", JSON.stringify(new_cache), start_point);
             return new_cache;
         };
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {

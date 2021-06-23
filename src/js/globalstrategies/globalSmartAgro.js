@@ -21,7 +21,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -52,7 +51,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         SmartAgro.prototype.assessment = function (cache) {
             var _this = this;
             if (cache === void 0) { cache = {}; }
-            var result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, enemie_first_archer = undefined;
+            var result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
             this.ai_units.forEach(function (curent_unit) {
                 if (curent_unit.person.health < 30) {
                     result -= 400;
@@ -85,7 +84,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     if (cache_enemies.length > 0) {
                         console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                         if (enemie_first_archer) {
-                            if (_this.getEnemyInField(enemie_first_archer, 3) != 0) {
+                            if (_this.getEnemyInField(enemie_first_archer, 2) != 0 &&
+                                (Math.abs(first_archer.x - curent_unit.x) < 3 ||
+                                    Math.abs(first_archer.y - curent_unit.y) < 3)) {
                                 cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                             }
                         }
@@ -104,6 +105,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     if (curent_unit.person.damage >= (best_enemie.person.health - 5) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                         cache_died.push(best_enemie);
                     }
+                    first_archer = curent_unit;
                     enemie_first_archer = best_enemie;
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }

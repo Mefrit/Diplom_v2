@@ -391,7 +391,7 @@ export class DefaultMethodsStrategy {
     checkUnitNotStatyOnArhcersAtacke(unit, units_purpose, cache_archers) {
         // првоеряет по хорошему, что юнит не стоит на позиции атаки лучника
         let result = false;
-        units_purpose.forEach((element) => {});
+        units_purpose.forEach((element) => { });
     }
     // автоматический путь к задангным координатам без учета возможных опасностей
     moveAutoStepStupid = (unit, obj2go, type = "fighter") => {
@@ -644,8 +644,8 @@ export class DefaultMethodsStrategy {
     getCoordForAtacke(unit, enemie, type = "default", free = true) {
         let coord_x,
             coord_y,
-            is_y = false,
-            is_x = false,
+            is_y = 0,
+            is_x = 0,
             res,
             coord = { x: enemie.x - 3, y: enemie.y };
 
@@ -668,13 +668,22 @@ export class DefaultMethodsStrategy {
             coord_x = this.maxFreeLineForArcher(enemie, "x");
             coord_y = this.maxFreeLineForArcher(enemie, "y");
             console.log("coord_y, coord_x", coord_y, coord_x);
-            if (this.getDistanceBetweenUnits(coord_y, enemie) > this.getDistanceBetweenUnits(coord_x, enemie)) {
+            is_y += this.getDistanceBetweenUnits(coord_y, enemie);
+            is_x += this.getDistanceBetweenUnits(coord_x, enemie);
+            console.log("coord1", coord_x, coord_y, is_x, is_y);
+            is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
+            is_y -= this.getDistanceBetweenUnits(coord_y, unit) * 2;
+            console.log("coord2", coord_x, coord_y, is_x, is_y, this.getEnemyInField(coord_x, 3), this.getEnemyInField(coord_y, 32));
+            is_x -= parseInt(this.getEnemyInField(coord_x, 2).length) * 2;
+            is_y -= parseInt(this.getEnemyInField(coord_y, 2).length) * 2;
+            if (is_y > is_x) {
                 coord = coord_y;
             } else {
                 coord = coord_x;
             }
+            console.log("coord3", coord, is_x, is_y, this.getEnemyInField(coord, 3));
         }
-        if (this.getEnemyInField(coord, 3) > 1) {
+        if (this.getEnemyInField(coord, 3) > 2) {
             return { x: enemie.x - 3, y: enemie.y };
         } else {
             return coord;
@@ -686,39 +695,39 @@ export class DefaultMethodsStrategy {
 
         if (direction == "y") {
             for (let i = coord.y - 1; i >= 0; i--) {
-                if (arr_up.length < 5) arr_up.push({ x: coord.x, y: i });
+                if (arr_up.length < 4) arr_up.push({ x: coord.x, y: i });
             }
             for (let i = coord.y + 1; i < 8; i++) {
-                if (arr_down.length < 5) arr_down.push({ x: coord.x, y: i });
+                if (arr_down.length < 4) arr_down.push({ x: coord.x, y: i });
             }
         } else {
             for (let i = coord.x - 1; i >= 0; i--) {
-                if (arr_up.length < 5) {
+                if (arr_up.length < 4) {
                     arr_up.push({ x: i, y: coord.y });
                 }
             }
             for (let i = coord.x + 1; i < 12; i++) {
-                if (arr_down.length < 5) arr_down.push({ x: i, y: coord.y });
+                if (arr_down.length < 4) arr_down.push({ x: i, y: coord.y });
             }
         }
         // console.log("!!!!!!!!11111111", arr_up, arr_down);
         arr_up = this.findFreeLine(arr_up, coord);
         arr_down = this.findFreeLine(arr_down, coord);
-        if (arr_up.length == 0 && arr_down.length == 0) {
-            for (let i = coord.y - 1; i >= 0; i--) {
-                if (arr_up.length < 5) arr_up.push({ x: coord.x, y: i });
-            }
-            for (let i = coord.y + 1; i < 8; i++) {
-                if (arr_down.length < 5) arr_down.push({ x: coord.x, y: i });
-            }
-        }
+        // if (arr_up.length == 0 && arr_down.length == 0) {
+        //     for (let i = coord.y - 1; i >= 0; i--) {
+        //         if (arr_up.length < 4) arr_up.push({ x: coord.x, y: i });
+        //     }
+        //     for (let i = coord.y + 1; i < 8; i++) {
+        //         if (arr_down.length < 4) arr_down.push({ x: coord.x, y: i });
+        //     }
+        // }
 
-        console.log(arr_up, arr_down);
-        if (Math.abs(arr_up.length - arr_down.length) < 2 && (arr_down.length > 3 || arr_up.length > 3)) {
+        if (Math.abs(arr_up.length - arr_down.length) < 3 && (arr_down.length > 2 || arr_up.length > 2)) {
             let tmp_up = this.getPointNearEnemy(arr_up, coord),
                 tmp_down = this.getPointNearEnemy(arr_down, coord);
-
-            return this.getDistanceBetweenUnits(coord, this.unit) < this.getDistanceBetweenUnits(coord, this.unit)
+            // if (direction == "y")
+            //     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!yyyyyyyyyyy", arr_up, arr_down, tmp_up, tmp_down);
+            return this.getDistanceBetweenUnits(tmp_down, this.unit) < this.getDistanceBetweenUnits(tmp_up, this.unit)
                 ? tmp_down
                 : tmp_up;
         } else {
@@ -757,18 +766,27 @@ export class DefaultMethodsStrategy {
                 // console.log(elem, this.unit_collection.checkFreeCoord(elem), this.unit);
                 if (
                     (this.unit_collection.checkFreeCoord(elem) || (this.unit.x == elem.x && this.unit.y == elem.y)) &&
-                    !this.checkFreeCoordWalls(wall_blocks, elem) &&
+
                     !find_closed_area
                 ) {
+                    console.log(elem, i, this.checkFreeCoordWalls(wall_blocks, elem));
                     if (this.getDistanceBetweenUnits(elem, start_point) <= i) {
-                        new_cache.push(elem);
+                        if (this.checkFreeCoordWalls(wall_blocks, elem)) {
+                            find_closed_area = true;
+                        } else {
+                            new_cache.push(elem);
+                        }
+
                         return false;
+                    } else {
+
+                        return true;
                     }
-                    return true;
+
                     // }
                 } else {
-                    if (!find_closed_area) console.log("!!!!!!!!!!!!!!!!!!", elem);
-                    find_closed_area = true;
+                    // if (!find_closed_area) console.log("find_closed_area !!!!!!!!!!!!!!!!!!", i, elem);
+                    // find_closed_area = true;
 
                     return true;
                 }
@@ -781,7 +799,7 @@ export class DefaultMethodsStrategy {
                 break;
             }
         }
-        console.log("new_cache=======>>>>>>>> ", " ==>  ", new_cache, start_point);
+        console.log("new_cache=======>>>>>>>> ", " ==>  ", JSON.stringify(new_cache), start_point);
         // cache.forEach((elem, index, arr) => {
         //     // if (
         //     //     this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
@@ -843,9 +861,9 @@ export class DefaultMethodsStrategy {
     }
     getNearFriendsUnit(unit, cacheUnits) {
         var coord_min = {
-                x: cacheUnits[0].x,
-                y: cacheUnits[0].y,
-            },
+            x: cacheUnits[0].x,
+            y: cacheUnits[0].y,
+        },
             hypotenuse_min,
             hypotenuse_elem;
         //FIX ME если придется добавлять препятствие, то этот кусок кода нужно бюудет переписывать

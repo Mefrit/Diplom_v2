@@ -34,7 +34,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         return reverse ? [...ai_units].reverse() : ai_units;
     }
     assessment(cache: any = {}) {
-        let result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, enemie_first_archer = undefined;
+        let result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
         // ввести кеш, тех мест где приблизительно будут находиться друзья,
         // ..когда пойжут мочить врагов
         // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
@@ -73,7 +73,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
                     if (enemie_first_archer) {
-                        if (this.getEnemyInField(enemie_first_archer, 3) != 0) {
+                        if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
+                            (Math.abs(first_archer.x - curent_unit.x) < 3 ||
+                                Math.abs(first_archer.y - curent_unit.y) < 3)) {
                             cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                         }
                     }
@@ -94,6 +96,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 if (curent_unit.person.damage >= (best_enemie.person.health - 5) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                     cache_died.push(best_enemie);
                 }
+                first_archer = curent_unit;
                 enemie_first_archer = best_enemie;
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
             } else {
