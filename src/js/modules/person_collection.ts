@@ -46,7 +46,7 @@ export class Collection {
 
     getPersonById(id) {
         return this.collection.filter((elem) => {
-            if (!elem.isNotDied() && elem.perosn.id == id) {
+            if (!elem.isNotDied() && elem.person.id == id) {
                 return elem;
             }
         });

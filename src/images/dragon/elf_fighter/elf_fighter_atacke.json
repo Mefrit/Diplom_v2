@@ -1,0 +1,468 @@
+{
+    "frameRate": 24,
+    "armature": [
+        {
+            "animation": [
+                {
+                    "ffd": [],
+                    "playTimes": 0,
+                    "duration": 20,
+                    "ik": [],
+                    "frame": [],
+                    "bone": [
+                        {
+                            "frame": [
+                                {
+                                    "transform": {},
+                                    "duration": 20
+                                }
+                            ],
+                            "name": "root"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "transform": {},
+                                    "duration": 20
+                                }
+                            ],
+                            "name": "2_body"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "transform": {},
+                                    "duration": 20
+                                }
+                            ],
+                            "name": "2_body1"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {},
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -11.7317,
+                                        "skY": -11.7317
+                                    },
+                                    "duration": 7
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -20.002,
+                                        "skY": -20.002
+                                    },
+                                    "duration": 2
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -20.002,
+                                        "skY": -20.002
+                                    },
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -11.7317,
+                                        "skY": -11.7317
+                                    },
+                                    "duration": 3
+                                },
+                                {
+                                    "transform": {},
+                                    "duration": 0
+                                }
+                            ],
+                            "name": "2_arm_right"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "transform": {},
+                                    "duration": 20
+                                }
+                            ],
+                            "name": "2_body2"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {},
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -10.5521,
+                                        "skY": -10.5521
+                                    },
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -21.8095,
+                                        "skY": -21.8095
+                                    },
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -21.8095,
+                                        "skY": -21.8095
+                                    },
+                                    "duration": 5
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -10.5521,
+                                        "skY": -10.5521
+                                    },
+                                    "duration": 3
+                                },
+                                {
+                                    "transform": {},
+                                    "duration": 0
+                                }
+                            ],
+                            "name": "2_arm_left"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {},
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -8.3361,
+                                        "skY": -8.3361
+                                    },
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -11.3701,
+                                        "skY": -11.3701
+                                    },
+                                    "duration": 5
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -14.2341,
+                                        "skY": -14.2341
+                                    },
+                                    "duration": 4
+                                },
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {
+                                        "skX": -8.3361,
+                                        "skY": -8.3361
+                                    },
+                                    "duration": 3
+                                },
+                                {
+                                    "transform": {},
+                                    "duration": 0
+                                }
+                            ],
+                            "name": "sword"
+                        },
+                        {
+                            "frame": [
+                                {
+                                    "tweenEasing": 0,
+                                    "transform": {},
+                                    "duration": 20
+                                },
+                                {
+                                    "transform": {},
+                                    "duration": 0
+                                }
+                            ],
+                            "name": "2_head"
+                        }
+                    ],
+                    "slot": [],
+                    "name": "animtion0"
+                }
+            ],
+            "aabb": {
+                "width": 938.7719351289172,
+                "y": -615.383332346012,
+                "height": 1043.7751739877465,
+                "x": -590.6585788665604
+            },
+            "type": "Armature",
+            "frameRate": 24,
+            "ik": [],
+            "bone": [
+                {
+                    "name": "root",
+                    "transform": {}
+                },
+                {
+                    "length": 320,
+                    "transform": {
+                        "y": 159.95,
+                        "skX": -92.6314,
+                        "skY": -92.6314,
+                        "x": -46.3
+                    },
+                    "parent": "root",
+                    "name": "2_body"
+                },
+                {
+                    "length": 100,
+                    "transform": {
+                        "y": -0.0964,
+                        "skX": 102.3003,
+                        "skY": 102.3003,
+                        "x": 318.0898
+                    },
+                    "parent": "2_body",
+                    "name": "2_body1"
+                },
+                {
+                    "length": 264,
+                    "transform": {
+                        "y": -1.818,
+                        "skX": 71.0806,
+                        "skY": 71.0806,
+                        "x": 123.499
+                    },
+                    "parent": "2_body1",
+                    "name": "2_arm_right"
+                },
+                {
+                    "length": 178,
+                    "transform": {
+                        "y": 6.2105,
+                        "skX": -114.6891,
+                        "skY": -114.6891,
+                        "x": 1.0581
+                    },
+                    "parent": "2_body1",
+                    "name": "2_head"
+                },
+                {
+                    "length": 285,
+                    "transform": {
+                        "y": 33.9811,
+                        "skX": 113.321,
+                        "skY": 113.321,
+                        "x": -111.6284
+                    },
+                    "parent": "2_body1",
+                    "name": "2_arm_left"
+                },
+                {
+                    "length": 125,
+                    "transform": {
+                        "y": 4.0017,
+                        "skX": 162.6568,
+                        "skY": 162.6568,
+                        "x": 0.4289
+                    },
+                    "parent": "2_body1",
+                    "name": "2_body2"
+                },
+                {
+                    "length": 471,
+                    "transform": {
+                        "y": 1.8033,
+                        "skX": 120.2195,
+                        "skY": 120.2195,
+                        "x": 287.1261
+                    },
+                    "parent": "2_arm_left",
+                    "name": "sword"
+                }
+            ],
+            "defaultActions": [
+                {
+                    "gotoAndPlay": "animtion0"
+                }
+            ],
+            "slot": [
+                {
+                    "z": 0,
+                    "name": "2_leg_left",
+                    "parent": "root",
+                    "color": {}
+                },
+                {
+                    "z": 1,
+                    "name": "2_leg_right",
+                    "parent": "root",
+                    "color": {}
+                },
+                {
+                    "z": 2,
+                    "name": "2_arm_left",
+                    "parent": "2_arm_left",
+                    "color": {}
+                },
+                {
+                    "z": 3,
+                    "name": "2_body",
+                    "parent": "2_body2",
+                    "color": {}
+                },
+                {
+                    "z": 4,
+                    "name": "2_head",
+                    "parent": "2_head",
+                    "color": {}
+                },
+                {
+                    "z": 5,
+                    "name": "sword",
+                    "parent": "sword",
+                    "color": {}
+                },
+                {
+                    "z": 6,
+                    "name": "2_arm_right",
+                    "parent": "2_arm_right",
+                    "color": {}
+                }
+            ],
+            "name": "Armature",
+            "skin": [
+                {
+                    "slot": [
+                        {
+                            "display": [
+                                {
+                                    "path": "2_body",
+                                    "type": "image",
+                                    "name": "2_body",
+                                    "transform": {
+                                        "y": -160.3345,
+                                        "skX": -173.2246,
+                                        "skY": -173.2246,
+                                        "x": -109.4313
+                                    }
+                                }
+                            ],
+                            "name": "2_body"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "2_head",
+                                    "type": "image",
+                                    "name": "2_head",
+                                    "transform": {
+                                        "y": 94.3638,
+                                        "skX": 102.6659,
+                                        "skY": 102.6659,
+                                        "x": 189.3989
+                                    }
+                                }
+                            ],
+                            "name": "2_head"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "sword",
+                                    "type": "image",
+                                    "name": "sword",
+                                    "transform": {
+                                        "y": 6.0425,
+                                        "skX": 116.7906,
+                                        "skY": 116.7906,
+                                        "x": 217.3191
+                                    }
+                                }
+                            ],
+                            "name": "sword"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "2_arm_right",
+                                    "type": "image",
+                                    "name": "2_arm_right",
+                                    "transform": {
+                                        "y": -34.7281,
+                                        "skX": -72.4305,
+                                        "skY": -72.4305,
+                                        "x": 162.3639
+                                    }
+                                }
+                            ],
+                            "name": "2_arm_right"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "2_leg_left",
+                                    "type": "image",
+                                    "name": "2_leg_left",
+                                    "transform": {
+                                        "y": 283.03,
+                                        "x": -141.0071
+                                    }
+                                }
+                            ],
+                            "name": "2_leg_left"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "2_leg_right",
+                                    "type": "image",
+                                    "name": "2_leg_right",
+                                    "transform": {
+                                        "y": 297.8918,
+                                        "x": 46.2958
+                                    }
+                                }
+                            ],
+                            "name": "2_leg_right"
+                        },
+                        {
+                            "display": [
+                                {
+                                    "path": "2_arm_left",
+                                    "type": "image",
+                                    "name": "2_arm_left",
+                                    "transform": {
+                                        "y": 5.8505,
+                                        "skX": -122.9898,
+                                        "skY": -122.9898,
+                                        "x": 145.4932
+                                    }
+                                }
+                            ],
+                            "name": "2_arm_left"
+                        }
+                    ],
+                    "name": ""
+                }
+            ]
+        }
+    ],
+    "isGlobal": 0,
+    "name": "elf_fighter",
+    "version": "5.0"
+}

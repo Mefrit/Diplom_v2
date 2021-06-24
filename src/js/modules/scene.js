@@ -19,7 +19,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                 }
             };
             this.syncUnit = function (data) {
-                _this.collectionPersons = data;
+                _this.person_collection = data;
             };
             this.onOutBlock = function (event) {
                 event.target.classList.remove("block__free");
@@ -31,7 +31,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                     _this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
                     _this.canvas.style.top = posY;
                 }
-                activePerson = _this.collectionPersons.getCollection().filter(function (elem) {
+                activePerson = _this.person_collection.getCollection().filter(function (elem) {
                     if (elem.getId() == _this.canvas.getAttribute("data-id")) {
                         elem.setCoord(parseInt(posX.split("px")) / 120, parseInt(posY.split("px")) / 120);
                         elem.setMoveAction(true);
@@ -41,7 +41,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                     }
                 });
                 if (activePerson.length == 0) {
-                    _this.collectionPersons.getCollection().forEach(function (elem) {
+                    _this.person_collection.getCollection().forEach(function (elem) {
                         if (!elem.getKind()) {
                             elem.setMoveAction(false);
                         }
@@ -52,10 +52,31 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             };
             this.contactPersons = function (event) {
                 var canvas = event.target, img = _this.loader.get(event.target.getAttribute("data-image"));
-                _this.view.contactPersonsView(canvas, img);
+                if (typeof _this.canvas != "undefined") {
+                    var id_person = parseInt(_this.canvas.getAttribute("data-id"));
+                    var unit_1 = _this.person_collection.getPersonById(id_person)[0];
+                    if (unit_1.person.class == "fighter") {
+                        unit_1.stopAnimation("elf_fighter_default");
+                        unit_1.playAnimation("elf_fighter_atacke");
+                        setTimeout(function () {
+                            unit_1.stopAnimation("elf_fighter_atacke");
+                            unit_1.playAnimation("elf_fighter_default");
+                        }, 750);
+                    }
+                    if (unit_1.person.class == "archer") {
+                        unit_1.stopAnimation("elf_archer_default");
+                        unit_1.playAnimation("elf_archer_atacke");
+                        setTimeout(function () {
+                            unit_1.stopAnimation("elf_archer_atacke");
+                            unit_1.playAnimation("elf_archer_default");
+                        }, 750);
+                    }
+                    _this.view.contactPersonsView(canvas, img, unit_1.person.damage);
+                }
             };
             this.onChangePerson = function (event) {
                 var canvas = event.target;
+                console.log("onChangePerson!!!!!!!!!", canvas);
                 if (_this.canvas != undefined) {
                     _this.view.clearPrev(_this.canvas, _this.loader);
                 }
@@ -68,21 +89,21 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             this.chosePerson = false;
             this.skins = {};
             this.config_skins = config_skins;
-            this.collectionPersons = new person_collection_1.Collection(arrImg);
+            this.person_collection = new person_collection_1.Collection(arrImg);
             this.wall_blocks = [];
-            this.view = new viewScene_1.ViewScene(this.collectionPersons, this.loader);
+            this.view = new viewScene_1.ViewScene(this.person_collection, this.loader);
             this.curentPerson = undefined;
             this.water_blocks = [];
             this.ai = ai;
             this.ai.initView(this.view);
-            this.ai.initPersons(this.collectionPersons, this.syncUnit);
+            this.ai.initPersons(this.person_collection, this.syncUnit);
             this.play();
         }
         Scene.prototype.getCoordFromStyle = function (elem) {
             return parseInt(elem.split("px")[0]);
         };
         Scene.prototype.getPerson = function () {
-            return this.collectionPersons;
+            return this.person_collection;
         };
         Scene.prototype.renderElement = function (element) {
             this.view.renderElement(element);
@@ -135,7 +156,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             this.renderArena();
             var cache_skins = [], tmp = {};
             this.loader.loadElement("./src/images/rip.png");
-            this.loader.load(this.collectionPersons);
+            this.loader.load(this.person_collection);
             this.loadDragon();
             this.loader.onReady(function () {
                 _this.config_skins.forEach(function (skin) {
@@ -151,7 +172,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                         tmp = {};
                     });
                 });
-                _this.collectionPersons.collection.forEach(function (elem) {
+                _this.person_collection.collection.forEach(function (elem) {
                     var img = _this.loader.get(elem.person.url);
                     var cnvsElem = document.createElement("canvas");
                     cnvsElem = _this.view.renderPlayer(cnvsElem, elem, img);

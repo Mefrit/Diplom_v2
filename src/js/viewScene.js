@@ -38,12 +38,10 @@ define(["require", "exports"], function (require, exports) {
                         obj = elemCollection;
                     }
                 });
-                if (damage != 0) {
+                if (damage > 0) {
                     if (typeof obj != "undefined") {
                         if (obj.getHealth() >= 10) {
                             obj.setHealth(obj.getHealth() - damage);
-                        }
-                        else {
                         }
                     }
                 }
@@ -55,6 +53,10 @@ define(["require", "exports"], function (require, exports) {
                 ctx.clearRect(0, 0, 1000, 1000);
                 _this.drawImage(ctx, img);
                 id = { id: canvas.getAttribute("data-id") };
+                canvas.classList.add("person-atacked");
+                setTimeout(function () {
+                    canvas.classList.remove("person-atacked");
+                }, 800);
                 _this.changeHealth(ctx, { person: id }, damage);
             };
             this.arrObjPersons = arrObjPlayers;

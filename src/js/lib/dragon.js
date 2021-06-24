@@ -182,24 +182,36 @@ define(["require", "exports"], function (require, exports) {
                     unit.playAnimation("die_fighter");
                     setTimeout(function () {
                         unit.stopAnimation("die_fighter");
+                        setTimeout(function () {
+                            unit.domPerson.classList.add("person-die");
+                        }, 560);
                     }, 810);
                 }
                 if (unit.person.evil && unit.person.class == "archer") {
                     unit.playAnimation("evil_archer_die");
                     setTimeout(function () {
                         unit.stopAnimation("evil_archer_die");
+                        setTimeout(function () {
+                            unit.domPerson.classList.add("person-die");
+                        }, 560);
                     }, 750);
                 }
                 if (!unit.person.evil && unit.person.class == "archer") {
                     unit.playAnimation("elf_archer_die");
                     setTimeout(function () {
                         unit.stopAnimation("elf_archer_die");
+                        setTimeout(function () {
+                            unit.domPerson.classList.add("person-die");
+                        }, 760);
                     }, 710);
                 }
                 if (!unit.person.evil && unit.person.class == "fighter") {
                     unit.playAnimation("elf_fighter_die");
                     setTimeout(function () {
                         unit.stopAnimation("elf_fighter_die");
+                        setTimeout(function () {
+                            unit.domPerson.classList.add("person-die");
+                        }, 760);
                     }, 660);
                 }
             }

@@ -19,7 +19,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             y: 4,
             evil: false,
             class: "archer",
-            damage: 10,
+            damage: 40,
             health: 50,
             id: 1,
         },
@@ -248,6 +248,21 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
                     ],
                     name: "elf_fighter_default",
                     scale: 0.8
+                },
+                {
+                    class: "elf_fighter",
+                    src_json: "./src/images/dragon/elf_fighter/elf_fighter_atacke.json",
+                    src_images: [
+                        { name: "2_leg_left", path: "./src/images/dragon/elf_fighter/images/2_leg_left.png" },
+                        { name: "2_leg_right", path: "./src/images/dragon/elf_fighter/images/2_leg_right.png" },
+                        { name: "2_arm_left", path: "./src/images/dragon/elf_fighter/images/2_arm_left.png" },
+                        { name: "2_body", path: "./src/images/dragon/elf_fighter/images/2_body.png" },
+                        { name: "2_head", path: "./src/images/dragon/elf_fighter/images/2_head.png" },
+                        { name: "sword", path: "./src/images/dragon/elf_fighter/images/sword.png" },
+                        { name: "2_arm_right", path: "./src/images/dragon/elf_fighter/images/2_arm_right.png" },
+                    ],
+                    name: "elf_fighter_atacke",
+                    scale: 0.8
                 }
             ]
         },
@@ -290,6 +305,25 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
                         { name: "1_arm_left", path: "./src/images/dragon/elf_archer/images/1_arm_left.png" },
                     ],
                     name: "elf_archer_default",
+                    scale: 0.8
+                },
+                {
+                    class: "elf_archer",
+                    src_json: "./src/images/dragon/elf_archer/elf_archer_atacke.json",
+                    src_images: [
+                        { name: "1_quiver", path: "./src/images/dragon/elf_archer/images/1_quiver.png" },
+                        { name: "1_hand_right", path: "./src/images/dragon/elf_archer/images/1_hand_right.png" },
+                        { name: "1_arm_right", path: "./src/images/dragon/elf_archer/images/1_arm_right.png" },
+                        { name: "1_leg_right", path: "./src/images/dragon/elf_archer/images/1_leg_right.png" },
+                        { name: "1_leg_left", path: "./src/images/dragon/elf_archer/images/1_leg_left.png" },
+                        { name: "1_body", path: "./src/images/dragon/elf_archer/images/1_body.png" },
+                        { name: "1_head", path: "./src/images/dragon/elf_archer/images/1_head.png" },
+                        { name: "arrow", path: "./src/images/dragon/elf_archer/images/arrow.png" },
+                        { name: "1_bow1", path: "./src/images/dragon/elf_archer/images/1_bow1.png" },
+                        { name: "1_hand_left", path: "./src/images/dragon/elf_archer/images/1_hand_left.png" },
+                        { name: "1_arm_left", path: "./src/images/dragon/elf_archer/images/1_arm_left.png" },
+                    ],
+                    name: "elf_archer_atacke",
                     scale: 0.8
                 }
             ]

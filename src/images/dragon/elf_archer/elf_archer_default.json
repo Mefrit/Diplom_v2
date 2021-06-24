@@ -517,6 +517,7 @@
             "frameRate": 24,
             "slot": [
                 {
+                    "z": 0,
                     "color": {},
                     "name": "1_quiver",
                     "parent": "root"

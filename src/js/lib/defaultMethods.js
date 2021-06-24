@@ -381,7 +381,7 @@ define(["require", "exports"], function (require, exports) {
                         result = false;
                     }
                 });
-                if (result) {
+                if (result && point) {
                     if (parseInt(_this.getDistanceBetweenUnits(point, enemie).toFixed(0)) <= 1.2) {
                         return {
                             point: point,
@@ -534,6 +534,7 @@ define(["require", "exports"], function (require, exports) {
             if (!is_y && !is_x) {
                 coord_x = this.maxFreeLineForArcher(enemie, "x");
                 coord_y = this.maxFreeLineForArcher(enemie, "y");
+                console.log("coord_y, coord_x", coord_y, coord_x);
                 is_y += this.getDistanceBetweenUnits(coord_y, enemie);
                 is_x += this.getDistanceBetweenUnits(coord_x, enemie);
                 is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
@@ -594,6 +595,19 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getPointNearEnemy = function (cache, enemy) {
             var _this = this;
             var result = cache[cache.length - 1], max = 0, distance, water_blocks = this.scene.get("water_blocks");
+            if (cache.length == 0) {
+                if (enemy.x > 4) {
+                    return { x: enemy.x - 3, y: enemy.y };
+                }
+                else {
+                    if (enemy.y > 4) {
+                        return { x: enemy.x, y: enemy.y - 3 };
+                    }
+                    else {
+                        return { x: enemy.x, y: enemy.y + 3 };
+                    }
+                }
+            }
             cache.forEach(function (element) {
                 if (element.x == enemy.x || enemy.y == element.y) {
                     distance = _this.getDistanceBetweenUnits(element, enemy);

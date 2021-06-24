@@ -131,6 +131,7 @@ html {
 .block__nonFree {
     box-shadow: 0px 0px 20px gorgb(245, 20, 20);
 }
+
 .block__nonFree:hover {
     box-shadow: 0px 0px 20px rgb(245, 20, 20);
 }
@@ -147,8 +148,14 @@ html {
     height: 20px;
     float: left;
 }
+.person-die {
+    display: none;
+}
+.person-atacked {
+    box-shadow: inset 0px 0px 20px rgb(245, 20, 20), 0px 0px 20px rgb(245, 20, 20);
+}
 .person:hover {
-    box-shadow: 5px 5px 5px rgb(190, 108, 54), -5px -5px 5px rgb(228, 137, 76);
+    box-shadow: inset 0px 0px 5px rgb(221, 221, 221), 0px 0px 10px rgb(221, 221, 221);
 }
 #block_information {
     width: 200px;

@@ -44,25 +44,12 @@ export class ViewScene {
                 obj = elemCollection;
             }
         });
-
-        // ctx.moveTo(20, 20);
-        // ctx.lineWidth = 5;
-        // ctx.strokeStyle = "green";
-        // console.log("changeHealth", obj.getHealth(), damage);
-        if (damage != 0) {
+        if (damage > 0) {
             if (typeof obj != "undefined") {
                 if (obj.getHealth() >= 10) {
                     obj.setHealth(obj.getHealth() - damage);
-                } else {
-                    // ctx.strokeStyle = "red";
-                    // // docume   nt.getelement
-                    // ctx.clearRect(0, 0, 1000, 1000);
-                    // img = this.loader.get("./src/images/rip.png");
-                    // this.renderPlayer(obj.getDoomObj(), obj, img);
                 }
             }
-            // ctx.lineTo(obj.getHealth() * 3, 20);
-            // ctx.stroke();
         }
     };
     contactPersonsView = (canvas, img, damage = 5) => {
@@ -72,7 +59,10 @@ export class ViewScene {
         ctx.clearRect(0, 0, 1000, 1000);
         this.drawImage(ctx, img);
         id = { id: canvas.getAttribute("data-id") };
-
+        canvas.classList.add("person-atacked");
+        setTimeout(() => {
+            canvas.classList.remove("person-atacked");
+        }, 800);
         this.changeHealth(ctx, { person: id }, damage);
     };
     drawImage(ctx, img) {

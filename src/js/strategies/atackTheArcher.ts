@@ -110,6 +110,9 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
     }
     got2AttackePosition(enemie) {
         // console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
+        if (enemie == undefined) {
+            enemie = this.findNearestEnemies(this.unit);
+        }
         if (this.parent_strategy == "UndercoverArcherAttack") {
             return this.moveAutoStepStupid(
                 this.unit,
@@ -119,6 +122,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
         let res = this.checkFreeWay2Atack(enemie, this.unit, "x"),
             coord;
+        console.log(enemie);
         if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
         }

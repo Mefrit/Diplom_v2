@@ -45,7 +45,7 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
         };
         Collection.prototype.getPersonById = function (id) {
             return this.collection.filter(function (elem) {
-                if (!elem.isNotDied() && elem.perosn.id == id) {
+                if (!elem.isNotDied() && elem.person.id == id) {
                     return elem;
                 }
             });

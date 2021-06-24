@@ -59,7 +59,6 @@ export class DefaultMethodsStrategy {
     // }
     getDistanceBetweenUnits(unit1, unit2) {
         // }
-
         let tmp_x, tmp_y;
         tmp_x = unit1.x - unit2.x;
         tmp_y = unit1.y - unit2.y;
@@ -347,7 +346,7 @@ export class DefaultMethodsStrategy {
                     // }
                 }
             });
-            if (result) {
+            if (result && point) {
                 if (parseInt(this.getDistanceBetweenUnits(point, enemie).toFixed(0)) <= 1.2) {
                     return {
                         point,
@@ -674,7 +673,7 @@ export class DefaultMethodsStrategy {
         if (!is_y && !is_x) {
             coord_x = this.maxFreeLineForArcher(enemie, "x");
             coord_y = this.maxFreeLineForArcher(enemie, "y");
-            // console.log("coord_y, coord_x", coord_y, coord_x);
+            console.log("coord_y, coord_x", coord_y, coord_x);
             is_y += this.getDistanceBetweenUnits(coord_y, enemie);
             is_x += this.getDistanceBetweenUnits(coord_x, enemie);
             // console.log("coord1", coord_x, coord_y, is_x, is_y);
@@ -717,9 +716,10 @@ export class DefaultMethodsStrategy {
                 if (arr_down.length < 4) arr_down.push({ x: i, y: coord.y });
             }
         }
-        // console.log("!!!!!!!!11111111", arr_up, arr_down);
+        // if (direction == "x") console.log("!!!!!!!!11111111 xx", this.unit.domPerson, arr_up, arr_down);
         arr_up = this.findFreeLine(arr_up, coord);
         arr_down = this.findFreeLine(arr_down, coord);
+        // if (direction == "x") console.log("!!!!!!!!1222222 xxx", arr_up, arr_down);
         // if (arr_up.length == 0 && arr_down.length == 0) {
         //     for (let i = coord.y - 1; i >= 0; i--) {
         //         if (arr_up.length < 4) arr_up.push({ x: coord.x, y: i });
@@ -748,6 +748,17 @@ export class DefaultMethodsStrategy {
             max = 0,
             distance,
             water_blocks = this.scene.get("water_blocks");
+        if (cache.length == 0) {
+            if (enemy.x > 4) {
+                return { x: enemy.x - 3, y: enemy.y };
+            } else {
+                if (enemy.y > 4) {
+                    return { x: enemy.x, y: enemy.y - 3 };
+                } else {
+                    return { x: enemy.x, y: enemy.y + 3 };
+                }
+            }
+        }
         cache.forEach((element) => {
             if (element.x == enemy.x || enemy.y == element.y) {
                 distance = this.getDistanceBetweenUnits(element, enemy);
@@ -770,7 +781,6 @@ export class DefaultMethodsStrategy {
         // console.log(cache);
         while (true) {
             cache = cache.filter((elem, index, arr) => {
-                // console.log(elem, this.unit_collection.checkFreeCoord(elem), this.unit);
                 if (
                     (this.unit_collection.checkFreeCoord(elem) || (this.unit.x == elem.x && this.unit.y == elem.y)) &&
                     !find_closed_area
@@ -790,6 +800,14 @@ export class DefaultMethodsStrategy {
 
                     // }
                 } else {
+                    // console.log(
+                    //     cache,
+                    //     this.unit.domPerson,
+                    //     elem,
+                    //     this.unit_collection.checkFreeCoord(elem),
+                    //     " ||| ",
+                    //     this.unit.x == elem.x && this.unit.y == elem.y
+                    // );
                     // if (!find_closed_area) console.log("find_closed_area !!!!!!!!!!!!!!!!!!", i, elem);
                     // find_closed_area = true;
 

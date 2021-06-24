@@ -74,7 +74,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                     else {
                         var nearest = _this.findNearestEnemies(_this.unit);
-                        console.log("!~@@@@@@@@@@  nearest", _this.unit.domPerson, nearest);
                         if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, nearest).toFixed(0)) <= 1) {
                             _this.unit.stopAnimation("default_fighter");
                             _this.unit.playAnimation("atacke_fighter");

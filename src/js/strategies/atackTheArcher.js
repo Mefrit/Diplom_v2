@@ -112,10 +112,14 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
         };
         AtackTheArcher.prototype.got2AttackePosition = function (enemie) {
+            if (enemie == undefined) {
+                enemie = this.findNearestEnemies(this.unit);
+            }
             if (this.parent_strategy == "UndercoverArcherAttack") {
                 return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
             var res = this.checkFreeWay2Atack(enemie, this.unit, "x"), coord;
+            console.log(enemie);
             if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }

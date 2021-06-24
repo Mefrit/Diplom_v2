@@ -203,6 +203,9 @@ export class DragonAnimationUpdate {
 
                 setTimeout(() => {
                     unit.stopAnimation("die_fighter");
+                    setTimeout(() => {
+                        unit.domPerson.classList.add("person-die");
+                    }, 560);
                 }, 810);
             }
             if (unit.person.evil && unit.person.class == "archer") {
@@ -211,6 +214,9 @@ export class DragonAnimationUpdate {
 
                 setTimeout(() => {
                     unit.stopAnimation("evil_archer_die");
+                    setTimeout(() => {
+                        unit.domPerson.classList.add("person-die");
+                    }, 560);
                 }, 750);
             }
             if (!unit.person.evil && unit.person.class == "archer") {
@@ -219,6 +225,9 @@ export class DragonAnimationUpdate {
 
                 setTimeout(() => {
                     unit.stopAnimation("elf_archer_die");
+                    setTimeout(() => {
+                        unit.domPerson.classList.add("person-die");
+                    }, 760);
                 }, 710);
             }
             if (!unit.person.evil && unit.person.class == "fighter") {
@@ -226,6 +235,9 @@ export class DragonAnimationUpdate {
                 unit.playAnimation("elf_fighter_die");
                 setTimeout(() => {
                     unit.stopAnimation("elf_fighter_die");
+                    setTimeout(() => {
+                        unit.domPerson.classList.add("person-die");
+                    }, 760);
                 }, 660);
             }
         }

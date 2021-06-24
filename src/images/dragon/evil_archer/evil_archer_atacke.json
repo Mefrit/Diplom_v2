@@ -621,6 +621,7 @@
             "frameRate": 24,
             "slot": [
                 {
+                    "z": 0,
                     "color": {},
                     "name": "3_right_leg",
                     "parent": "root"
