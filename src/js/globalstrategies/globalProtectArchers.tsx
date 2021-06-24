@@ -20,70 +20,104 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
     }
     assessment(cache) {
 
-        var result = 1100, enemies_near_archers, archers;
-        archers = this.unit_collection.getAiArchers();
-        // console.log(near_archer);
-        // FIX ME  можно в кеш положить
-        // учитывать здоровье лучников?
-        archers.forEach(elem => {
-            enemies_near_archers = this.getEnemyInField({
-                x: elem.person.x,
-                y: elem.person.y
-            }, 5);
-            result += enemies_near_archers.length * 600;
-            result += elem.person.health * 6;
-            enemies_near_archers = this.getEnemyInField({
-                x: elem.person.x,
-                y: elem.person.y
-            }, 3);
-            result += enemies_near_archers.length * 2200;
-            result += (100 - elem.person.health) * 100;
-            enemies_near_archers = this.getEnemyInField({
-                x: elem.person.x,
-                y: elem.person.y
-            }, 2);
-            result += enemies_near_archers.length * 6200;
+        let result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
+        // ввести кеш, тех мест где приблизительно будут находиться друзья,
+        // ..когда пойжут мочить врагов
+        // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
 
-            // }
+        this.ai_units.forEach(curent_unit => {
+            if (curent_unit.person.health < 30) {
+                result -= 400;
+            }
+            if (curent_unit.person.health < 20) {
+                result -= 700;
+            }
+            result += (5 - this.unit_collection.getCountEnemy()) * 300;
+            enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
+            enemies_near_4.forEach(enemie => {
+                // учет возможных атак
+                if (enemie.person.class == "archer") {
+                    result += 400;
+                } else {
+                    result += 300;
+                }
+                if (curent_unit.person.class == "archer") {
+                    result += 10 * Math.abs(80 - enemie.person.health);
+                } else {
+                    result += 8 * Math.abs(80 - enemie.person.health);
+                }
+            });
+            enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
+
+            if (curent_unit.isArchers()) {
+                cache_enemies = this.getEnemyInField({
+                    x: curent_unit.person.x,
+                    y: curent_unit.person.y
+                }, 8);
+
+                if (cache_enemies.length > 0) {
+                    // вопрос, когда лучше удалять этих чуваков?
+                    if (enemie_first_archer) {
+                        if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
+                            (Math.abs(first_archer.x - curent_unit.x) < 3 ||
+                                Math.abs(first_archer.y - curent_unit.y) < 3)) {
+                            cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                        }
+                    }
+
+                    cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
+                    if (cache_enemies.length > 0) {
+                        best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
+                    } else {
+                        best_enemie = this.findNearestEnemies(curent_unit);
+                    }
+                } else {
+                    best_enemie = this.findNearestEnemies(curent_unit);
+                }
+                // console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
+                result -= 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
+
+                if (curent_unit.person.damage >= (best_enemie.person.health - 5) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
+                    cache_died.push(best_enemie);
+                }
+                first_archer = curent_unit;
+                enemie_first_archer = best_enemie;
+                cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+                result += 200 * parseInt(this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length);
+                result += 750 * parseInt(this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 2).length);
+            } else {
+                // enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 2);
+                // if (enemies_near_3.length > 0) {
+                //     enemies_near_3 = this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);
+                //     best_enemie = this.getBestEnemie(enemies_near_3, curent_unit);
+                //     // console.log("cache_died fighter", curent_unit.person.damage, best_enemie.person.health, this.getDistanceBetweenUnits(curent_unit, best_enemie));
+                //     if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {
+
+                //         cache_died.push(best_enemie);
+
+                //     }
+                //     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+
+                //     if (this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
+                //         result += 300;
+                //     } else {
+                //         /// просчитать риски, возникающие на пути к врагу
+                //         result -= 200 * this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
+                //     }
+                //     if (best_enemie.person.health > curent_unit.person.health) {
+                //         result -= 300;
+                //     } else {
+                //         result += 300;
+                //     }
+
+
+                // }
+            }
+
+
         });
-        // this.ai_units.forEach(elem => {
-        //     if (elem.person.health > 30) {
-        //         result += 300;
-        //     }
-        //     if (elem.person.health > 20 && elem.person.health < 30) {
-        //         result += 100;
-        //     }
-        // });
-
-        // // if (!cache.enemies_near_3) {
-        // //     enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 3);
-        // //     cache.enemies_near_3 = enemies;
-        // // } else {
-        // //     enemies = cache.enemies_near_3;
-        // // }
-        // enemies = this.unit_collection.getUserCollection();
-        // enemies.forEach(elem => {
-        //     if (elem.person.health < 30) {
-        //         result += 300;
-        //     }
-        //     // if (elem.person.health > 20 && elem.person.health < 30) {
-        //     //     result += 100;
-        //     // }
-        // });
-        // if (enemies.length == 0) {
-        //     result += 300;
-        // } else {
-        //     result -= 1000 / enemies.length;
-        // }
-        // console.log("!!!!!!!!!!\n\n\n enemies in fields AtackTheArcher", enemies);
-        // enemies.forEach(elem => {
-        //     result -= elem.health * 5
-        // });
-        // console.log("!!!!!!!!!!\n\n\n enemies in fields", enemies);
-        // чем больше. тем лучше будет считаьься стратегия
-        console.log("ProtectArchers ==> ", Math.round(result));
+        console.log("Protect Arcgers", Math.round(result), cache);
         return { total: Math.round(result), cache: cache };
-        // return Math.floor(Math.random() * Math.floor(100));
     }
     getBestEnemie(cache_enemies, unit) {
         var best_enemie = cache_enemies[0], distance_best = 0;
@@ -111,14 +145,19 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
     startMove(cache_unit, index) {
         let unit = cache_unit[index];
         let cache_enemies = [], best_enemie = {}, enemies_3field = [], strategy_cache: any = {}, archers;
-        cache_enemies = this.getEnemyInField({
-            x: unit.person.x,
-            y: unit.person.y
-        }, 4);
-        if (cache_enemies.length > 0) {
-            best_enemie = this.getBestEnemie(cache_enemies, unit);
-        } else {
-            best_enemie = this.findNearestEnemies(unit);
+        best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
+
+        if (!best_enemie) {
+
+            cache_enemies = this.getEnemyInField({
+                x: unit.person.x,
+                y: unit.person.y
+            }, 4);
+            if (cache_enemies.length > 0) {
+                best_enemie = this.getBestEnemie(cache_enemies, unit);
+            } else {
+                best_enemie = this.findNearestEnemies(unit);
+            }
         }
         var ChoosenStrategy;
         // сделать так , что бы двигались в сторону ближайших игроков
@@ -149,7 +188,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
             unit: unit
         });
         if (cache_unit[index].person.class == "fighter") {
-            ai.start(cache_unit).then(() => {
+            ai.start(cache_unit, best_enemie).then(() => {
                 if (index < cache_unit.length - 1) {
                     this.startMove(cache_unit, index + 1);
                 }

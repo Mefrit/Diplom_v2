@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SecurityArcher = void 0;
     var SecurityArcher = (function (_super) {
         __extends(SecurityArcher, _super);
         function SecurityArcher(props) {
@@ -24,10 +25,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         SecurityArcher.prototype.getInfo = function () {
             return "SecurityArcher";
         };
-        SecurityArcher.prototype.start = function (cache) {
+        SecurityArcher.prototype.start = function (cache, near_enemy) {
             var _this = this;
+            if (near_enemy === void 0) { near_enemy = undefined; }
             return new Promise(function (resolve, reject) {
-                var near_enemy = _this.findNearestEnemies(_this.unit);
                 var near_archer = _this.findNearestArchers(_this.unit);
                 var pos_security = {};
                 var near_enemies = [];
@@ -58,17 +59,27 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                             }
                         });
                     }
+                    if (typeof near_enemy == "undefined") {
+                        near_enemy = _this.findNearestEnemies(_this.unit);
+                    }
                     pos_security.near_archer = near_archer;
                     var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");
-                    if (res.findEnime == true) {
-                        if (Math.abs(_this.unit.x - near_enemy.x) == 1) {
-                            _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
-                            var checkArcherPosition = _this.checkArcherPosition(near_enemy);
-                            if (checkArcherPosition.result && !_this.unit.moveAction) {
-                                _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
-                            }
+                    var checkArcherPosition = _this.checkArcherPosition(near_enemy);
+                    if (Math.abs(_this.unit.x - near_enemy.x) == 1 && Math.abs(_this.unit.y - near_enemy.y) == 1) {
+                        _this.unit.stopAnimation("default_fighter");
+                        _this.unit.playAnimation("atacke_fighter");
+                        setTimeout(function () {
+                            _this.unit.stopAnimation("atacke_fighter");
+                            _this.unit.playAnimation("default_fighter");
+                        }, 750);
+                        _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
+                        if (checkArcherPosition.result && !_this.unit.moveAction) {
+                            _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
                         }
-                        else {
+                    }
+                    else {
+                        if (checkArcherPosition.result && !_this.unit.moveAction) {
+                            _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
                         }
                     }
                 }

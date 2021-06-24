@@ -21,6 +21,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -82,7 +83,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         y: curent_unit.person.y
                     }, 8);
                     if (cache_enemies.length > 0) {
-                        console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                         if (enemie_first_archer) {
                             if (_this.getEnemyInField(enemie_first_archer, 2) != 0 &&
                                 (Math.abs(first_archer.x - curent_unit.x) < 3 ||
@@ -101,7 +101,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     else {
                         best_enemie = _this.findNearestEnemies(curent_unit);
                     }
-                    result += 200 * _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
+                    result -= 200 * _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
                     if (curent_unit.person.damage >= (best_enemie.person.health - 5) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                         cache_died.push(best_enemie);
                     }
@@ -129,6 +129,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         else {
                             result += 300;
                         }
+                    }
+                    else {
+                        cache.units_purpose.push({ enemie: _this.findNearestEnemies(curent_unit), id: curent_unit.person.id });
                     }
                 }
             });

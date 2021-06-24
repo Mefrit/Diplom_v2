@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "./defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultGlobalMethodsStrategy = void 0;
     var DefaultGlobalMethodsStrategy = (function (_super) {
         __extends(DefaultGlobalMethodsStrategy, _super);
         function DefaultGlobalMethodsStrategy(props) {
@@ -25,7 +26,13 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         DefaultGlobalMethodsStrategy.prototype.getBestEnemie = function (cache_enemies, unit) {
             var _this = this;
             var best_enemie = cache_enemies[0], distance_best, tmp, have_best_choise = false;
-            distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
+            if (cache_enemies.length > 0) {
+                distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
+            }
+            else {
+                distance_best = 1000;
+                best_enemie = this.findNearestEnemies(unit);
+            }
             cache_enemies.forEach(function (elem) {
                 if (!have_best_choise) {
                     tmp = Math.round(_this.getDistanceBetweenUnits(elem, unit));

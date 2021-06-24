@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.FightIfYouCan = void 0;
     var FightIfYouCan = (function (_super) {
         __extends(FightIfYouCan, _super);
         function FightIfYouCan(props) {
@@ -51,7 +52,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             return new Promise(function (resolve, reject) {
                 var coord, res, animation, attakedEnemie, checkArcherPosition = { result: false, point: {} }, archers = _this.unit_collection.getAiArchers();
                 coord = { x: enemie.person.x, y: enemie.person.y };
-                if (_this.checkArchersPosition()) {
+                if (_this.checkNearArchersPosition()) {
                     checkArcherPosition = _this.checkArcherPosition(enemie);
                 }
                 if (enemie.isNotDied()) {
@@ -70,6 +71,19 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                             _this.unit.playAnimation("default_fighter");
                         }, 750);
                         _this.view.contactPersonsView(enemie.domPerson, enemie.image, _this.unit.person.damage);
+                    }
+                    else {
+                        var nearest = _this.findNearestEnemies(_this.unit);
+                        console.log("!~@@@@@@@@@@  nearest", _this.unit.domPerson, nearest);
+                        if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, nearest).toFixed(0)) <= 1) {
+                            _this.unit.stopAnimation("default_fighter");
+                            _this.unit.playAnimation("atacke_fighter");
+                            setTimeout(function () {
+                                _this.unit.stopAnimation("atacke_fighter");
+                                _this.unit.playAnimation("default_fighter");
+                            }, 750);
+                            _this.view.contactPersonsView(nearest.domPerson, nearest.image, _this.unit.person.damage);
+                        }
                     }
                 }
                 else {

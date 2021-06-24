@@ -87,7 +87,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 checkArcherPosition = { result: false, point: {} },
                 archers = this.unit_collection.getAiArchers();
             coord = { x: enemie.person.x, y: enemie.person.y };
-            if (this.checkArchersPosition()) {
+            if (this.checkNearArchersPosition()) {
                 checkArcherPosition = this.checkArcherPosition(enemie);
             }
             if (enemie.isNotDied()) {
@@ -99,6 +99,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 !this.unit.moveAction &&
                 this.getDistanceBetweenUnits(this.unit, enemie) < 4
             ) {
+                // this.moveTo(this.unit, checkArcherPosition.point);
                 this.moveTo(this.unit, checkArcherPosition.point);
                 if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1) {
                     this.unit.stopAnimation("default_fighter");
@@ -110,6 +111,20 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                         this.unit.playAnimation("default_fighter");
                     }, 750);
                     this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
+                } else {
+                    let nearest = this.findNearestEnemies(this.unit);
+                    console.log("!~@@@@@@@@@@  nearest", this.unit.domPerson, nearest);
+                    if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, nearest).toFixed(0)) <= 1) {
+                        this.unit.stopAnimation("default_fighter");
+                        this.unit.playAnimation("atacke_fighter");
+
+                        // animation.stop();
+                        setTimeout(() => {
+                            this.unit.stopAnimation("atacke_fighter");
+                            this.unit.playAnimation("default_fighter");
+                        }, 750);
+                        this.view.contactPersonsView(nearest.domPerson, nearest.image, this.unit.person.damage);
+                    }
                 }
 
                 // запуск анимации атаки

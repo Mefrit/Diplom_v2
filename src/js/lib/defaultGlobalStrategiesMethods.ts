@@ -12,9 +12,12 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
             distance_best,
             tmp,
             have_best_choise = false;
-
-        distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
-
+        if (cache_enemies.length > 0) {
+            distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
+        } else {
+            distance_best = 1000;
+            best_enemie = this.findNearestEnemies(unit);
+        }
         cache_enemies.forEach((elem) => {
             if (!have_best_choise) {
                 tmp = Math.round(this.getDistanceBetweenUnits(elem, unit));

@@ -70,7 +70,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 }, 8);
 
                 if (cache_enemies.length > 0) {
-                    console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
+                    // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
                     if (enemie_first_archer) {
                         if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
@@ -91,7 +91,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     best_enemie = this.findNearestEnemies(curent_unit);
                 }
                 // console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
-                result += 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
+                result -= 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
 
                 if (curent_unit.person.damage >= (best_enemie.person.health - 5) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                     cache_died.push(best_enemie);
@@ -125,6 +125,8 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     }
 
 
+                } else {
+                    cache.units_purpose.push({ enemie: this.findNearestEnemies(curent_unit), id: curent_unit.person.id });
                 }
             }
 

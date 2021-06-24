@@ -11,9 +11,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DistanceAgro = void 0;
     var DistanceAgro = (function (_super) {
         __extends(DistanceAgro, _super);
         function DistanceAgro(props) {
@@ -28,7 +36,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         }
         DistanceAgro.prototype.assessment = function (cache) {
             var _this = this;
-            var result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, enemie_first_archer = undefined;
+            var result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
             this.ai_units.forEach(function (curent_unit) {
                 if (curent_unit.person.health < 30) {
                     result -= 400;
@@ -59,9 +67,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         y: curent_unit.person.y
                     }, 8);
                     if (cache_enemies.length > 0) {
-                        console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                         if (enemie_first_archer) {
-                            if (_this.getEnemyInField(enemie_first_archer, 3) != 0) {
+                            if (_this.getEnemyInField(enemie_first_archer, 2) != 0 &&
+                                (Math.abs(first_archer.x - curent_unit.x) < 3 ||
+                                    Math.abs(first_archer.y - curent_unit.y) < 3)) {
                                 cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                             }
                         }
@@ -76,40 +85,39 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     else {
                         best_enemie = _this.findNearestEnemies(curent_unit);
                     }
-                    result += 200 * _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
+                    result -= 200 * _this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
                     if (curent_unit.person.damage >= (best_enemie.person.health - 5) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                         cache_died.push(best_enemie);
                     }
+                    first_archer = curent_unit;
                     enemie_first_archer = best_enemie;
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
-                    if (enemies_near_3.length > 0) {
-                        enemies_near_3 = _this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);
-                        best_enemie = _this.getBestEnemie(enemies_near_3, curent_unit);
-                        if (curent_unit.person.damage >= (best_enemie.person.health - 10) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {
-                            cache_died.push(best_enemie);
-                        }
-                        cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
-                        if (_this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
-                            result += 500;
-                        }
-                        else {
-                            result -= 200 * _this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
-                        }
-                        if (best_enemie.person.health > curent_unit.person.health) {
-                            result -= 300;
-                        }
-                        else {
-                            result += 300;
-                        }
-                    }
+                    result += 20 * (100 - parseInt(curent_unit.person.health));
                 }
             });
-            console.log("Smart Agro", Math.round(result), cache);
+            result += 10 * (5 - this.ai_units.length);
+            result -= 12 * (5 - this.unit_collection.getUserCollection().length);
+            console.log("Distance Agro", Math.round(result), cache);
             return { total: Math.round(result), cache: cache };
         };
         DistanceAgro.prototype.createMytantStrategy = function () {
+        };
+        DistanceAgro.prototype.choseTurnUnits = function (ai_units) {
+            var _this = this;
+            var friends, reverse = false;
+            ai_units.forEach(function (element) {
+                if (_this.isArchers(element)) {
+                    friends = _this.getFriendsInField(element, 2);
+                    friends.forEach(function (near_friend) {
+                        if (!_this.isArchers(near_friend) && (near_friend.y == element.y)) {
+                            reverse = true;
+                        }
+                    });
+                }
+            });
+            return reverse ? __spreadArrays(ai_units).reverse() : ai_units;
         };
         DistanceAgro.prototype.startMove = function (cache_unit, index) {
             var _this = this;
@@ -166,6 +174,8 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         };
         DistanceAgro.prototype.start = function (cache) {
             this.global_cache = cache;
+            this.ai_units = this.sortArchersFirst(this.ai_units);
+            this.ai_units = this.choseTurnUnits(this.ai_units);
             this.startMove(this.ai_units, 0);
         };
         return DistanceAgro;

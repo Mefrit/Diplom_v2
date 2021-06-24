@@ -109,7 +109,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
     }
     got2AttackePosition(enemie) {
-        console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
+        // console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
         if (this.parent_strategy == "UndercoverArcherAttack") {
             return this.moveAutoStepStupid(
                 this.unit,
@@ -123,7 +123,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
         }
         coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-        console.log("coord11111111111111", coord);
+        // console.log("coord11111111111111", coord);
         if (coord) {
             // return this.moveAutoStepStupid(this.unit, coord, "archer");
             // console.log("coord2", coord);
@@ -199,7 +199,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             if (enemie.isNotDied()) {
                 enemie = this.findNearestEnemies(this.unit);
             }
-            console.log("atackeChosenUnit");
             this.findPointAtackArcher(enemie);
             this.unit.setMoveAction(false);
             setTimeout(() => {

@@ -1,6 +1,7 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -110,6 +111,7 @@ define(["require", "exports"], function (require, exports) {
                     }
                 });
                 if (frontier.length > 0) {
+                    console.log("bestPoint", frontier, bestPoint, _this.unit.domPerson, obj2go);
                     _this.moveTo(unit, bestPoint.next);
                 }
                 current = { id: 0, x: unit.person.x, y: unit.person.y };
@@ -131,14 +133,14 @@ define(["require", "exports"], function (require, exports) {
             this.scene.renderElement(person);
         };
         DefaultMethodsStrategy.prototype.findNearestArchers = function (unit) {
-            var min = 1000, nearArcher = undefined, tmp_x, tmp_y, tmp_min = 1000;
+            var min = 1000, nearArcher = undefined, tmp_x, tmp_y, tmp_min = 1000, min_friends_aroun = 0, friends;
             this.unit_collection.getCollection().forEach(function (element) {
                 if (element.person.evil && !element.isNotDied() && element.person.class == "archer") {
                     tmp_x = unit.person.x - element.person.x;
                     tmp_y = unit.person.y - element.person.y;
                     tmp_min = Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
                     if (min > tmp_min && (unit.x != element.x || unit.y != element.y)) {
-                        min = tmp_min;
+                        min_friends_aroun = min = tmp_min;
                         nearArcher = element;
                     }
                 }
@@ -278,6 +280,7 @@ define(["require", "exports"], function (require, exports) {
                         }
                     });
                     res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+                    res += Math.round(this.getDistanceBetweenUnits(a, b));
                     if (a.y == b.y && a.x == b.x) {
                         res -= 1000;
                     }
@@ -356,7 +359,7 @@ define(["require", "exports"], function (require, exports) {
             }
             return res;
         };
-        DefaultMethodsStrategy.prototype.checkArchersPosition = function () {
+        DefaultMethodsStrategy.prototype.checkNearArchersPosition = function () {
             var _this = this;
             var archers = this.unit_collection.getAiArchers(), result = false;
             archers.forEach(function (archer) {
@@ -397,7 +400,6 @@ define(["require", "exports"], function (require, exports) {
                 points = this.getPointsField(enemie, 1);
             }
             points = this.deleteExistPointIfArcherNear(points, enemie);
-            console.log(" checkArcherPosition points", points, this.unit.domPerson);
             if (points.length == 0) {
                 res.result = false;
             }
@@ -418,6 +420,7 @@ define(["require", "exports"], function (require, exports) {
                     }
                 }
             });
+            console.log(" checkArcherPosition points", points, this.unit.domPerson, res.point);
             return res;
         };
         DefaultMethodsStrategy.prototype.checkUnitNotStatyOnArhcersAtacke = function (unit, units_purpose, cache_archers) {
@@ -531,13 +534,10 @@ define(["require", "exports"], function (require, exports) {
             if (!is_y && !is_x) {
                 coord_x = this.maxFreeLineForArcher(enemie, "x");
                 coord_y = this.maxFreeLineForArcher(enemie, "y");
-                console.log("coord_y, coord_x", coord_y, coord_x);
                 is_y += this.getDistanceBetweenUnits(coord_y, enemie);
                 is_x += this.getDistanceBetweenUnits(coord_x, enemie);
-                console.log("coord1", coord_x, coord_y, is_x, is_y);
                 is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
                 is_y -= this.getDistanceBetweenUnits(coord_y, unit) * 2;
-                console.log("coord2", coord_x, coord_y, is_x, is_y, this.getEnemyInField(coord_x, 3), this.getEnemyInField(coord_y, 32));
                 is_x -= parseInt(this.getEnemyInField(coord_x, 2).length) * 2;
                 is_y -= parseInt(this.getEnemyInField(coord_y, 2).length) * 2;
                 if (is_y > is_x) {
@@ -546,7 +546,6 @@ define(["require", "exports"], function (require, exports) {
                 else {
                     coord = coord_x;
                 }
-                console.log("coord3", coord, is_x, is_y, this.getEnemyInField(coord, 3));
             }
             if (this.getEnemyInField(coord, 3) > 2) {
                 return { x: enemie.x - 3, y: enemie.y };
@@ -611,12 +610,10 @@ define(["require", "exports"], function (require, exports) {
             var wall_blocks = this.scene.get("wall_blocks");
             var water_blocks = this.scene.get("water_blocks");
             var new_cache = [], i = 1, find_closed_area = false;
-            console.log(cache);
             while (true) {
                 cache = cache.filter(function (elem, index, arr) {
                     if ((_this.unit_collection.checkFreeCoord(elem) || (_this.unit.x == elem.x && _this.unit.y == elem.y)) &&
                         !find_closed_area) {
-                        console.log(elem, i, _this.checkFreeCoordWalls(wall_blocks, elem));
                         if (_this.getDistanceBetweenUnits(elem, start_point) <= i) {
                             if (_this.checkFreeCoordWalls(wall_blocks, elem)) {
                                 find_closed_area = true;
@@ -642,7 +639,6 @@ define(["require", "exports"], function (require, exports) {
                     break;
                 }
             }
-            console.log("new_cache=======>>>>>>>> ", " ==>  ", JSON.stringify(new_cache), start_point);
             return new_cache;
         };
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {

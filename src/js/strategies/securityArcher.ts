@@ -15,9 +15,8 @@ export class SecurityArcher extends DefaultMethodsStrategy {
         return "SecurityArcher";
     }
 
-    start(cache) {
+    start(cache, near_enemy = undefined) {
         return new Promise((resolve, reject) => {
-            var near_enemy = this.findNearestEnemies(this.unit);
             var near_archer = this.findNearestArchers(this.unit);
             var pos_security: any = {};
             var near_enemies = [];
@@ -58,29 +57,45 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                     });
                 }
 
-                //
+                if (typeof near_enemy == "undefined") {
+                    near_enemy = this.findNearestEnemies(this.unit);
+                }
 
                 pos_security.near_archer = near_archer;
                 var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
-                if (res.findEnime == true) {
-                    //атака , если лучник не далеко
 
-                    if (Math.abs(this.unit.x - near_enemy.x) == 1) {
-                        // запуск анимации атаки
-                        this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
+                //атака , если лучник не далеко
+                var checkArcherPosition = this.checkArcherPosition(near_enemy);
+                if (Math.abs(this.unit.x - near_enemy.x) == 1 && Math.abs(this.unit.y - near_enemy.y) == 1) {
+                    // запуск анимации атаки
+                    this.unit.stopAnimation("default_fighter");
+                    this.unit.playAnimation("atacke_fighter");
 
-                        var checkArcherPosition = this.checkArcherPosition(near_enemy);
-                        // только если олучник стреляет сделать то бишь на позиции
-                        if (checkArcherPosition.result && !this.unit.moveAction) {
-                            // console.log("checkArcherPosition", checkArcherPosition);
-                            this.moveAutoStepStupid(this.unit, checkArcherPosition.point, "securityArcher");
-                        }
-                    } else {
-                        // догоняем лучника
-                        // this.moveAutoStepStupid(this.unit, pos_security, "fighter");
+                    // animation.stop();
+                    setTimeout(() => {
+                        this.unit.stopAnimation("atacke_fighter");
+                        this.unit.playAnimation("default_fighter");
+                    }, 750);
+                    this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
+
+                    // только если олучник стреляет сделать то бишь на позиции
+                    if (checkArcherPosition.result && !this.unit.moveAction) {
+                        // console.log("checkArcherPosition", checkArcherPosition);
+                        this.moveAutoStepStupid(this.unit, checkArcherPosition.point, "securityArcher");
+                    }
+                } else {
+                    // догоняем лучника
+                    // this.moveAutoStepStupid(this.unit, pos_security, "fighter");
+                    // let enemie_near_archer = this.getEnemyInField(near_archer, 2);
+                    // if (enemie_near_archer.length > 0) {
+                    // }
+                    if (checkArcherPosition.result && !this.unit.moveAction) {
+                        // console.log("checkArcherPosition", checkArcherPosition);
+                        this.moveAutoStepStupid(this.unit, checkArcherPosition.point, "securityArcher");
                     }
                 }
             }
+
             this.unit.setMoveAction(false);
             setTimeout(() => {
                 resolve("Promise2");

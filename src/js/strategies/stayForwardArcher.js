@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.StayForwardArcher = void 0;
     var StayForwardArcher = (function (_super) {
         __extends(StayForwardArcher, _super);
         function StayForwardArcher(props) {

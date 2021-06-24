@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.AtackTheArcher = void 0;
     var AtackTheArcher = (function (_super) {
         __extends(AtackTheArcher, _super);
         function AtackTheArcher(props) {
@@ -111,7 +112,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
         };
         AtackTheArcher.prototype.got2AttackePosition = function (enemie) {
-            console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
             if (this.parent_strategy == "UndercoverArcherAttack") {
                 return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
@@ -120,7 +120,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
             coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-            console.log("coord11111111111111", coord);
             if (coord) {
                 return this.moveAutoStepStupid(this.unit, coord, "stupid");
             }
@@ -193,7 +192,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (enemie.isNotDied()) {
                     enemie = _this.findNearestEnemies(_this.unit);
                 }
-                console.log("atackeChosenUnit");
                 _this.findPointAtackArcher(enemie);
                 _this.unit.setMoveAction(false);
                 setTimeout(function () {

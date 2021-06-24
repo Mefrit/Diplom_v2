@@ -205,7 +205,7 @@ export class ViewScene {
         if (i == 7 && j == 5) {
             block.src = "src/images/block1.png";
         }
-        if (i == 1 && j == 5) {
+        if (i == 7 && j == 5) {
             block.src = "src/images/block1.png";
         }
         if (i == 2 && j == 5) {

@@ -27,14 +27,17 @@ export class DefaultMethodsStrategy {
             nearArcher = undefined,
             tmp_x,
             tmp_y,
-            tmp_min = 1000;
+            tmp_min = 1000,
+            min_friends_aroun = 0,
+            friends;
         this.unit_collection.getCollection().forEach((element) => {
             if (element.person.evil && !element.isNotDied() && element.person.class == "archer") {
                 tmp_x = unit.person.x - element.person.x;
                 tmp_y = unit.person.y - element.person.y;
                 tmp_min = Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+
                 if (min > tmp_min && (unit.x != element.x || unit.y != element.y)) {
-                    min = tmp_min;
+                    min_friends_aroun = min = tmp_min;
                     nearArcher = element;
                 }
             }
@@ -216,7 +219,9 @@ export class DefaultMethodsStrategy {
                         res += 4;
                     }
                 });
+
                 res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+                res += Math.round(this.getDistanceBetweenUnits(a, b));
                 if (a.y == b.y && a.x == b.x) {
                     res -= 1000;
                 }
@@ -318,7 +323,7 @@ export class DefaultMethodsStrategy {
         }
         return res;
     }
-    checkArchersPosition() {
+    checkNearArchersPosition() {
         let archers = this.unit_collection.getAiArchers(),
             result = false;
         archers.forEach((archer) => {
@@ -366,7 +371,7 @@ export class DefaultMethodsStrategy {
         }
 
         points = this.deleteExistPointIfArcherNear(points, enemie);
-        console.log(" checkArcherPosition points", points, this.unit.domPerson);
+
         if (points.length == 0) {
             res.result = false;
         } else {
@@ -386,12 +391,13 @@ export class DefaultMethodsStrategy {
                 }
             }
         });
+        console.log(" checkArcherPosition points", points, this.unit.domPerson, res.point);
         return res;
     }
     checkUnitNotStatyOnArhcersAtacke(unit, units_purpose, cache_archers) {
         // првоеряет по хорошему, что юнит не стоит на позиции атаки лучника
         let result = false;
-        units_purpose.forEach((element) => { });
+        units_purpose.forEach((element) => {});
     }
     // автоматический путь к задангным координатам без учета возможных опасностей
     moveAutoStepStupid = (unit, obj2go, type = "fighter") => {
@@ -530,6 +536,7 @@ export class DefaultMethodsStrategy {
         });
 
         if (frontier.length > 0) {
+            console.log("bestPoint", frontier, bestPoint, this.unit.domPerson, obj2go);
             this.moveTo(unit, bestPoint.next);
         }
         current = { id: 0, x: unit.person.x, y: unit.person.y };
@@ -667,13 +674,13 @@ export class DefaultMethodsStrategy {
         if (!is_y && !is_x) {
             coord_x = this.maxFreeLineForArcher(enemie, "x");
             coord_y = this.maxFreeLineForArcher(enemie, "y");
-            console.log("coord_y, coord_x", coord_y, coord_x);
+            // console.log("coord_y, coord_x", coord_y, coord_x);
             is_y += this.getDistanceBetweenUnits(coord_y, enemie);
             is_x += this.getDistanceBetweenUnits(coord_x, enemie);
-            console.log("coord1", coord_x, coord_y, is_x, is_y);
+            // console.log("coord1", coord_x, coord_y, is_x, is_y);
             is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
             is_y -= this.getDistanceBetweenUnits(coord_y, unit) * 2;
-            console.log("coord2", coord_x, coord_y, is_x, is_y, this.getEnemyInField(coord_x, 3), this.getEnemyInField(coord_y, 32));
+            // console.log("coord2", coord_x, coord_y, is_x, is_y, this.getEnemyInField(coord_x, 3), this.getEnemyInField(coord_y, 32));
             is_x -= parseInt(this.getEnemyInField(coord_x, 2).length) * 2;
             is_y -= parseInt(this.getEnemyInField(coord_y, 2).length) * 2;
             if (is_y > is_x) {
@@ -681,7 +688,7 @@ export class DefaultMethodsStrategy {
             } else {
                 coord = coord_x;
             }
-            console.log("coord3", coord, is_x, is_y, this.getEnemyInField(coord, 3));
+            // console.log("coord3", coord, is_x, is_y, this.getEnemyInField(coord, 3));
         }
         if (this.getEnemyInField(coord, 3) > 2) {
             return { x: enemie.x - 3, y: enemie.y };
@@ -760,16 +767,15 @@ export class DefaultMethodsStrategy {
         let new_cache = [],
             i = 1,
             find_closed_area = false;
-        console.log(cache);
+        // console.log(cache);
         while (true) {
             cache = cache.filter((elem, index, arr) => {
                 // console.log(elem, this.unit_collection.checkFreeCoord(elem), this.unit);
                 if (
                     (this.unit_collection.checkFreeCoord(elem) || (this.unit.x == elem.x && this.unit.y == elem.y)) &&
-
                     !find_closed_area
                 ) {
-                    console.log(elem, i, this.checkFreeCoordWalls(wall_blocks, elem));
+                    // console.log(elem, i, this.checkFreeCoordWalls(wall_blocks, elem));
                     if (this.getDistanceBetweenUnits(elem, start_point) <= i) {
                         if (this.checkFreeCoordWalls(wall_blocks, elem)) {
                             find_closed_area = true;
@@ -779,7 +785,6 @@ export class DefaultMethodsStrategy {
 
                         return false;
                     } else {
-
                         return true;
                     }
 
@@ -799,7 +804,7 @@ export class DefaultMethodsStrategy {
                 break;
             }
         }
-        console.log("new_cache=======>>>>>>>> ", " ==>  ", JSON.stringify(new_cache), start_point);
+        // console.log("new_cache=======>>>>>>>> ", " ==>  ", JSON.stringify(new_cache), start_point);
         // cache.forEach((elem, index, arr) => {
         //     // if (
         //     //     this.unit_collection.checkFreeCoord({ x: elem.x, y: elem.y }) &&
@@ -861,9 +866,9 @@ export class DefaultMethodsStrategy {
     }
     getNearFriendsUnit(unit, cacheUnits) {
         var coord_min = {
-            x: cacheUnits[0].x,
-            y: cacheUnits[0].y,
-        },
+                x: cacheUnits[0].x,
+                y: cacheUnits[0].y,
+            },
             hypotenuse_min,
             hypotenuse_elem;
         //FIX ME если придется добавлять препятствие, то этот кусок кода нужно бюудет переписывать
