@@ -165,7 +165,7 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         DefaultGlobalMethodsStrategy.prototype.getEnemieFromCachePurpose = function (cache_purpose, id) {
             var result = cache_purpose.filter(function (elem) {
                 if (elem.id == id) {
-                    return cache_purpose;
+                    return elem.enemie;
                 }
             });
             if (result.length == 0) {

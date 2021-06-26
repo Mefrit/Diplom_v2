@@ -67,17 +67,19 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             priority += Math.abs(point.x - nearest_friend.x) * 10;
             return priority;
         };
-        GoAwayIfManyEnemies.prototype.go2friendsSafety = function (nearest_friend) {
+        GoAwayIfManyEnemies.prototype.go2friendsSafety = function (nearest_friend, is_protect_arher) {
             var _this = this;
+            if (is_protect_arher === void 0) { is_protect_arher = false; }
             var near_enemies, points_near, best_point;
             near_enemies = this.getEnemyInField({
                 x: this.unit.x,
                 y: this.unit.y,
             }, 4);
-            console.log("near_enemies", near_enemies);
             points_near = this.getNeighbors({ x: this.unit.x, y: this.unit.y });
-            console.log("go2friendsSafety s", this.getNeighbors({ x: this.unit.x, y: this.unit.y }));
             points_near = this.deleteExcessCoord(points_near);
+            if (is_protect_arher) {
+                points_near.push({ nearest_friend: nearest_friend });
+            }
             points_near.forEach(function (elem, index, arr) {
                 elem.priority = _this.heuristicSave(elem, near_enemies, nearest_friend);
             });
@@ -93,6 +95,58 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 this.moveTo(this.unit, best_point);
             }
         };
+        GoAwayIfManyEnemies.prototype.got2AttackePosition = function (enemie) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var near_friends = _this.unit_collection.getAICollection(), nearest_friend;
+                if (near_friends.length == 0) {
+                }
+                else {
+                    nearest_friend = _this.getNearFriendsUnit(_this.unit, near_friends);
+                    _this.go2friendsSafety(nearest_friend, false);
+                }
+                _this.unit.setMoveAction(false);
+                console.log("nearest_friend", nearest_friend, enemie);
+                setTimeout(function () {
+                    resolve("Promise4");
+                }, 320);
+            });
+        };
+        GoAwayIfManyEnemies.prototype.atackeChosenUnit = function (cache, enemie, is_protect_arcger) {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                var near_friends = _this.unit_collection.getAICollection(), nearest_friend;
+                enemie = _this.findNearestEnemies(_this.unit);
+                var point;
+                if (near_friends.length == 0) {
+                    point = _this.getGetPointFarFromEnemie(_this.unit, enemie);
+                    _this.go2friendsSafety(point, is_protect_arcger);
+                }
+                else {
+                    if (is_protect_arcger) {
+                        point = _this.getGetPointFarFromEnemie(_this.unit, enemie);
+                    }
+                    else {
+                        point = _this.getNearFriendsUnit(_this.unit, near_friends);
+                    }
+                }
+                _this.go2friendsSafety(point, is_protect_arcger);
+                var maxX = Math.abs(enemie.person.x - _this.unit.person.x), resCheck, maxY = Math.abs(enemie.person.y - _this.unit.person.y);
+                if (maxY > maxX) {
+                    resCheck = _this.checkFreeWay2Atack(enemie, _this.unit, "y");
+                }
+                else {
+                    resCheck = _this.checkFreeWay2Atack(enemie, _this.unit, "x");
+                }
+                if (resCheck.free) {
+                    _this.tryAtakeArcher(resCheck, enemie);
+                }
+                _this.unit.setMoveAction(false);
+                setTimeout(function () {
+                    resolve("Promise4");
+                }, 320);
+            });
+        };
         GoAwayIfManyEnemies.prototype.start = function (cache) {
             var _this = this;
             return new Promise(function (resolve, reject) {
@@ -101,7 +155,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
                 else {
                     nearest_friend = _this.getNearFriendsUnit(_this.unit, near_friends);
-                    _this.go2friendsSafety(nearest_friend);
+                    _this.go2friendsSafety(nearest_friend, false);
                 }
                 _this.unit.setMoveAction(false);
                 console.log("nearest_friend", nearest_friend);

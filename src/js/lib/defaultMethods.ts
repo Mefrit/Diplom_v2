@@ -920,6 +920,98 @@ export class DefaultMethodsStrategy {
         let rand = min - 0.5 + Math.random() * (max - min + 1);
         return Math.round(rand);
     }
+    getGetPointFarFromEnemie(unit, enemie) {
+        let point_1 = { x: enemie.x, y: enemie.y },
+            point_2 = { x: enemie.x, y: enemie.y };
+        if (enemie.x > 5) {
+            point_1.x = enemie.x - 5;
+        } else {
+            point_1.x = enemie.x + 5;
+        }
+
+        if (enemie.y > 3) {
+            point_2.y = enemie.y - 5;
+        } else {
+            point_2.y = enemie.y + 5;
+        }
+        let count_enemy_1 = this.getEnemyInField(point_1, 3);
+        let count_enemy_2 = this.getEnemyInField(point_2, 3);
+        let dist_1 = this.getDistanceBetweenUnits(point_1, this.unit);
+        let dist_2 = this.getDistanceBetweenUnits(point_2, this.unit);
+        console.log("dist_1, dist_2", dist_1, dist_2, point_1, point_2, enemie.domPerson);
+        if (this.getEnemyInField(point_1, 3).length < 3 && this.getEnemyInField(point_2, 3).length < 2) {
+            if (dist_1 == dist_2 || Math.abs(dist_1 - dist_2) == 1) {
+                return this.getFriendsInField(point_1, 3) > this.getFriendsInField(point_1, 3) ? point_1 : point_2;
+            }
+            return dist_1 > dist_2 ? point_1 : point_2;
+        } else {
+            return count_enemy_2.length > count_enemy_1.length ? point_2 : point_1;
+        }
+    }
+    tryAtakeArcher(resCheck, enemie) {
+        let pointPosition,
+            xLineCondition,
+            yLineCondition,
+            res = { pointPosition: [], result: true };
+        if (resCheck.arrayPoit.length > 0) {
+            pointPosition = resCheck.arrayPoit[resCheck.arrayPoit.length - 1];
+            res.pointPosition = pointPosition;
+            // враги на линии
+            xLineCondition = enemie.x == this.unit.x && pointPosition.x == this.unit.x;
+            yLineCondition = enemie.y == this.unit.y && pointPosition.y == this.unit.y;
+        } else {
+            xLineCondition = false;
+            yLineCondition = false;
+        }
+
+        if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
+            if (Math.abs(this.unit.x - enemie.x) >= Math.abs(this.unit.y - enemie.y)) {
+                // поиск атаки по горизонтале
+                if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
+                    this.moveAutoStepStupid(this.unit, enemie, "archer");
+                } else {
+                    if (Math.abs(this.unit.y - enemie.y) < 3 && this.unit.y != enemie.y && !this.unit.moveAction) {
+                        this.moveAutoStepStupid(this.unit, enemie, "archer");
+                    }
+                }
+                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                    this.atakeArcher(enemie);
+                } else {
+                    res.result = false;
+                }
+            } else {
+                // поиск атаки по вертикали
+                let new_x, new_y;
+                if (!this.unit.moveAction) {
+                    if (enemie.person.y < 3) {
+                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 8 }, "fighter", {});
+                    } else {
+                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
+                    }
+                }
+                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                    this.atakeArcher(enemie);
+                } else {
+                    res.result = false;
+                }
+            }
+            // проверка на тикать от сюда
+        } else {
+            res.result = false;
+        }
+        return res;
+    }
+    atakeArcher(enemie) {
+        this.unit.stopAnimation("default_archer");
+        this.unit.playAnimation("atacke_archer");
+
+        // animation.stop();
+        setTimeout(() => {
+            this.unit.stopAnimation("atacke_archer");
+            this.unit.playAnimation("default_archer");
+        }, 800);
+        this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
+    }
     getNearFriendsUnit(unit, cacheUnits) {
         var coord_min = {
                 x: cacheUnits[0].x,

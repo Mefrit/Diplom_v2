@@ -1,16 +1,15 @@
 import { DefaultMethodsStrategy } from "../lib/defaultMethods";
-export class AtackTheArcher extends DefaultMethodsStrategy {
+export class RunAwayArcher extends DefaultMethodsStrategy {
     unit: any;
     coordsEvil: any;
     view: any;
     last_enemie: any;
     parent_strategy: string;
-    is_protect_strategy: boolean;
     constructor(props: any) {
         super(props);
         this.unit = props.unit;
         this.last_enemie;
-        this.is_protect_strategy = false;
+
         this.parent_strategy = props.hasOwnProperty("parent_strategy") ? props.parent_strategy : "default";
         // console.log("props", props, this.parent_strategy);
     }
@@ -104,9 +103,9 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         return res;
     }
     //если на лучника атакуют, то он убегает
-    runAwayArcher() {
+    runAwayArcher(enemy) {
         if (this.unit.x < 11) {
-            this.moveAutoStepStupid(this.unit, { x: this.unit.x + 1, y: this.unit.y }, "archer");
+            this.moveAutoStepStupid(this.unit, point, "archer");
         }
     }
     got2AttackePosition(enemie) {
@@ -128,13 +127,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
         }
         coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-        console.log("is_protect_strategy", this.is_protect_strategy);
-        if (this.is_protect_strategy) {
-            let near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAiArchers());
-            if (this.getDistanceBetweenUnits(near_friend, coord) < 3) {
-                return this.moveAutoStepStupid(this.unit, enemie, "archer");
-            }
-        }
         // console.log("coord11111111111111", coord, enemie.domPerson, this.unit.domPerson);
         if (coord) {
             // return this.moveAutoStepStupid(this.unit, coord, "archer");
@@ -144,7 +136,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             return this.moveAutoStepStupid(this.unit, coord, "fighter");
         }
     }
-    findPointAtackArcher(enemie, is_protect_strategy = false) {
+    findPointAtackArcher(enemie) {
         let maxX = Math.abs(enemie.person.x - this.unit.person.x),
             maxY = Math.abs(enemie.person.y - this.unit.person.y),
             resCheck,
@@ -205,14 +197,17 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             }, 520);
         });
     }
-    atackeChosenUnit(cache, enemie, is_protect_strategy = false) {
-        console.log(enemie, is_protect_strategy);
-        this.is_protect_strategy = is_protect_strategy;
+    // go2friend(cache, friend) {
+
+    //     this.runAwayArcher(point);
+    // }
+    atackeChosenUnit(cache, enemie) {
+        console.log(enemie);
         return new Promise((resolve, reject) => {
             if (enemie.isNotDied()) {
                 enemie = this.findNearestEnemies(this.unit);
             }
-            this.findPointAtackArcher(enemie, is_protect_strategy);
+            this.runAwayArcher(enemie);
             this.unit.setMoveAction(false);
             setTimeout(() => {
                 resolve("Promise5");

@@ -180,7 +180,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
     getEnemieFromCachePurpose(cache_purpose, id) {
         let result = cache_purpose.filter((elem) => {
             if (elem.id == id) {
-                return cache_purpose;
+                return elem.enemie;
             }
         });
         if (result.length == 0) {

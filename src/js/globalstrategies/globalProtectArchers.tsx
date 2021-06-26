@@ -10,6 +10,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
     constructor(props: any) {
         // console.log("DistanceAgro", props);
         super(props);
+        this.global_cache = {};
         this.unit_collection = props.unit_collection;
         this.ai_units = props.ai_units;
         this.scene = props.scene;
@@ -250,8 +251,28 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
 
     startMove(cache_unit, index) {
         let unit = cache_unit[index];
-        let cache_enemies = [], best_enemie = {}, enemies_3field = [], strategy_cache: any = {}, archers;
-        best_enemie = this.getEnemieFromCachePurpose(cache_unit.units_purpose, unit.person.id);
+        let cache_enemies = [], best_enemie: any = {}, enemies_3field = [], strategy_cache: any = {}, archers;
+        console.log(this.global_cache, unit.person.id);
+
+        best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
+        // if (!best_enemie) {
+        if (unit.person.class == "archer") {
+            cache_enemies = this.getEnemyInField({
+                x: unit.person.x,
+                y: unit.person.y
+            }, 5);
+
+            if (cache_enemies.length > 0) {
+                best_enemie = this.getBestEnemie(cache_enemies, unit);
+            } else {
+                best_enemie = this.findNearestEnemies(unit);
+            }
+        }
+        // } else {
+        //     best_enemie = best_enemie.enemie;
+        // }
+
+        console.log('best_enemie!!!!!!1 ', best_enemie);
 
         if (!best_enemie) {
 
@@ -283,9 +304,8 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
                     ChoosenStrategy = this.getStrategyByName(cacheFighterAI, "SecurityArcher");
                 }
             });
-
         } else {
-            ChoosenStrategy = this.getStrategyByName(cacheArcherAI, "AtackTheArcher");
+            ChoosenStrategy = this.getStrategyByName(cacheArcherAI, "GoAwayIfManyEnemies");
         }
         var ai = new ChoosenStrategy({
             scene: this.scene,
@@ -294,6 +314,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
             unit: unit
         });
         if (cache_unit[index].person.class == "fighter") {
+
             ai.start(cache_unit, best_enemie).then(() => {
                 if (index < cache_unit.length - 1) {
                     this.startMove(cache_unit, index + 1);
@@ -301,7 +322,8 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
 
             });
         } else {
-            ai.atackeChosenUnit(cache_unit, best_enemie).then((data) => {
+            console.log('best_enemie!!!!!! 2', best_enemie);
+            ai.atackeChosenUnit(cache_unit, best_enemie, true).then((data) => {
                 if (index < cache_unit.length - 1) {
                     this.startMove(cache_unit, index + 1);
                 }
@@ -311,6 +333,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
         }
     }
     start(cache) {
+        this.global_cache = cache;
         this.startMove(this.ai_units, 0);
         // console.log("start Distance", cache);
     }

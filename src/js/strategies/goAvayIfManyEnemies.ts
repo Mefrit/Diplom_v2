@@ -63,7 +63,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
         return priority;
     }
     // FIX ME, написать метод, позволяющий вернуться к своим самым безопасным путем
-    go2friendsSafety(nearest_friend) {
+    go2friendsSafety(nearest_friend, is_protect_arher = false) {
         var near_enemies, points_near, best_point;
         near_enemies = this.getEnemyInField(
             {
@@ -73,11 +73,12 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             4
         );
 
-        console.log("near_enemies", near_enemies);
         points_near = this.getNeighbors({ x: this.unit.x, y: this.unit.y });
-        console.log("go2friendsSafety s", this.getNeighbors({ x: this.unit.x, y: this.unit.y }));
-        points_near = this.deleteExcessCoord(points_near);
 
+        points_near = this.deleteExcessCoord(points_near);
+        if (is_protect_arher) {
+            points_near.push({ nearest_friend });
+        }
         points_near.forEach((elem, index, arr) => {
             elem.priority = this.heuristicSave(elem, near_enemies, nearest_friend);
         });
@@ -99,6 +100,62 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             this.moveTo(this.unit, best_point);
         }
     }
+    got2AttackePosition(enemie) {
+        // console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
+        return new Promise((resolve, reject) => {
+            var near_friends = this.unit_collection.getAICollection(),
+                nearest_friend;
+            if (near_friends.length == 0) {
+                //FIX ME убегать тупо
+            } else {
+                nearest_friend = this.getNearFriendsUnit(this.unit, near_friends);
+                this.go2friendsSafety(nearest_friend, false);
+            }
+            this.unit.setMoveAction(false);
+            console.log("nearest_friend", nearest_friend, enemie);
+            setTimeout(() => {
+                resolve("Promise4");
+            }, 320);
+        });
+    }
+    atackeChosenUnit(cache, enemie, is_protect_arcger) {
+        return new Promise((resolve, reject) => {
+            var near_friends = this.unit_collection.getAICollection(),
+                nearest_friend;
+            enemie = this.findNearestEnemies(this.unit);
+            let point;
+            if (near_friends.length == 0) {
+                //FIX ME убегать тупо
+
+                point = this.getGetPointFarFromEnemie(this.unit, enemie);
+                this.go2friendsSafety(point, is_protect_arcger);
+            } else {
+                if (is_protect_arcger) {
+                    point = this.getGetPointFarFromEnemie(this.unit, enemie);
+                } else {
+                    point = this.getNearFriendsUnit(this.unit, near_friends);
+                }
+            }
+            this.go2friendsSafety(point, is_protect_arcger);
+            let maxX = Math.abs(enemie.person.x - this.unit.person.x),
+                resCheck,
+                maxY = Math.abs(enemie.person.y - this.unit.person.y);
+
+            if (maxY > maxX) {
+                resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
+            } else {
+                resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
+            }
+            if (resCheck.free) {
+                this.tryAtakeArcher(resCheck, enemie);
+            }
+            this.unit.setMoveAction(false);
+
+            setTimeout(() => {
+                resolve("Promise4");
+            }, 320);
+        });
+    }
     start(cache) {
         return new Promise((resolve, reject) => {
             var near_friends = this.unit_collection.getAICollection(),
@@ -107,7 +164,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
                 //FIX ME убегать тупо
             } else {
                 nearest_friend = this.getNearFriendsUnit(this.unit, near_friends);
-                this.go2friendsSafety(nearest_friend);
+                this.go2friendsSafety(nearest_friend, false);
             }
             this.unit.setMoveAction(false);
             console.log("nearest_friend", nearest_friend);

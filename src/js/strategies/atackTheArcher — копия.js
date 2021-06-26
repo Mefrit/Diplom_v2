@@ -21,7 +21,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             var _this = _super.call(this, props) || this;
             _this.unit = props.unit;
             _this.last_enemie;
-            _this.is_protect_strategy = false;
             _this.parent_strategy = props.hasOwnProperty("parent_strategy") ? props.parent_strategy : "default";
             return _this;
         }
@@ -124,13 +123,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
             coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-            console.log("is_protect_strategy", this.is_protect_strategy);
-            if (this.is_protect_strategy) {
-                var near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAiArchers());
-                if (this.getDistanceBetweenUnits(near_friend, coord) < 3) {
-                    return this.moveAutoStepStupid(this.unit, enemie, "archer");
-                }
-            }
             if (coord) {
                 return this.moveAutoStepStupid(this.unit, coord, "stupid");
             }
@@ -138,8 +130,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, coord, "fighter");
             }
         };
-        AtackTheArcher.prototype.findPointAtackArcher = function (enemie, is_protect_strategy) {
-            if (is_protect_strategy === void 0) { is_protect_strategy = false; }
+        AtackTheArcher.prototype.findPointAtackArcher = function (enemie) {
             var maxX = Math.abs(enemie.person.x - this.unit.person.x), maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;
             if (maxY > maxX) {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
@@ -196,16 +187,14 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }, 520);
             });
         };
-        AtackTheArcher.prototype.atackeChosenUnit = function (cache, enemie, is_protect_strategy) {
+        AtackTheArcher.prototype.atackeChosenUnit = function (cache, enemie) {
             var _this = this;
-            if (is_protect_strategy === void 0) { is_protect_strategy = false; }
-            console.log(enemie, is_protect_strategy);
-            this.is_protect_strategy = is_protect_strategy;
+            console.log(enemie);
             return new Promise(function (resolve, reject) {
                 if (enemie.isNotDied()) {
                     enemie = _this.findNearestEnemies(_this.unit);
                 }
-                _this.findPointAtackArcher(enemie, is_protect_strategy);
+                _this.findPointAtackArcher(enemie);
                 _this.unit.setMoveAction(false);
                 setTimeout(function () {
                     resolve("Promise5");

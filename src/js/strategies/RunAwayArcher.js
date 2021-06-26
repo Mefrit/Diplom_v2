@@ -14,21 +14,20 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AtackTheArcher = void 0;
-    var AtackTheArcher = (function (_super) {
-        __extends(AtackTheArcher, _super);
-        function AtackTheArcher(props) {
+    exports.RunAwayArcher = void 0;
+    var RunAwayArcher = (function (_super) {
+        __extends(RunAwayArcher, _super);
+        function RunAwayArcher(props) {
             var _this = _super.call(this, props) || this;
             _this.unit = props.unit;
             _this.last_enemie;
-            _this.is_protect_strategy = false;
             _this.parent_strategy = props.hasOwnProperty("parent_strategy") ? props.parent_strategy : "default";
             return _this;
         }
-        AtackTheArcher.prototype.getInfo = function () {
+        RunAwayArcher.prototype.getInfo = function () {
             return "AtackTheArcher";
         };
-        AtackTheArcher.prototype.assessment = function (cache_assessment) {
+        RunAwayArcher.prototype.assessment = function (cache_assessment) {
             var result = 1000, enemies;
             if (!cache_assessment.enemies_near_5) {
                 enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 5);
@@ -45,7 +44,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             });
             return { total: result, cache: cache_assessment };
         };
-        AtackTheArcher.prototype.atakeArcher = function (enemie) {
+        RunAwayArcher.prototype.atakeArcher = function (enemie) {
             var _this = this;
             this.unit.stopAnimation("default_archer");
             this.unit.playAnimation("atacke_archer");
@@ -55,7 +54,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }, 800);
             this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
         };
-        AtackTheArcher.prototype.tryAtakeArcher = function (resCheck, enemie) {
+        RunAwayArcher.prototype.tryAtakeArcher = function (resCheck, enemie) {
             var pointPosition, xLineCondition, yLineCondition, res = { pointPosition: [], result: true };
             if (resCheck.arrayPoit.length > 0) {
                 pointPosition = resCheck.arrayPoit[resCheck.arrayPoit.length - 1];
@@ -107,12 +106,12 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
             return res;
         };
-        AtackTheArcher.prototype.runAwayArcher = function () {
+        RunAwayArcher.prototype.runAwayArcher = function (enemy) {
             if (this.unit.x < 11) {
-                this.moveAutoStepStupid(this.unit, { x: this.unit.x + 1, y: this.unit.y }, "archer");
+                this.moveAutoStepStupid(this.unit, point, "archer");
             }
         };
-        AtackTheArcher.prototype.got2AttackePosition = function (enemie) {
+        RunAwayArcher.prototype.got2AttackePosition = function (enemie) {
             if (enemie == undefined) {
                 enemie = this.findNearestEnemies(this.unit);
             }
@@ -124,13 +123,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
             coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-            console.log("is_protect_strategy", this.is_protect_strategy);
-            if (this.is_protect_strategy) {
-                var near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAiArchers());
-                if (this.getDistanceBetweenUnits(near_friend, coord) < 3) {
-                    return this.moveAutoStepStupid(this.unit, enemie, "archer");
-                }
-            }
             if (coord) {
                 return this.moveAutoStepStupid(this.unit, coord, "stupid");
             }
@@ -138,8 +130,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, coord, "fighter");
             }
         };
-        AtackTheArcher.prototype.findPointAtackArcher = function (enemie, is_protect_strategy) {
-            if (is_protect_strategy === void 0) { is_protect_strategy = false; }
+        RunAwayArcher.prototype.findPointAtackArcher = function (enemie) {
             var maxX = Math.abs(enemie.person.x - this.unit.person.x), maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;
             if (maxY > maxX) {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
@@ -184,7 +175,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
             }
         };
-        AtackTheArcher.prototype.start = function (cache) {
+        RunAwayArcher.prototype.start = function (cache) {
             var _this = this;
             return new Promise(function (resolve, reject) {
                 var enemie = _this.findNearestEnemies(_this.unit);
@@ -196,23 +187,21 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }, 520);
             });
         };
-        AtackTheArcher.prototype.atackeChosenUnit = function (cache, enemie, is_protect_strategy) {
+        RunAwayArcher.prototype.atackeChosenUnit = function (cache, enemie) {
             var _this = this;
-            if (is_protect_strategy === void 0) { is_protect_strategy = false; }
-            console.log(enemie, is_protect_strategy);
-            this.is_protect_strategy = is_protect_strategy;
+            console.log(enemie);
             return new Promise(function (resolve, reject) {
                 if (enemie.isNotDied()) {
                     enemie = _this.findNearestEnemies(_this.unit);
                 }
-                _this.findPointAtackArcher(enemie, is_protect_strategy);
+                _this.runAwayArcher(enemie);
                 _this.unit.setMoveAction(false);
                 setTimeout(function () {
                     resolve("Promise5");
                 }, 320);
             });
         };
-        return AtackTheArcher;
+        return RunAwayArcher;
     }(defaultMethods_1.DefaultMethodsStrategy));
-    exports.AtackTheArcher = AtackTheArcher;
+    exports.RunAwayArcher = RunAwayArcher;
 });

@@ -20,6 +20,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         function ProtectArchers(props) {
             var _this = _super.call(this, props) || this;
             _this.ai_units = [];
+            _this.global_cache = {};
             _this.unit_collection = props.unit_collection;
             _this.ai_units = props.ai_units;
             _this.scene = props.scene;
@@ -133,7 +134,21 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             var _this = this;
             var unit = cache_unit[index];
             var cache_enemies = [], best_enemie = {}, enemies_3field = [], strategy_cache = {}, archers;
-            best_enemie = this.getEnemieFromCachePurpose(cache_unit.units_purpose, unit.person.id);
+            console.log(this.global_cache, unit.person.id);
+            best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
+            if (unit.person.class == "archer") {
+                cache_enemies = this.getEnemyInField({
+                    x: unit.person.x,
+                    y: unit.person.y
+                }, 5);
+                if (cache_enemies.length > 0) {
+                    best_enemie = this.getBestEnemie(cache_enemies, unit);
+                }
+                else {
+                    best_enemie = this.findNearestEnemies(unit);
+                }
+            }
+            console.log('best_enemie!!!!!!1 ', best_enemie);
             if (!best_enemie) {
                 cache_enemies = this.getEnemyInField({
                     x: unit.person.x,
@@ -164,7 +179,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 });
             }
             else {
-                ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheArcherAI, "AtackTheArcher");
+                ChoosenStrategy = this.getStrategyByName(cacheUnitSingleStrategy_1.cacheArcherAI, "GoAwayIfManyEnemies");
             }
             var ai = new ChoosenStrategy({
                 scene: this.scene,
@@ -180,7 +195,8 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 });
             }
             else {
-                ai.atackeChosenUnit(cache_unit, best_enemie).then(function (data) {
+                console.log('best_enemie!!!!!! 2', best_enemie);
+                ai.atackeChosenUnit(cache_unit, best_enemie, true).then(function (data) {
                     if (index < cache_unit.length - 1) {
                         _this.startMove(cache_unit, index + 1);
                     }
@@ -188,6 +204,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             }
         };
         ProtectArchers.prototype.start = function (cache) {
+            this.global_cache = cache;
             this.startMove(this.ai_units, 0);
         };
         return ProtectArchers;
