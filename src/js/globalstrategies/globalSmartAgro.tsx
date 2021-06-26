@@ -72,10 +72,18 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 if (cache_enemies.length > 0) {
                     // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
+                    // if (enemie_first_archer) {
+                    //     if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
+                    //         (Math.abs(first_archer.x - curent_unit.x) < 3 ||
+                    //             Math.abs(first_archer.y - curent_unit.y) < 3)) {
+                    //         cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
+                    //     }
+                    // }
                     if (enemie_first_archer) {
-                        if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
-                            (Math.abs(first_archer.x - curent_unit.x) < 3 ||
-                                Math.abs(first_archer.y - curent_unit.y) < 3)) {
+                        if (this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
+                            (Math.abs(first_archer.x - curent_unit.x) < 2 ||
+                                Math.abs(first_archer.y - curent_unit.y) < 2)) {
+
                             cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                         }
                     }
@@ -102,7 +110,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
             } else {
                 if (enemies_near_3.length > 0) {
                     enemies_near_3 = this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);
+
                     best_enemie = this.getBestEnemie(enemies_near_3, curent_unit);
+
                     // console.log("cache_died fighter", curent_unit.person.damage, best_enemie.person.health, this.getDistanceBetweenUnits(curent_unit, best_enemie));
                     if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {
 

@@ -31,41 +31,60 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             return new Promise(function (resolve, reject) {
                 var near_archer = _this.findNearestArchers(_this.unit);
                 var pos_security = {};
-                var near_enemies = [];
+                var near_enemies = [], atake = false;
+                if (typeof near_enemy == "undefined") {
+                    near_enemy = _this.findNearestEnemies(_this.unit);
+                }
+                if (Math.abs(_this.unit.x - near_enemy.x) <= 1 && Math.abs(_this.unit.y - near_enemy.y) <= 1) {
+                    _this.unit.stopAnimation("default_fighter");
+                    _this.unit.playAnimation("atacke_fighter");
+                    atake = true;
+                    setTimeout(function () {
+                        _this.unit.stopAnimation("atacke_fighter");
+                        _this.unit.playAnimation("default_fighter");
+                    }, 750);
+                    _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
+                }
+                var ai_archers = _this.unit_collection.getAiArchers(), end = false;
+                if (ai_archers.length > 1) {
+                    ai_archers.forEach(function (elem) {
+                        if (_this.getFriendsInField(elem, 2).length == 0 && !end) {
+                            near_archer = elem;
+                            end = true;
+                        }
+                    });
+                }
+                if (near_enemies.length == 0) {
+                    pos_security.x = near_archer.x - 1;
+                }
+                else {
+                    var nearest_enemy = _this.findNearestEnemies(_this.unit);
+                    if (nearest_enemy.x < near_archer.x) {
+                        pos_security.x = near_archer.x + 1;
+                    }
+                    else {
+                        pos_security.x = near_archer.x - 1;
+                    }
+                }
                 pos_security.y = near_archer.y;
+                var wall_blocks = _this.scene.get("wall_blocks"), water_blocks = _this.scene.get("water_blocks");
                 if (Math.abs(_this.unit.x - near_archer.x) != 0 || Math.abs(_this.unit.y - near_archer.y) != 0) {
                     near_enemies = _this.getEnemyInField({ x: _this.unit.x, y: _this.unit.y }, 6);
-                    if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y + 1 })) {
+                    if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y + 1 }) &&
+                        !_this.checkFreeCoordWalls(wall_blocks, { x: pos_security.x, y: near_archer.y + 1 }) &&
+                        !_this.checkFreeCoordWalls(water_blocks, { x: pos_security.x, y: near_archer.y + 1 })) {
                         pos_security.y = near_archer.y + 1;
                     }
                     else {
-                        if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y - 1 })) {
-                            pos_security.y = near_archer.y - 1;
-                        }
-                        else {
-                            pos_security.y = near_archer.y;
-                        }
+                        pos_security.y = near_archer.y - 1;
                     }
-                    if (near_enemies.length == 0) {
-                        pos_security.x = near_archer.x - 2;
-                    }
-                    else {
-                        near_enemies.forEach(function (elem) {
-                            if (elem.x < near_archer.x) {
-                                pos_security.x = near_archer.x + 1;
-                            }
-                            else {
-                                pos_security.x = near_archer.x - 1;
-                            }
-                        });
-                    }
-                    if (typeof near_enemy == "undefined") {
+                    if (typeof near_enemy == "undefined" || atake) {
                         near_enemy = _this.findNearestEnemies(_this.unit);
                     }
                     pos_security.near_archer = near_archer;
                     var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");
                     var checkArcherPosition = _this.checkArcherPosition(near_enemy);
-                    if (Math.abs(_this.unit.x - near_enemy.x) == 1 && Math.abs(_this.unit.y - near_enemy.y) == 1) {
+                    if (Math.abs(_this.unit.x - near_enemy.x) <= 1 && Math.abs(_this.unit.y - near_enemy.y) <= 1 && !atake) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         setTimeout(function () {
@@ -73,14 +92,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                             _this.unit.playAnimation("default_fighter");
                         }, 750);
                         _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
-                        if (checkArcherPosition.result && !_this.unit.moveAction) {
-                            _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
-                        }
                     }
-                    else {
-                        if (checkArcherPosition.result && !_this.unit.moveAction) {
-                            _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
-                        }
+                    if (checkArcherPosition.result && !_this.unit.moveAction) {
+                        _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
                     }
                 }
                 _this.unit.setMoveAction(false);

@@ -122,12 +122,12 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
         let res = this.checkFreeWay2Atack(enemie, this.unit, "x"),
             coord;
-        console.log(enemie);
+
         if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
         }
         coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-        // console.log("coord11111111111111", coord);
+        // console.log("coord11111111111111", coord, enemie.domPerson, this.unit.domPerson);
         if (coord) {
             // return this.moveAutoStepStupid(this.unit, coord, "archer");
             // console.log("coord2", coord);
@@ -152,7 +152,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             res = this.tryAtakeArcher(resCheck, enemie);
             if (!res.result) {
                 // this.moveCarefully(this.unit, enemie, "archer", {});
-                console.log("0", this.unit);
+
                 if (!this.unit.moveAction) {
                     this.got2AttackePosition(enemie);
                 }
@@ -169,7 +169,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 }
             }
         } else {
-            console.log("1", this.unit);
             if (!this.unit.moveAction) {
                 this.got2AttackePosition(enemie);
             }

@@ -111,7 +111,6 @@ define(["require", "exports"], function (require, exports) {
                     }
                 });
                 if (frontier.length > 0) {
-                    console.log("bestPoint", frontier, bestPoint, _this.unit.domPerson, obj2go);
                     _this.moveTo(unit, bestPoint.next);
                 }
                 current = { id: 0, x: unit.person.x, y: unit.person.y };
@@ -392,7 +391,7 @@ define(["require", "exports"], function (require, exports) {
         };
         DefaultMethodsStrategy.prototype.checkArcherPosition = function (enemie) {
             var _this = this;
-            var res = { point: { x: enemie.x - 1, y: enemie.y }, result: false }, points = [], min_count = 1000, count_enemy = 0, tmp_res;
+            var res = { point: { x: enemie.x - 1, y: enemie.y }, result: false }, points = [], min_count = 1000, count_enemy = 0;
             if (parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) == 2) {
                 points = this.getPointsField(this.unit, 1);
             }
@@ -420,7 +419,6 @@ define(["require", "exports"], function (require, exports) {
                     }
                 }
             });
-            console.log(" checkArcherPosition points", points, this.unit.domPerson, res.point);
             return res;
         };
         DefaultMethodsStrategy.prototype.checkUnitNotStatyOnArhcersAtacke = function (unit, units_purpose, cache_archers) {
@@ -530,17 +528,22 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getCoordForAtacke = function (unit, enemie, type, free) {
             if (type === void 0) { type = "default"; }
             if (free === void 0) { free = true; }
-            var coord_x, coord_y, is_y = 0, is_x = 0, res, coord = { x: enemie.x - 3, y: enemie.y };
+            var coord_x, coord_y, is_y = 0, is_x = 0, res, coord = { x: enemie.x - 4, y: enemie.y };
             if (!is_y && !is_x) {
                 coord_x = this.maxFreeLineForArcher(enemie, "x");
                 coord_y = this.maxFreeLineForArcher(enemie, "y");
-                console.log("coord_y, coord_x", coord_y, coord_x);
                 is_y += this.getDistanceBetweenUnits(coord_y, enemie);
                 is_x += this.getDistanceBetweenUnits(coord_x, enemie);
                 is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
                 is_y -= this.getDistanceBetweenUnits(coord_y, unit) * 2;
-                is_x -= parseInt(this.getEnemyInField(coord_x, 2).length) * 2;
-                is_y -= parseInt(this.getEnemyInField(coord_y, 2).length) * 2;
+                is_x -= parseInt(this.getEnemyInField(coord_x, 3).length) * 3;
+                is_y -= parseInt(this.getEnemyInField(coord_y, 3).length) * 3;
+                if (coord_y.empty_arr) {
+                    is_y -= 1000;
+                }
+                if (coord_x.empty_arr) {
+                    is_x -= 1000;
+                }
                 if (is_y > is_x) {
                     coord = coord_y;
                 }
@@ -548,8 +551,8 @@ define(["require", "exports"], function (require, exports) {
                     coord = coord_x;
                 }
             }
-            if (this.getEnemyInField(coord, 3) > 2) {
-                return { x: enemie.x - 3, y: enemie.y };
+            if (this.getEnemyInField(coord, 3) > 3) {
+                return { x: enemie.x - 4, y: enemie.y };
             }
             else {
                 return coord;
@@ -580,16 +583,26 @@ define(["require", "exports"], function (require, exports) {
             }
             arr_up = this.findFreeLine(arr_up, coord);
             arr_down = this.findFreeLine(arr_down, coord);
-            if (Math.abs(arr_up.length - arr_down.length) < 3 && (arr_down.length > 2 || arr_up.length > 2)) {
-                var tmp_up = this.getPointNearEnemy(arr_up, coord), tmp_down = this.getPointNearEnemy(arr_down, coord);
+            var tmp_up = this.getPointNearEnemy(arr_up, coord), tmp_down = this.getPointNearEnemy(arr_down, coord);
+            if (arr_down.length == 0) {
+                tmp_down.empty_arr = true;
+            }
+            else {
+                tmp_down.empty_arr = false;
+            }
+            if (arr_up.length == 0) {
+                tmp_up.empty_arr = true;
+            }
+            else {
+                tmp_up.empty_arr = false;
+            }
+            if (Math.abs(arr_up.length - arr_down.length) < 2 && arr_down.length > 2 && arr_up.length > 2) {
                 return this.getDistanceBetweenUnits(tmp_down, this.unit) < this.getDistanceBetweenUnits(tmp_up, this.unit)
                     ? tmp_down
                     : tmp_up;
             }
             else {
-                return arr_up.length > arr_down.length
-                    ? this.getPointNearEnemy(arr_up, coord)
-                    : this.getPointNearEnemy(arr_down, coord);
+                return arr_up.length > arr_down.length ? tmp_up : tmp_down;
             }
         };
         DefaultMethodsStrategy.prototype.getPointNearEnemy = function (cache, enemy) {
@@ -642,6 +655,7 @@ define(["require", "exports"], function (require, exports) {
                         }
                     }
                     else {
+                        find_closed_area = true;
                         return true;
                     }
                 });
@@ -651,6 +665,12 @@ define(["require", "exports"], function (require, exports) {
                 i++;
                 if (i == 15) {
                     break;
+                }
+            }
+            if (new_cache.length > 0) {
+                var last_point = new_cache[new_cache.length - 1];
+                if (this.checkFreeCoordWalls(water_blocks, last_point)) {
+                    new_cache.pop();
                 }
             }
             return new_cache;

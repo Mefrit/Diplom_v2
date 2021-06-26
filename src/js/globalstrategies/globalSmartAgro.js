@@ -84,9 +84,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }, 8);
                     if (cache_enemies.length > 0) {
                         if (enemie_first_archer) {
-                            if (_this.getEnemyInField(enemie_first_archer, 2) != 0 &&
-                                (Math.abs(first_archer.x - curent_unit.x) < 3 ||
-                                    Math.abs(first_archer.y - curent_unit.y) < 3)) {
+                            if (_this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
+                                (Math.abs(first_archer.x - curent_unit.x) < 2 ||
+                                    Math.abs(first_archer.y - curent_unit.y) < 2)) {
                                 cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                             }
                         }

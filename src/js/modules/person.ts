@@ -77,7 +77,6 @@ export class Person {
         this.person.y = y;
         this.x = x;
         this.y = y;
-        this.use = false;
         // какой ужас, но лень сделать под массивы
         this.moveAction = true;
         this.coordPrevPoint = { x: x, y: y };

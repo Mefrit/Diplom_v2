@@ -124,6 +124,7 @@ export class DefaultMethodsStrategy {
     }
     checkFreeCoordWalls(cache, unit) {
         let result = false;
+
         cache.forEach((element) => {
             if (element.x == unit.x && element.y == unit.y) {
                 result = true;
@@ -360,8 +361,7 @@ export class DefaultMethodsStrategy {
         let res = { point: { x: enemie.x - 1, y: enemie.y }, result: false },
             points = [],
             min_count = 1000,
-            count_enemy = 0,
-            tmp_res;
+            count_enemy = 0;
 
         if (parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) == 2) {
             points = this.getPointsField(this.unit, 1);
@@ -390,7 +390,6 @@ export class DefaultMethodsStrategy {
                 }
             }
         });
-        console.log(" checkArcherPosition points", points, this.unit.domPerson, res.point);
         return res;
     }
     checkUnitNotStatyOnArhcersAtacke(unit, units_purpose, cache_archers) {
@@ -535,7 +534,6 @@ export class DefaultMethodsStrategy {
         });
 
         if (frontier.length > 0) {
-            console.log("bestPoint", frontier, bestPoint, this.unit.domPerson, obj2go);
             this.moveTo(unit, bestPoint.next);
         }
         current = { id: 0, x: unit.person.x, y: unit.person.y };
@@ -653,44 +651,46 @@ export class DefaultMethodsStrategy {
             is_y = 0,
             is_x = 0,
             res,
-            coord = { x: enemie.x - 3, y: enemie.y };
-
-        // if (Math.abs(enemie.y - unit.y) < 4) {
-        //     res = this.checkFreeWay2Atack(enemie, { x: this.unit.x, y: enemie.y }, "x", true);
-
-        //     free = res.free;
-        //     if (free) {
-        //         is_x = true;
-        //     }
-        // }
-        // if (Math.abs(enemie.x - unit.x) < 4 && !free && !is_x) {
-        //     res = this.checkFreeWay2Atack(enemie, { x: this.unit.x, y: enemie.y }, "y", true);
-        //     is_y = true;
-        //     free = res.free;
-        // }
+            coord = { x: enemie.x - 4, y: enemie.y };
 
         // free &&
         if (!is_y && !is_x) {
             coord_x = this.maxFreeLineForArcher(enemie, "x");
             coord_y = this.maxFreeLineForArcher(enemie, "y");
-            console.log("coord_y, coord_x", coord_y, coord_x);
+
             is_y += this.getDistanceBetweenUnits(coord_y, enemie);
             is_x += this.getDistanceBetweenUnits(coord_x, enemie);
             // console.log("coord1", coord_x, coord_y, is_x, is_y);
             is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
             is_y -= this.getDistanceBetweenUnits(coord_y, unit) * 2;
             // console.log("coord2", coord_x, coord_y, is_x, is_y, this.getEnemyInField(coord_x, 3), this.getEnemyInField(coord_y, 32));
-            is_x -= parseInt(this.getEnemyInField(coord_x, 2).length) * 2;
-            is_y -= parseInt(this.getEnemyInField(coord_y, 2).length) * 2;
+            is_x -= parseInt(this.getEnemyInField(coord_x, 3).length) * 3;
+            is_y -= parseInt(this.getEnemyInField(coord_y, 3).length) * 3;
+            // console.log("coord_x", coord_x, "coord_y", coord_y);
+            if (coord_y.empty_arr) {
+                is_y -= 1000;
+            }
+            if (coord_x.empty_arr) {
+                is_x -= 1000;
+            }
             if (is_y > is_x) {
                 coord = coord_y;
             } else {
                 coord = coord_x;
             }
-            // console.log("coord3", coord, is_x, is_y, this.getEnemyInField(coord, 3));
+            // console.log(
+            //     "coord3",
+            //     is_y,
+            //     is_x,
+            //     coord,
+            //     coord_x,
+            //     coord_y,
+            //     this.getEnemyInField(coord, 3),
+            //     enemie.domPerson
+            // );
         }
-        if (this.getEnemyInField(coord, 3) > 2) {
-            return { x: enemie.x - 3, y: enemie.y };
+        if (this.getEnemyInField(coord, 3) > 3) {
+            return { x: enemie.x - 4, y: enemie.y };
         } else {
             return coord;
         }
@@ -716,10 +716,10 @@ export class DefaultMethodsStrategy {
                 if (arr_down.length < 4) arr_down.push({ x: i, y: coord.y });
             }
         }
-        // if (direction == "x") console.log("!!!!!!!!11111111 xx", this.unit.domPerson, arr_up, arr_down);
+        // console.log("!!!!!!!!11111111 direction", direction, this.unit.domPerson, arr_up, arr_down);
         arr_up = this.findFreeLine(arr_up, coord);
         arr_down = this.findFreeLine(arr_down, coord);
-        // if (direction == "x") console.log("!!!!!!!!1222222 xxx", arr_up, arr_down);
+        // console.log("!!!!!!!!1222222direction", direction, arr_up, arr_down, this.unit.domPerson);
         // if (arr_up.length == 0 && arr_down.length == 0) {
         //     for (let i = coord.y - 1; i >= 0; i--) {
         //         if (arr_up.length < 4) arr_up.push({ x: coord.x, y: i });
@@ -728,19 +728,57 @@ export class DefaultMethodsStrategy {
         //         if (arr_down.length < 4) arr_down.push({ x: coord.x, y: i });
         //     }
         // }
+        let tmp_up = this.getPointNearEnemy(arr_up, coord),
+            tmp_down = this.getPointNearEnemy(arr_down, coord);
+        // if (direction == "y")
 
-        if (Math.abs(arr_up.length - arr_down.length) < 3 && (arr_down.length > 2 || arr_up.length > 2)) {
-            let tmp_up = this.getPointNearEnemy(arr_up, coord),
-                tmp_down = this.getPointNearEnemy(arr_down, coord);
-            // if (direction == "y")
-            //     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!yyyyyyyyyyy", arr_up, arr_down, tmp_up, tmp_down);
+        if (arr_down.length == 0) {
+            tmp_down.empty_arr = true;
+        } else {
+            tmp_down.empty_arr = false;
+        }
+        if (arr_up.length == 0) {
+            tmp_up.empty_arr = true;
+        } else {
+            tmp_up.empty_arr = false;
+        }
+        // console.log(
+        //     "!!!!!!!!!!!!!!!!!!!!!!!!!!direction ",
+        //     direction,
+        //     "    ",
+        //     arr_up,
+        //     arr_down,
+        //     tmp_up,
+        //     tmp_down,
+        //     Math.abs(arr_up.length - arr_down.length) < 3 && arr_down.length > 2 && arr_up.length > 2
+        // );
+        if (Math.abs(arr_up.length - arr_down.length) < 2 && arr_down.length > 2 && arr_up.length > 2) {
             return this.getDistanceBetweenUnits(tmp_down, this.unit) < this.getDistanceBetweenUnits(tmp_up, this.unit)
                 ? tmp_down
                 : tmp_up;
         } else {
-            return arr_up.length > arr_down.length
-                ? this.getPointNearEnemy(arr_up, coord)
-                : this.getPointNearEnemy(arr_down, coord);
+            // console.log(
+            //     " arr_up.length > arr_down.l",
+            //     arr_up,
+            //     arr_down,
+            //     direction,
+            //     arr_up.length > arr_down.length,
+            //     this.getPointNearEnemy(arr_up, coord),
+            //     this.getPointNearEnemy(arr_down, coord)
+            // );
+            // let tmp_up = this.getPointNearEnemy(arr_up, coord),
+            //     tmp_down = this.getPointNearEnemy(arr_down, coord);
+            // if (arr_down.length == 0) {
+            //     tmp_down.empty_arr = true;
+            // } else {
+            //     tmp_down.empty_arr = false;
+            // }
+            // if (arr_up.length == 0) {
+            //     tmp_down.empty_arr = true;
+            // } else {
+            //     tmp_down.empty_arr = false;
+            // }
+            return arr_up.length > arr_down.length ? tmp_up : tmp_down;
         }
     }
     getPointNearEnemy(cache, enemy) {
@@ -778,7 +816,7 @@ export class DefaultMethodsStrategy {
         let new_cache = [],
             i = 1,
             find_closed_area = false;
-        // console.log(cache);
+
         while (true) {
             cache = cache.filter((elem, index, arr) => {
                 if (
@@ -800,17 +838,9 @@ export class DefaultMethodsStrategy {
 
                     // }
                 } else {
-                    // console.log(
-                    //     cache,
-                    //     this.unit.domPerson,
-                    //     elem,
-                    //     this.unit_collection.checkFreeCoord(elem),
-                    //     " ||| ",
-                    //     this.unit.x == elem.x && this.unit.y == elem.y
-                    // );
-                    // if (!find_closed_area) console.log("find_closed_area !!!!!!!!!!!!!!!!!!", i, elem);
-                    // find_closed_area = true;
-
+                    // if (!(this.unit.x == elem.x && this.unit.y == elem.y)) {
+                    find_closed_area = true;
+                    // }
                     return true;
                 }
             });
@@ -822,6 +852,14 @@ export class DefaultMethodsStrategy {
                 break;
             }
         }
+        if (new_cache.length > 0) {
+            let last_point = new_cache[new_cache.length - 1];
+            // console.log("last_point", last_point, new_cache);
+            if (this.checkFreeCoordWalls(water_blocks, last_point)) {
+                new_cache.pop();
+            }
+        }
+
         // console.log("new_cache=======>>>>>>>> ", " ==>  ", JSON.stringify(new_cache), start_point);
         // cache.forEach((elem, index, arr) => {
         //     // if (

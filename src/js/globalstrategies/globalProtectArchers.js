@@ -43,7 +43,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 enemies_near_4 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
                 enemies_near_4.forEach(function (enemie) {
                     if (enemie.person.class == "archer") {
-                        result += 400;
+                        result += 500;
                     }
                     else {
                         result += 300;
@@ -63,9 +63,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }, 8);
                     if (cache_enemies.length > 0) {
                         if (enemie_first_archer) {
-                            if (_this.getEnemyInField(enemie_first_archer, 2) != 0 &&
-                                (Math.abs(first_archer.x - curent_unit.x) < 3 ||
-                                    Math.abs(first_archer.y - curent_unit.y) < 3)) {
+                            if (_this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
+                                (Math.abs(first_archer.x - curent_unit.x) < 2 ||
+                                    Math.abs(first_archer.y - curent_unit.y) < 2)) {
                                 cache_enemies = _this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                             }
                         }
@@ -87,24 +87,35 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     first_archer = curent_unit;
                     enemie_first_archer = best_enemie;
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
-                    result += 200 * parseInt(_this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length);
-                    result += 750 * parseInt(_this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 2).length);
                 }
                 else {
+                    if (enemies_near_3.length > 0) {
+                        enemies_near_3 = _this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);
+                        best_enemie = _this.getBestEnemie(enemies_near_3, curent_unit);
+                        if (curent_unit.person.damage >= (best_enemie.person.health - 10) && _this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {
+                            cache_died.push(best_enemie);
+                        }
+                        cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+                        if (_this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
+                            result += 500;
+                        }
+                        else {
+                            result -= 200 * _this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
+                        }
+                        if (best_enemie.person.health > curent_unit.person.health) {
+                            result -= 300;
+                        }
+                        else {
+                            result += 300;
+                        }
+                    }
+                    else {
+                        cache.units_purpose.push({ enemie: _this.findNearestEnemies(curent_unit), id: curent_unit.person.id });
+                    }
                 }
             });
             console.log("Protect Arcgers", Math.round(result), cache);
             return { total: Math.round(result), cache: cache };
-        };
-        ProtectArchers.prototype.getBestEnemie = function (cache_enemies, unit) {
-            var best_enemie = cache_enemies[0], distance_best = 0;
-            cache_enemies.forEach(function (elem) {
-                distance_best = Math.sqrt(best_enemie.x * unit.x + best_enemie.y * unit.y);
-                if (Math.sqrt(elem.x * unit.x + elem.y * unit.y) < distance_best) {
-                    best_enemie = elem;
-                }
-            });
-            return best_enemie;
         };
         ProtectArchers.prototype.getEnemyFromCache = function (archer, enemies) {
             var _this = this;
@@ -122,7 +133,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             var _this = this;
             var unit = cache_unit[index];
             var cache_enemies = [], best_enemie = {}, enemies_3field = [], strategy_cache = {}, archers;
-            best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
+            best_enemie = this.getEnemieFromCachePurpose(cache_unit.units_purpose, unit.person.id);
             if (!best_enemie) {
                 cache_enemies = this.getEnemyInField({
                     x: unit.person.x,

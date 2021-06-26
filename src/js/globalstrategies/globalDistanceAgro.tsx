@@ -122,7 +122,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                     result += 8 * Math.abs(80 - enemie.person.health);
                 }
             });
-            enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
+            enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
 
             if (curent_unit.isArchers()) {
                 cache_enemies = this.getEnemyInField({
@@ -134,13 +134,14 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                     // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
                     if (enemie_first_archer) {
-                        if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
-                            (Math.abs(first_archer.x - curent_unit.x) < 3 ||
-                                Math.abs(first_archer.y - curent_unit.y) < 3)) {
+                        if (this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
+                            (Math.abs(first_archer.x - curent_unit.x) < 2 ||
+                                Math.abs(first_archer.y - curent_unit.y) < 2)) {
+                            // console.log("deleteEqualEnemyFromCache", curent_unit, this.getEnemyInField(enemie_first_archer, 2));
                             cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                         }
                     }
-
+                    // cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
 
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
                     if (cache_enemies.length > 0) {
@@ -162,7 +163,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
             } else {
                 // if (enemies_near_3.length > 0) {
-                //     enemies_near_3 = this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);
+                result -= 200 * enemies_near_3.length
                 //     best_enemie = this.getBestEnemie(enemies_near_3, curent_unit);
                 //     // console.log("cache_died fighter", curent_unit.person.damage, best_enemie.person.health, this.getDistanceBetweenUnits(curent_unit, best_enemie));
                 //     if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {

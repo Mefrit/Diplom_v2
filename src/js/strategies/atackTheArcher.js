@@ -119,7 +119,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
             var res = this.checkFreeWay2Atack(enemie, this.unit, "x"), coord;
-            console.log(enemie);
             if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
@@ -143,7 +142,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 this.got2AttackePosition(enemie);
                 res = this.tryAtakeArcher(resCheck, enemie);
                 if (!res.result) {
-                    console.log("0", this.unit);
                     if (!this.unit.moveAction) {
                         this.got2AttackePosition(enemie);
                     }
@@ -161,7 +159,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
             }
             else {
-                console.log("1", this.unit);
                 if (!this.unit.moveAction) {
                     this.got2AttackePosition(enemie);
                 }
