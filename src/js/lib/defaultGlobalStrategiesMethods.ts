@@ -61,8 +61,12 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                         }
                     }
                     if (Math.abs(tmp - distance_best) < 2) {
-                        if (best_enemie.person.health > elem.person.health) {
+                        if (best_enemie.person.health > elem.person.health && !this.isArchers(unit)) {
                             best_enemie = elem;
+                        }
+                        if (this.isArchers(elem)) {
+                            best_enemie = elem;
+                            have_best_choise = true;
                         }
                     }
                     if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
@@ -103,7 +107,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                         } else {
                         }
                         if (best_enemie.person.health > elem.person.health && !have_best_choise) {
-                            best_enemie = elem;
+                            if (!(best_enemie.x == unit.x || best_enemie.y == unit.y)) best_enemie = elem;
                         }
                     }
                 }
