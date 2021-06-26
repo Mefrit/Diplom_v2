@@ -56,6 +56,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     priority += 10;
                 }
             });
+            if (point.x == nearest_friend.x && point.y == nearest_friend.y) {
+                priority -= 2000;
+            }
             if (Math.abs(point.x - nearest_friend.x) == 0) {
                 priority -= 1000;
             }
@@ -77,21 +80,21 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }, 4);
             points_near = this.getNeighbors({ x: this.unit.x, y: this.unit.y });
             points_near = this.deleteExcessCoord(points_near);
-            if (is_protect_arher) {
-                points_near.push({ nearest_friend: nearest_friend });
+            if (is_protect_arher &&
+                this.getDistanceBetweenUnits(this.unit, { x: nearest_friend.x, y: nearest_friend.y }) < 3) {
+                points_near.push({ x: nearest_friend.x, y: nearest_friend.y });
             }
             points_near.forEach(function (elem, index, arr) {
                 elem.priority = _this.heuristicSave(elem, near_enemies, nearest_friend);
             });
+            points_near = this.deleteExcessCoord(points_near);
             best_point = points_near[0];
             points_near.forEach(function (element) {
                 if (element.priority <= best_point.priority) {
                     best_point = element;
                 }
             });
-            console.log(" tbest_point);", best_point);
             if (points_near.length > 0) {
-                console.log(" tbest_point);", best_point);
                 this.moveTo(this.unit, best_point);
             }
         };
@@ -158,7 +161,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     _this.go2friendsSafety(nearest_friend, false);
                 }
                 _this.unit.setMoveAction(false);
-                console.log("nearest_friend", nearest_friend);
                 setTimeout(function () {
                     resolve("Promise4");
                 }, 320);

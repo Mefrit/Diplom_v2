@@ -121,13 +121,8 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
         // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
 
         this.ai_units.forEach(curent_unit => {
-            if (curent_unit.person.health < 30) {
-                result -= 400;
-            }
-            if (curent_unit.person.health < 20) {
-                result -= 700;
-            }
-            result += (5 - this.unit_collection.getCountEnemy()) * 300;
+
+            // result += (5 - this.unit_collection.getCountEnemy()) * 300;
             enemies_near_4 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
             enemies_near_4.forEach(enemie => {
                 // учет возможных атак
@@ -137,19 +132,40 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
                     result += 300;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 10 * Math.abs(80 - enemie.person.health);
+                    result += 9 * Math.abs(70 - enemie.person.health);
                 } else {
-                    result += 8 * Math.abs(80 - enemie.person.health);
+                    result += 5 * Math.abs(100 - enemie.person.health);
                 }
             });
+            // result += (5 - this.unit_collection.getCountEnemy()) * 300;
             enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
 
             if (curent_unit.isArchers()) {
+                if (curent_unit.person.health < 30) {
+                    result += 300;
+                }
+                if (curent_unit.person.health < 20) {
+                    result += 500;
+                }
                 cache_enemies = this.getEnemyInField({
                     x: curent_unit.person.x,
                     y: curent_unit.person.y
                 }, 8);
-
+                let enemy_near_archer_3 = this.getEnemyInField({
+                    x: curent_unit.person.x,
+                    y: curent_unit.person.y
+                }, 3);
+                let enemy_near_archer_2 = this.getEnemyInField({
+                    x: curent_unit.person.x,
+                    y: curent_unit.person.y
+                }, 2);
+                // if (this.getEnemyInField({
+                //     x: curent_unit.person.x,
+                //     y: curent_unit.person.y
+                // }, 3).length > 3) {\
+                result += enemy_near_archer_2.length * 1000;
+                result += enemy_near_archer_3.length * 200;
+                // }
                 if (cache_enemies.length > 0) {
                     // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
@@ -180,7 +196,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
                     best_enemie = this.findNearestEnemies(curent_unit);
                 }
                 // console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
-                result -= 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
+                // result -= 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
 
                 if (curent_unit.person.damage >= (best_enemie.person.health - 5) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
                     cache_died.push(best_enemie);
@@ -202,18 +218,18 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
                     }
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
 
-                    if (this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
-                        result += 500;
-                    } else {
-                        /// просчитать риски, возникающие на пути к врагу
-                        // console.log("countEnemyWnenMoveToEnemy => ", this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie));
-                        result -= 200 * this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
-                    }
-                    if (best_enemie.person.health > curent_unit.person.health) {
-                        result -= 300;
-                    } else {
-                        result += 300;
-                    }
+                    // if (this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
+                    //     // result += 500;
+                    // } else {
+                    //     /// просчитать риски, возникающие на пути к врагу
+                    //     // console.log("countEnemyWnenMoveToEnemy => ", this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie));
+                    //     // result -= 200 * this.getAllDangersEnemyBetweenUnits(curent_unit, best_enemie);
+                    // }
+                    // if (best_enemie.person.health > curent_unit.person.health) {
+                    //     result -= 300;
+                    // } else {
+                    //     result += 300;
+                    // }
 
 
                 } else {
@@ -252,7 +268,6 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
     startMove(cache_unit, index) {
         let unit = cache_unit[index];
         let cache_enemies = [], best_enemie: any = {}, enemies_3field = [], strategy_cache: any = {}, archers;
-        console.log(this.global_cache, unit.person.id);
 
         best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
         // if (!best_enemie) {
@@ -272,7 +287,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
         //     best_enemie = best_enemie.enemie;
         // }
 
-        console.log('best_enemie!!!!!!1 ', best_enemie);
+        // console.log('best_enemie!!!!!!1 ', best_enemie);
 
         if (!best_enemie) {
 
@@ -322,7 +337,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
 
             });
         } else {
-            console.log('best_enemie!!!!!! 2', best_enemie);
+            // console.log('best_enemie!!!!!! 2', best_enemie);
             ai.atackeChosenUnit(cache_unit, best_enemie, true).then((data) => {
                 if (index < cache_unit.length - 1) {
                     this.startMove(cache_unit, index + 1);

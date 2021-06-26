@@ -238,6 +238,7 @@ define(["require", "exports"], function (require, exports) {
             return res;
         };
         DefaultMethodsStrategy.prototype.heuristic = function (a, b, type, enemies) {
+            var _this = this;
             if (enemies === void 0) { enemies = []; }
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y), archers = this.unit_collection.getAiArchers();
             switch (type) {
@@ -274,8 +275,15 @@ define(["require", "exports"], function (require, exports) {
                     break;
                 default:
                     archers.forEach(function (element) {
-                        if (element.x == b.x || element.y == b.y) {
-                            res += 4;
+                        if (_this.getEnemyInField(element, 4).length > 3) {
+                            if (element.x == b.x || element.y == b.y) {
+                                res += 3;
+                            }
+                        }
+                        else {
+                            if (element.x == b.x || element.y == b.y) {
+                                res += 10;
+                            }
                         }
                     });
                     res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
@@ -447,13 +455,16 @@ define(["require", "exports"], function (require, exports) {
                 if (!unit.isNotDied()) {
                     for (var i = 0; i < points.length; i++) {
                         if (points[i].x < 0 || points[i].x > 11) {
+                            console.log("!1");
                             res.free = false;
                         }
                         if (points[i].y < 0 || points[i].y > 8) {
+                            console.log("!2");
                             res.free = false;
                         }
                         if (unit.x == points[i].x && points[i].y == unit.y && curent_unit.hasOwnProperty("person")) {
                             if (unit.person.id != curent_unit.person.id) {
+                                console.log("!3");
                                 res.free = false;
                             }
                             else {
@@ -461,6 +472,7 @@ define(["require", "exports"], function (require, exports) {
                             }
                         }
                         if (_this.checkFreeCoordWalls(wall_blocks, points[i])) {
+                            console.log("!4");
                             res.free = false;
                         }
                     }
@@ -536,8 +548,8 @@ define(["require", "exports"], function (require, exports) {
                 is_x += this.getDistanceBetweenUnits(coord_x, enemie);
                 is_x -= this.getDistanceBetweenUnits(coord_x, unit) * 2;
                 is_y -= this.getDistanceBetweenUnits(coord_y, unit) * 2;
-                is_x -= parseInt(this.getEnemyInField(coord_x, 3).length) * 3;
-                is_y -= parseInt(this.getEnemyInField(coord_y, 3).length) * 3;
+                is_x -= parseInt(this.getEnemyInField(coord_x, 4).length) * 3;
+                is_y -= parseInt(this.getEnemyInField(coord_y, 4).length) * 3;
                 if (coord_y.empty_arr) {
                     is_y -= 1000;
                 }
@@ -550,6 +562,7 @@ define(["require", "exports"], function (require, exports) {
                 else {
                     coord = coord_x;
                 }
+                console.log("coord", is_y, is_x, "\ncoord=>", coord, " | ", coord_x, coord_y, "\n getEnemyInField", this.getEnemyInField(coord, 3), enemie.domPerson, this.unit.domPerson);
             }
             if (this.getEnemyInField(coord, 3) > 3) {
                 return { x: enemie.x - 4, y: enemie.y };
@@ -559,6 +572,55 @@ define(["require", "exports"], function (require, exports) {
             }
         };
         DefaultMethodsStrategy.prototype.maxFreeLineForArcher = function (coord, direction) {
+            var arr_up = [], arr_down = [];
+            if (direction == "y") {
+                for (var i = coord.y - 1; i >= 0; i--) {
+                    if (arr_up.length < 4)
+                        arr_up.push({ x: coord.x, y: i });
+                }
+                for (var i = coord.y + 1; i < 8; i++) {
+                    if (arr_down.length < 4)
+                        arr_down.push({ x: coord.x, y: i });
+                }
+            }
+            else {
+                for (var i = coord.x - 1; i >= 0; i--) {
+                    if (arr_up.length < 4) {
+                        arr_up.push({ x: i, y: coord.y });
+                    }
+                }
+                for (var i = coord.x + 1; i < 12; i++) {
+                    if (arr_down.length < 4)
+                        arr_down.push({ x: i, y: coord.y });
+                }
+            }
+            console.log("!!!!!!!!11111111 direction", direction, arr_up, arr_down, this.unit.domPerson);
+            arr_up = this.findFreeLine(arr_up, coord);
+            arr_down = this.findFreeLine(arr_down, coord);
+            console.log("!!!!!!!!1222222direction", direction, arr_up, arr_down, this.unit.domPerson);
+            var tmp_up = this.getPointNearEnemy(arr_up, coord), tmp_down = this.getPointNearEnemy(arr_down, coord);
+            if (arr_down.length == 0) {
+                tmp_down.empty_arr = true;
+            }
+            else {
+                tmp_down.empty_arr = false;
+            }
+            if (arr_up.length == 0) {
+                tmp_up.empty_arr = true;
+            }
+            else {
+                tmp_up.empty_arr = false;
+            }
+            if (Math.abs(arr_up.length - arr_down.length) < 2 && arr_down.length > 2 && arr_up.length > 2) {
+                return this.getDistanceBetweenUnits(tmp_down, this.unit) < this.getDistanceBetweenUnits(tmp_up, this.unit)
+                    ? tmp_down
+                    : tmp_up;
+            }
+            else {
+                return arr_up.length > arr_down.length ? tmp_up : tmp_down;
+            }
+        };
+        DefaultMethodsStrategy.prototype.maxFreeLineForArcher2 = function (coord, direction) {
             var arr_up = [], arr_down = [];
             if (direction == "y") {
                 for (var i = coord.y - 1; i >= 0; i--) {
@@ -614,10 +676,16 @@ define(["require", "exports"], function (require, exports) {
                 }
                 else {
                     if (enemy.y > 4) {
+                        if (!this.checkFreeCoordWalls(water_blocks, { x: enemy.x, y: enemy.y - 4 })) {
+                            return { x: enemy.x, y: enemy.y - 4 };
+                        }
                         return { x: enemy.x, y: enemy.y - 3 };
                     }
                     else {
-                        return { x: enemy.x, y: enemy.y + 3 };
+                        if (!this.checkFreeCoordWalls(water_blocks, { x: enemy.x, y: enemy.y + 4 })) {
+                            return { x: enemy.x, y: enemy.y + 4 };
+                        }
+                        return { x: enemy.x, y: enemy.y + 4 };
                     }
                 }
             }
@@ -685,9 +753,16 @@ define(["require", "exports"], function (require, exports) {
         };
         DefaultMethodsStrategy.prototype.getFriendsInField = function (coord_unit, field_step) {
             var _this = this;
+            var real_unit = coord_unit.hasOwnProperty("perosn") ? true : false;
             return this.unit_collection.getAICollection().filter(function (elem) {
-                if (coord_unit.person.id != elem.person.id && _this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
-                    return elem;
+                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
+                    if (real_unit) {
+                        if (coord_unit.person.id != elem.person.id)
+                            return elem;
+                    }
+                    else {
+                        return elem;
+                    }
                 }
             });
         };
@@ -708,30 +783,38 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getGetPointFarFromEnemie = function (unit, enemie) {
             var point_1 = { x: enemie.x, y: enemie.y }, point_2 = { x: enemie.x, y: enemie.y };
             if (enemie.x > 5) {
-                point_1.x = enemie.x - 5;
+                point_1.x = enemie.x - 4;
             }
             else {
-                point_1.x = enemie.x + 5;
+                point_1.x = enemie.x + 4;
             }
             if (enemie.y > 3) {
-                point_2.y = enemie.y - 5;
+                point_2.y = enemie.y - 4;
             }
             else {
-                point_2.y = enemie.y + 5;
+                point_2.y = enemie.y + 4;
+            }
+            if (enemie.y == 3 || enemie.y == 4) {
+                if (this.getDistanceBetweenUnits({ x: enemie.x, y: enemie.y + 4 }, this.unit) >
+                    this.getDistanceBetweenUnits({ x: enemie.x, y: enemie.y - 4 }, this.unit)) {
+                    point_2.y = 0;
+                }
+                else {
+                    point_2.y = 7;
+                }
             }
             var count_enemy_1 = this.getEnemyInField(point_1, 3);
             var count_enemy_2 = this.getEnemyInField(point_2, 3);
             var dist_1 = this.getDistanceBetweenUnits(point_1, this.unit);
             var dist_2 = this.getDistanceBetweenUnits(point_2, this.unit);
-            console.log("dist_1, dist_2", dist_1, dist_2, point_1, point_2, enemie.domPerson);
-            if (this.getEnemyInField(point_1, 3).length < 3 && this.getEnemyInField(point_2, 3).length < 2) {
-                if (dist_1 == dist_2 || Math.abs(dist_1 - dist_2) == 1) {
-                    return this.getFriendsInField(point_1, 3) > this.getFriendsInField(point_1, 3) ? point_1 : point_2;
+            if (this.getEnemyInField(point_1, 2).length < 2 && this.getEnemyInField(point_2, 2).length < 2) {
+                if (Math.round(Math.abs(dist_1 - dist_2)) <= 2) {
+                    return this.getFriendsInField(point_1, 3) > this.getFriendsInField(point_2, 3) ? point_1 : point_2;
                 }
-                return dist_1 > dist_2 ? point_1 : point_2;
+                return dist_1 < dist_2 ? point_1 : point_2;
             }
             else {
-                return count_enemy_2.length > count_enemy_1.length ? point_2 : point_1;
+                return count_enemy_2.length > count_enemy_1.length ? point_1 : point_2;
             }
         };
         DefaultMethodsStrategy.prototype.tryAtakeArcher = function (resCheck, enemie) {

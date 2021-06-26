@@ -56,9 +56,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     result += 300;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 10 * Math.abs(80 - enemie.person.health);
+                    result += 10 * Math.abs(100 - enemie.person.health);
                 } else {
-                    result += 8 * Math.abs(80 - enemie.person.health);
+                    result += 8 * Math.abs(100 - enemie.person.health);
                 }
             });
             enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
@@ -68,7 +68,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     x: curent_unit.person.x,
                     y: curent_unit.person.y
                 }, 8);
-
+                // if (this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length == 1) {
+                //     result += 500;
+                // }
                 if (cache_enemies.length > 0) {
                     // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
@@ -121,7 +123,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     }
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
 
-                    if (this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
+                    if (this.getDistanceBetweenUnits(best_enemie, curent_unit) < 4) {
                         result += 500;
                     } else {
                         /// просчитать риски, возникающие на пути к врагу
@@ -133,7 +135,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     } else {
                         result += 300;
                     }
-
+                    if (this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length == 1) {
+                        result += 1000;
+                    }
 
                 } else {
                     cache.units_purpose.push({ enemie: this.findNearestEnemies(curent_unit), id: curent_unit.person.id });

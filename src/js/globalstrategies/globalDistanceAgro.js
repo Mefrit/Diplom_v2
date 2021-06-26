@@ -44,7 +44,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 if (curent_unit.person.health < 20) {
                     result -= 700;
                 }
-                result += (5 - _this.unit_collection.getCountEnemy()) * 300;
+                result -= (5 - _this.unit_collection.getCountEnemy()) * 300;
                 enemies_near_4 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
                 enemies_near_4.forEach(function (enemie) {
                     if (enemie.person.class == "archer") {
@@ -54,10 +54,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         result += 300;
                     }
                     if (curent_unit.person.class == "archer") {
-                        result += 10 * Math.abs(80 - enemie.person.health);
+                        result += 10 * Math.abs(70 - enemie.person.health);
                     }
                     else {
-                        result += 8 * Math.abs(80 - enemie.person.health);
+                        result += 8 * Math.abs(100 - enemie.person.health);
                     }
                 });
                 enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
@@ -95,11 +95,11 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 }
                 else {
                     result -= 200 * enemies_near_3.length;
-                    result += 20 * (100 - parseInt(curent_unit.person.health));
+                    result += 10 * (100 - parseInt(curent_unit.person.health));
                 }
             });
             result += 10 * (5 - this.ai_units.length);
-            result -= 12 * (5 - this.unit_collection.getUserCollection().length);
+            result -= 15 * (5 - this.unit_collection.getUserCollection().length);
             console.log("Distance Agro", Math.round(result), cache);
             return { total: Math.round(result), cache: cache };
         };
@@ -107,7 +107,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         };
         DistanceAgro.prototype.choseTurnUnits = function (ai_units) {
             var _this = this;
-            var friends, reverse = false;
+            var friends, reverse = false, enemies;
             ai_units.forEach(function (element) {
                 if (_this.isArchers(element)) {
                     friends = _this.getFriendsInField(element, 2);
@@ -115,9 +115,12 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         if (!_this.isArchers(near_friend) && (near_friend.y == element.y)) {
                             reverse = true;
                         }
+                        else {
+                        }
                     });
                 }
             });
+            console.log("reverse", reverse);
             return reverse ? __spreadArrays(ai_units).reverse() : ai_units;
         };
         DistanceAgro.prototype.startMove = function (cache_unit, index) {

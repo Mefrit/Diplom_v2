@@ -65,6 +65,7 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
                 _this.CACHE = assessment.cache;
                 return { assessment: assessment.total, ai: tmp_ai };
             });
+            console.log("-----------------");
             result_assessment.forEach(function (elem) {
                 if (max == -1) {
                     max = elem.assessment;

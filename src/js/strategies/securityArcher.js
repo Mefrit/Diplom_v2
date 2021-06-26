@@ -45,6 +45,20 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }, 750);
                     _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
                 }
+                else {
+                    var local_near_enemy = _this.findNearestEnemies(_this.unit);
+                    if (Math.abs(_this.unit.x - local_near_enemy.x) <= 1 &&
+                        Math.abs(_this.unit.y - local_near_enemy.y) <= 1) {
+                        _this.unit.stopAnimation("default_fighter");
+                        _this.unit.playAnimation("atacke_fighter");
+                        atake = true;
+                        setTimeout(function () {
+                            _this.unit.stopAnimation("atacke_fighter");
+                            _this.unit.playAnimation("default_fighter");
+                        }, 750);
+                        _this.view.contactPersonsView(local_near_enemy.domPerson, local_near_enemy.image, _this.unit.person.damage);
+                    }
+                }
                 var ai_archers = _this.unit_collection.getAiArchers(), end = false;
                 if (ai_archers.length > 1) {
                     ai_archers.forEach(function (elem) {
@@ -92,6 +106,20 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                             _this.unit.playAnimation("default_fighter");
                         }, 750);
                         _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
+                    }
+                    else {
+                        var local_near_enemy = _this.findNearestEnemies(_this.unit);
+                        if (Math.abs(_this.unit.x - local_near_enemy.x) <= 1 &&
+                            Math.abs(_this.unit.y - local_near_enemy.y) <= 1) {
+                            _this.unit.stopAnimation("default_fighter");
+                            _this.unit.playAnimation("atacke_fighter");
+                            atake = true;
+                            setTimeout(function () {
+                                _this.unit.stopAnimation("atacke_fighter");
+                                _this.unit.playAnimation("default_fighter");
+                            }, 750);
+                            _this.view.contactPersonsView(local_near_enemy.domPerson, local_near_enemy.image, _this.unit.person.damage);
+                        }
                     }
                     if (checkArcherPosition.result && !_this.unit.moveAction) {
                         _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");

@@ -196,6 +196,7 @@ export class UndercoverArcherAttack extends DefaultGlobalMethodsStrategy {
                 first_archer = curent_unit;
                 enemie_first_archer = best_enemie;
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
+                result -= 20000;
             } else {
                 if (enemies_near_3.length > 0) {
                     enemies_near_3 = this.deleteEqualEnemyFromCache(enemies_near_3, cache_died);

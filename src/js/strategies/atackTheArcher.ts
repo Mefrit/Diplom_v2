@@ -50,59 +50,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }, 800);
         this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
     }
-    tryAtakeArcher(resCheck, enemie) {
-        let pointPosition,
-            xLineCondition,
-            yLineCondition,
-            res = { pointPosition: [], result: true };
-        if (resCheck.arrayPoit.length > 0) {
-            pointPosition = resCheck.arrayPoit[resCheck.arrayPoit.length - 1];
-            res.pointPosition = pointPosition;
-            // враги на линии
-            xLineCondition = enemie.x == this.unit.x && pointPosition.x == this.unit.x;
-            yLineCondition = enemie.y == this.unit.y && pointPosition.y == this.unit.y;
-        } else {
-            xLineCondition = false;
-            yLineCondition = false;
-        }
 
-        if (yLineCondition || xLineCondition || resCheck.arrayPoit.length == 0) {
-            if (Math.abs(this.unit.x - enemie.x) >= Math.abs(this.unit.y - enemie.y)) {
-                // поиск атаки по горизонтале
-                if (Math.abs(this.unit.x - enemie.x) < 3 && !this.unit.moveAction) {
-                    this.moveAutoStepStupid(this.unit, enemie, "archer");
-                } else {
-                    if (Math.abs(this.unit.y - enemie.y) < 3 && this.unit.y != enemie.y && !this.unit.moveAction) {
-                        this.moveAutoStepStupid(this.unit, enemie, "archer");
-                    }
-                }
-                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
-                    this.atakeArcher(enemie);
-                } else {
-                    res.result = false;
-                }
-            } else {
-                // поиск атаки по вертикали
-                let new_x, new_y;
-                if (!this.unit.moveAction) {
-                    if (enemie.person.y < 3) {
-                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 8 }, "fighter", {});
-                    } else {
-                        this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
-                    }
-                }
-                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
-                    this.atakeArcher(enemie);
-                } else {
-                    res.result = false;
-                }
-            }
-            // проверка на тикать от сюда
-        } else {
-            res.result = false;
-        }
-        return res;
-    }
     //если на лучника атакуют, то он убегает
     runAwayArcher() {
         if (this.unit.x < 11) {
@@ -128,20 +76,43 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
         }
         coord = this.getCoordForAtacke(this.unit, enemie, "default", res.free);
-        console.log("is_protect_strategy", this.is_protect_strategy);
+
         if (this.is_protect_strategy) {
             let near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAiArchers());
             if (this.getDistanceBetweenUnits(near_friend, coord) < 3) {
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
         }
-        // console.log("coord11111111111111", coord, enemie.domPerson, this.unit.domPerson);
+        // console.log("coord11111111111111", coord);
         if (coord) {
             // return this.moveAutoStepStupid(this.unit, coord, "archer");
             // console.log("coord2", coord);
+            if (
+                this.getEnemyInField(coord, 3).length > 4 &&
+                this.getFriendsInField(coord, 3).length < 2 &&
+                this.unit_collection.getAICollection().length > 3
+            ) {
+                let near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAICollection()),
+                    obj2go = { x: near_friend.x, y: near_friend.y };
+                if (near_friend.x > 2) {
+                    obj2go.x = near_friend.x - 2;
+                    obj2go.y = near_friend.y;
+                } else {
+                    if (near_friend.y > 2) {
+                        obj2go.y = near_friend.y - 2;
+                        obj2go.x = near_friend.x;
+                    }
+                }
+                // console.log("HERE STUPId");
+                return this.moveAutoStepStupid(this.unit, obj2go, "fighter");
+            }
+            // if (this.getDistanceBetweenUnits(coord, this.unit) <= 1) {
+            //     return this.moveAutoStepStupid(this.unit, enemie, "archer");
+            // }
+            // console.log("coord", coord);
             return this.moveAutoStepStupid(this.unit, coord, "stupid");
         } else {
-            return this.moveAutoStepStupid(this.unit, coord, "fighter");
+            return this.moveAutoStepStupid(this.unit, enemie, "archer");
         }
     }
     findPointAtackArcher(enemie, is_protect_strategy = false) {
@@ -206,7 +177,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         });
     }
     atackeChosenUnit(cache, enemie, is_protect_strategy = false) {
-        console.log(enemie, is_protect_strategy);
         this.is_protect_strategy = is_protect_strategy;
         return new Promise((resolve, reject) => {
             if (enemie.isNotDied()) {

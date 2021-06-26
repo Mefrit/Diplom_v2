@@ -70,10 +70,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         result += 300;
                     }
                     if (curent_unit.person.class == "archer") {
-                        result += 10 * Math.abs(80 - enemie.person.health);
+                        result += 10 * Math.abs(100 - enemie.person.health);
                     }
                     else {
-                        result += 8 * Math.abs(80 - enemie.person.health);
+                        result += 8 * Math.abs(100 - enemie.person.health);
                     }
                 });
                 enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
@@ -117,7 +117,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                             cache_died.push(best_enemie);
                         }
                         cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
-                        if (_this.getDistanceBetweenUnits(best_enemie, curent_unit) < 3) {
+                        if (_this.getDistanceBetweenUnits(best_enemie, curent_unit) < 4) {
                             result += 500;
                         }
                         else {
@@ -128,6 +128,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         }
                         else {
                             result += 300;
+                        }
+                        if (_this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length == 1) {
+                            result += 1000;
                         }
                     }
                     else {

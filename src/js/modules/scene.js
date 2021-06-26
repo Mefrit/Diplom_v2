@@ -76,7 +76,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             };
             this.onChangePerson = function (event) {
                 var canvas = event.target;
-                console.log("onChangePerson!!!!!!!!!", canvas);
                 if (_this.canvas != undefined) {
                     _this.view.clearPrev(_this.canvas, _this.loader);
                 }

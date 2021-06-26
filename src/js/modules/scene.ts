@@ -271,7 +271,6 @@ export class Scene {
                     }
                 });
 
-                // elem.initDragonAnimatoin();
                 elem.initImage(img);
                 document.getElementById("scene").appendChild(cnvsElem);
             });
@@ -310,7 +309,7 @@ export class Scene {
     };
     onChangePerson = (event) => {
         let canvas = event.target;
-        console.log("onChangePerson!!!!!!!!!", canvas);
+
         if (this.canvas != undefined) {
             this.view.clearPrev(this.canvas, this.loader);
         }

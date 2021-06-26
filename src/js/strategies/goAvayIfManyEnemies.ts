@@ -43,12 +43,15 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             if (Math.abs(point.x - this.unit.x) < 2 && Math.abs(point.y - this.unit.y) < 2) {
                 priority += 10;
             }
+
             // priority +=
             // if (Math.abs(point.x - elem.x) < 2) {
             //     priority += 20;
             // }
         });
-
+        if (point.x == nearest_friend.x && point.y == nearest_friend.y) {
+            priority -= 2000;
+        }
         if (Math.abs(point.x - nearest_friend.x) == 0) {
             priority -= 1000;
         }
@@ -76,27 +79,33 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
         points_near = this.getNeighbors({ x: this.unit.x, y: this.unit.y });
 
         points_near = this.deleteExcessCoord(points_near);
-        if (is_protect_arher) {
-            points_near.push({ nearest_friend });
+        if (
+            is_protect_arher &&
+            this.getDistanceBetweenUnits(this.unit, { x: nearest_friend.x, y: nearest_friend.y }) < 3
+        ) {
+            points_near.push({ x: nearest_friend.x, y: nearest_friend.y });
         }
         points_near.forEach((elem, index, arr) => {
             elem.priority = this.heuristicSave(elem, near_enemies, nearest_friend);
         });
+        points_near = this.deleteExcessCoord(points_near);
+
         best_point = points_near[0];
-        // console.log("frontier points=> go2friendsSafety ", points_near);
+
         points_near.forEach((element) => {
             if (element.priority <= best_point.priority) {
                 // что бы искал пути, конечно это не панацея в более сложных ситуация фигурка будет тупить
                 // написать по нормальному!!!!!
                 // if (unit.coordPrevPoint.x != element.next.x && unit.coordPrevPoint.y != element.next.y) {
                 // console.log("unit.coordPrevPoint,", unit.coordPrevPoint, element.next);
+
                 best_point = element;
                 // }
             }
         });
-        console.log(" tbest_point);", best_point);
+        // console.log(" tbest_point);", best_point);
         if (points_near.length > 0) {
-            console.log(" tbest_point);", best_point);
+            // console.log(" tbest_point);", best_point);
             this.moveTo(this.unit, best_point);
         }
     }
@@ -136,6 +145,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
                     point = this.getNearFriendsUnit(this.unit, near_friends);
                 }
             }
+
             this.go2friendsSafety(point, is_protect_arcger);
             let maxX = Math.abs(enemie.person.x - this.unit.person.x),
                 resCheck,
@@ -146,6 +156,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             } else {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
             }
+            // console.log("!!!!!!!!!!!!!esCheck", resCheck, this.unit.domPerson);
             if (resCheck.free) {
                 this.tryAtakeArcher(resCheck, enemie);
             }
@@ -167,7 +178,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
                 this.go2friendsSafety(nearest_friend, false);
             }
             this.unit.setMoveAction(false);
-            console.log("nearest_friend", nearest_friend);
+            // console.log("nearest_friend", nearest_friend);
             setTimeout(() => {
                 resolve("Promise4");
             }, 320);

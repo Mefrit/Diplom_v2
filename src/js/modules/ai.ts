@@ -86,7 +86,7 @@ export class Ai {
             // console.log("ai ", tmp_ai.getInfo(), "total ", assessment.total);
             return { assessment: assessment.total, ai: tmp_ai };
         });
-
+        console.log("-----------------");
         result_assessment.forEach((elem) => {
             if (max == -1) {
                 max = elem.assessment;
