@@ -66,6 +66,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 8);
+                    result += 200 * (5 - enemies_near_3.length);
                     if (cache_enemies.length > 0) {
                         if (enemie_first_archer) {
                             if (_this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
@@ -94,7 +95,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
-                    result -= 300 * enemies_near_3.length;
+                    result += 200 * (5 - enemies_near_3.length);
                     result += 10 * (100 - parseInt(curent_unit.person.health));
                 }
             });
