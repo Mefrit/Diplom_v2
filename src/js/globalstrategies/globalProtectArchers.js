@@ -32,21 +32,21 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         }
         ProtectArchers.prototype.assessment = function (cache) {
             var _this = this;
-            var result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
+            var result = 800, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
             this.ai_units.forEach(function (curent_unit) {
                 enemies_near_4 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
                 enemies_near_4.forEach(function (enemie) {
                     if (enemie.person.class == "archer") {
-                        result += 500;
+                        result += 400;
                     }
                     else {
-                        result += 300;
+                        result += 200;
                     }
                     if (curent_unit.person.class == "archer") {
-                        result += 9 * Math.abs(70 - enemie.person.health);
+                        result += 6 * Math.abs(70 - enemie.person.health);
                     }
                     else {
-                        result += 5 * Math.abs(100 - enemie.person.health);
+                        result += 4 * Math.abs(100 - enemie.person.health);
                     }
                 });
                 enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 6);
@@ -69,7 +69,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 2);
-                    result += enemy_near_archer_2.length * 1000;
+                    result += enemy_near_archer_2.length * 1200;
                     result += enemy_near_archer_3.length * 200;
                     if (cache_enemies.length > 0) {
                         if (enemie_first_archer) {

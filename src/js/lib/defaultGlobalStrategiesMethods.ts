@@ -36,13 +36,13 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                                 }
                             }
                         } else {
-                            best_enemie = elem;
-                            distance_best = tmp;
-                            if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
-                                // if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-                                have_best_choise = true;
-                                // }
-                            }
+                            // best_enemie = elem;
+                            // distance_best = tmp;
+                            // if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
+                            //     // if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+                            //     have_best_choise = true;
+                            //     // }
+                            // }
                         }
                     }
                 }
@@ -76,7 +76,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                         // }
                     } else {
                         if (
-                            (Math.abs(elem.y - unit.y) <= 2 || Math.abs(elem.x - unit.x) <= 2) &&
+                            (Math.abs(elem.y - unit.y) <= 1 || Math.abs(elem.x - unit.x) <= 1) &&
                             unit.person.class == "archer"
                         ) {
                             best_enemie = elem;
@@ -104,10 +104,18 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                         ) {
                             best_enemie = elem;
                             have_best_choise = true;
-                        } else {
                         }
-                        if (best_enemie.person.health > elem.person.health && !have_best_choise) {
-                            if (!(best_enemie.x == unit.x || best_enemie.y == unit.y)) best_enemie = elem;
+                        if (
+                            best_enemie.person.health > elem.person.health &&
+                            !have_best_choise &&
+                            best_enemie.person.health < 50
+                        ) {
+                            if (
+                                !(best_enemie.x == unit.x || best_enemie.y == unit.y) &&
+                                best_enemie.person.class != "archer"
+                            ) {
+                                best_enemie = elem;
+                            }
                         }
                     }
                 }

@@ -126,7 +126,7 @@ export class DefaultMethodsStrategy {
         let result = false;
 
         cache.forEach((element) => {
-            if (element.x == unit.x && element.y == unit.y) {
+            if (parseInt(element.x) == parseInt(unit.x) && parseInt(element.y) == parseInt(unit.y)) {
                 result = true;
             }
         });
@@ -179,6 +179,7 @@ export class DefaultMethodsStrategy {
             archers = this.unit_collection.getAiArchers();
         switch (type) {
             case "archer":
+                res += 10 * this.getEnemyInField(b, 2);
                 if (Math.abs(a.x - b.x) < 4) {
                     res += 10;
                     if (Math.abs(a.x - b.x) < 3) {
@@ -208,6 +209,7 @@ export class DefaultMethodsStrategy {
                     res -= 1000;
                 }
                 break;
+
             default:
                 // if (a.x == b.x || a.y == b.y) {
                 //     res += 1;
@@ -423,7 +425,6 @@ export class DefaultMethodsStrategy {
         cost_so_far[0] = 0;
 
         pointsNear = this.getNeighbors({ x: unit.person.x, y: unit.person.y }, type);
-        pointsNear = this.deleteExcessCoord(pointsNear);
 
         if (!obj2go.hasOwnProperty("domPerson")) {
             pointsNear.push({
@@ -437,6 +438,7 @@ export class DefaultMethodsStrategy {
                 y: obj2go.y,
             });
         }
+        pointsNear = this.deleteExcessCoord(pointsNear);
         pointsNear.forEach((next, index, arr) => {
             next.id = unit.person.x + unit.person.y + index;
             new_cost = cost_so_far[current.id] + 1;
@@ -708,10 +710,13 @@ export class DefaultMethodsStrategy {
                 "\n getEnemyInField",
                 this.getEnemyInField(coord, 3),
                 enemie.domPerson,
-                this.unit.domPerson
+                this.unit.domPerson,
+                "getDistanceBetweenUnits",
+                this.getDistanceBetweenUnits(coord, enemie)
             );
         }
-        if (this.getEnemyInField(coord, 3) > 3) {
+        if (this.getEnemyInField(coord, 3) > 3 || this.getDistanceBetweenUnits(coord, enemie) <= 1) {
+            // if(this.checkFree)
             return { x: enemie.x - 4, y: enemie.y };
         } else {
             return coord;
@@ -738,7 +743,7 @@ export class DefaultMethodsStrategy {
                 if (arr_down.length < 4) arr_down.push({ x: i, y: coord.y });
             }
         }
-        console.log("!!!!!!!!11111111 direction", direction, arr_up, arr_down, this.unit.domPerson, coord);
+        console.log("!!!!!!!!11111111 direction", direction, arr_up, arr_down, this.unit.domPerson);
         arr_up = this.findFreeLine(arr_up, coord);
         arr_down = this.findFreeLine(arr_down, coord);
         console.log("!!!!!!!!1222222direction", direction, arr_up, arr_down, this.unit.domPerson);
@@ -768,8 +773,6 @@ export class DefaultMethodsStrategy {
         //     "!!!!!!!!!!!!!!!!!!!!!!!!!!direction ",
         //     direction,
         //     "    ",
-        //     arr_up,
-        //     arr_down,
         //     tmp_up,
         //     tmp_down,
         //     Math.abs(arr_up.length - arr_down.length) < 3 && arr_down.length > 2 && arr_up.length > 2
@@ -865,7 +868,7 @@ export class DefaultMethodsStrategy {
             max = 0,
             distance,
             water_blocks = this.scene.get("water_blocks");
-        console.log("\ngetPointNearEnemy", cache);
+        // console.log("\ngetPointNearEnemy", cache);
         if (cache.length == 0 || !cache) {
             if (enemy.x > 4) {
                 return { x: enemy.x - 3, y: enemy.y };
@@ -921,7 +924,7 @@ export class DefaultMethodsStrategy {
                             console.log("\n\n find_closed_area 1 ", elem);
                             find_closed_area = true;
                         } else {
-                            new_cache.push(elem);
+                            if (!this.checkFreeCoordWalls(new_cache, elem)) new_cache.push(elem);
                         }
 
                         return false;
@@ -931,11 +934,18 @@ export class DefaultMethodsStrategy {
 
                     // }
                 } else {
-                    if (!(this.unit.x == elem.x && this.unit.y == elem.y)) {
+                    // if (!(this.unit.x == elem.x && this.unit.y == elem.y)) {
+                    //     console.log("\n\n find_closed_area 222", elem, this.unit_collection.checkFreeCoord(elem));
+                    //     find_closed_area = true;
+                    // } else {
+                    //     new_cache.push(elem);
+                    // }
+                    if (this.unit.x == elem.x && this.unit.y == elem.y) {
                         console.log("\n\n find_closed_area 222", elem, this.unit_collection.checkFreeCoord(elem));
                         find_closed_area = true;
                     } else {
-                        new_cache.push(elem);
+                        if (!this.checkFreeCoordWalls(new_cache, elem) && this.unit_collection.checkFreeCoord(elem))
+                            new_cache.push(elem);
                     }
                     return true;
                 }
@@ -951,7 +961,21 @@ export class DefaultMethodsStrategy {
         if (new_cache.length > 0) {
             let last_point = new_cache[new_cache.length - 1];
             // console.log("last_point", last_point, new_cache);
-            if (this.checkFreeCoordWalls(water_blocks, last_point)) {
+            if (
+                this.checkFreeCoordWalls(water_blocks, last_point) ||
+                (!this.unit_collection.checkFreeCoord(last_point) &&
+                    this.unit.x != last_point.x &&
+                    this.unit.y != last_point.y)
+            ) {
+                console.log(
+                    "pop!!!!!!!!!!!!!!!!!!",
+                    last_point,
+
+                    !this.unit_collection.checkFreeCoord(last_point),
+                    this.checkFreeCoordWalls(water_blocks, last_point),
+                    this.checkFreeCoordWalls(water_blocks, last_point) ||
+                        !this.unit_collection.checkFreeCoord(last_point)
+                );
                 new_cache.pop();
             }
         }

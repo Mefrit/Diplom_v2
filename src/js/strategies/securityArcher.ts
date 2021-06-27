@@ -85,85 +85,100 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                     }
                 });
             }
-
-            if (near_enemies.length == 0) {
-                pos_security.x = near_archer.x - 1;
+            near_enemies = this.getEnemyInField(near_archer, 6);
+            // if (near_enemies.length == 0) {
+            //     pos_security.x = near_archer.x - 1;
+            // } else {
+            //     let nearest_enemy = this.findNearestEnemies(near_archer);
+            //     console.log("nearest_enemy", nearest_enemy, near_archer);
+            //     if (nearest_enemy.x > near_archer.x) {
+            //         pos_security.x = near_archer.x + 1;
+            //     } else {
+            //         pos_security.x = near_archer.x - 1;
+            //         // pos_security.x = near_archer.x;
+            //     }
+            // }
+            let nearest_enemy = this.findNearestEnemies(near_archer);
+            // console.log("nearest_enemy", nearest_enemy, near_archer);
+            if (nearest_enemy.x > near_archer.x) {
+                pos_security.x = near_archer.x + 1;
             } else {
-                let nearest_enemy = this.findNearestEnemies(this.unit);
-                if (nearest_enemy.x < near_archer.x) {
-                    pos_security.x = near_archer.x + 1;
-                } else {
-                    pos_security.x = near_archer.x - 1;
-                    // pos_security.x = near_archer.x;
-                }
+                pos_security.x = near_archer.x - 1;
+                // pos_security.x = near_archer.x;
             }
 
             pos_security.y = near_archer.y;
             let wall_blocks = this.scene.get("wall_blocks"),
                 water_blocks = this.scene.get("water_blocks");
-            if (Math.abs(this.unit.x - near_archer.x) != 0 || Math.abs(this.unit.y - near_archer.y) != 0) {
-                near_enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 6);
+            // if (Math.abs(this.unit.x - near_archer.x) != 0 || Math.abs(this.unit.y - near_archer.y) != 0) {
+            near_enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 6);
+            if (
+                this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y + 1 }) &&
+                !this.checkFreeCoordWalls(wall_blocks, { x: pos_security.x, y: near_archer.y + 1 }) &&
+                !this.checkFreeCoordWalls(water_blocks, { x: pos_security.x, y: near_archer.y + 1 })
+            ) {
+                pos_security.y = near_archer.y + 1;
+            } else {
+                pos_security.y = near_archer.y - 1;
+            }
+
+            if (typeof near_enemy == "undefined" || atake) {
+                near_enemy = this.findNearestEnemies(this.unit);
+            }
+            pos_security.near_archer = near_archer;
+            console.log("pos_security", pos_security, near_archer.domPerson);
+            var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
+
+            //атака , если лучник не далеко
+            var checkArcherPosition = this.checkArcherPosition(near_enemy);
+
+            if (Math.abs(this.unit.x - near_enemy.x) <= 1 && Math.abs(this.unit.y - near_enemy.y) <= 1 && !atake) {
+                // запуск анимации атаки
+                this.unit.stopAnimation("default_fighter");
+                this.unit.playAnimation("atacke_fighter");
+
+                // animation.stop();
+                setTimeout(() => {
+                    this.unit.stopAnimation("atacke_fighter");
+                    this.unit.playAnimation("default_fighter");
+                }, 750);
+                this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
+
+                // только если олучник стреляет сделать то бишь на позиции
+            } else {
+                let local_near_enemy = this.findNearestEnemies(this.unit);
                 if (
-                    this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y + 1 }) &&
-                    !this.checkFreeCoordWalls(wall_blocks, { x: pos_security.x, y: near_archer.y + 1 }) &&
-                    !this.checkFreeCoordWalls(water_blocks, { x: pos_security.x, y: near_archer.y + 1 })
+                    Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
+                    Math.abs(this.unit.y - local_near_enemy.y) <= 1
                 ) {
-                    pos_security.y = near_archer.y + 1;
-                } else {
-                    pos_security.y = near_archer.y - 1;
-                }
-
-                if (typeof near_enemy == "undefined" || atake) {
-                    near_enemy = this.findNearestEnemies(this.unit);
-                }
-                pos_security.near_archer = near_archer;
-                // console.log("pos_security", pos_security, near_archer.domPerson);
-                var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
-
-                //атака , если лучник не далеко
-                var checkArcherPosition = this.checkArcherPosition(near_enemy);
-
-                if (Math.abs(this.unit.x - near_enemy.x) <= 1 && Math.abs(this.unit.y - near_enemy.y) <= 1 && !atake) {
                     // запуск анимации атаки
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
-
+                    atake = true;
                     // animation.stop();
                     setTimeout(() => {
                         this.unit.stopAnimation("atacke_fighter");
                         this.unit.playAnimation("default_fighter");
                     }, 750);
-                    this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
+                    this.view.contactPersonsView(
+                        local_near_enemy.domPerson,
+                        local_near_enemy.image,
+                        this.unit.person.damage
+                    );
 
                     // только если олучник стреляет сделать то бишь на позиции
-                } else {
-                    let local_near_enemy = this.findNearestEnemies(this.unit);
-                    if (
-                        Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
-                        Math.abs(this.unit.y - local_near_enemy.y) <= 1
-                    ) {
-                        // запуск анимации атаки
-                        this.unit.stopAnimation("default_fighter");
-                        this.unit.playAnimation("atacke_fighter");
-                        atake = true;
-                        // animation.stop();
-                        setTimeout(() => {
-                            this.unit.stopAnimation("atacke_fighter");
-                            this.unit.playAnimation("default_fighter");
-                        }, 750);
-                        this.view.contactPersonsView(
-                            local_near_enemy.domPerson,
-                            local_near_enemy.image,
-                            this.unit.person.damage
-                        );
+                }
+            }
+            if (checkArcherPosition.result && !this.unit.moveAction) {
+                // console.log("checkArcherPosition", checkArcherPosition);
+                this.moveAutoStepStupid(this.unit, checkArcherPosition.point, "securityArcher");
+            }
+            // }
 
-                        // только если олучник стреляет сделать то бишь на позиции
-                    }
-                }
-                if (checkArcherPosition.result && !this.unit.moveAction) {
-                    // console.log("checkArcherPosition", checkArcherPosition);
-                    this.moveAutoStepStupid(this.unit, checkArcherPosition.point, "securityArcher");
-                }
+            if (this.checkFreeCoordWalls(this.unit_collection.getAICollection(), pos_security)) {
+                pos_security.x = near_archer.x - 1;
+            } else {
+                pos_security.x = near_archer.x + 1;
             }
 
             this.unit.setMoveAction(false);

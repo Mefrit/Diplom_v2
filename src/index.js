@@ -5,8 +5,8 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
     var arrPersons = [
         {
             url: "./src/images/hola_1.png",
-            x: 6,
-            y: 3,
+            x: 11,
+            y: 2,
             evil: false,
             class: "fighter",
             damage: 15,

@@ -36,6 +36,12 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 coord = { x: nearEnemie.person.x, y: nearEnemie.person.y };
                 res = _this.moveCarefully(_this.unit, nearEnemie, "fighter", cache);
                 if (res.findEnime == true) {
+                    _this.unit.stopAnimation("default_fighter");
+                    _this.unit.playAnimation("atacke_fighter");
+                    setTimeout(function () {
+                        _this.unit.stopAnimation("atacke_fighter");
+                        _this.unit.playAnimation("default_fighter");
+                    }, 750);
                     _this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, _this.unit.person.damage);
                     checkArcherPosition = _this.checkArcherPosition(res.enemie);
                     if (checkArcherPosition.result && !_this.unit.moveAction) {

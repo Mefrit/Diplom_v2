@@ -68,7 +68,12 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
                     //атака , если лучник не далеко
 
                     if (Math.abs(this.unit.x - near_enemy.x) == 1) {
-                        // запуск анимации атаки
+                        // запуск анимации атаки  this.unit.stopAnimation("default_fighter");
+                        this.unit.playAnimation("atacke_fighter");
+                        setTimeout(() => {
+                            this.unit.stopAnimation("atacke_fighter");
+                            this.unit.playAnimation("default_fighter");
+                        }, 750);
                         this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
 
                         var checkArcherPosition = this.checkArcherPosition(near_enemy);

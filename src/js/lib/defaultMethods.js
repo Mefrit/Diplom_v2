@@ -26,7 +26,6 @@ define(["require", "exports"], function (require, exports) {
                 came_from[0] = NaN;
                 cost_so_far[0] = 0;
                 pointsNear = _this.getNeighbors({ x: unit.person.x, y: unit.person.y }, type);
-                pointsNear = _this.deleteExcessCoord(pointsNear);
                 if (!obj2go.hasOwnProperty("domPerson")) {
                     pointsNear.push({
                         x: unit.x,
@@ -39,6 +38,7 @@ define(["require", "exports"], function (require, exports) {
                         y: obj2go.y,
                     });
                 }
+                pointsNear = _this.deleteExcessCoord(pointsNear);
                 pointsNear.forEach(function (next, index, arr) {
                     next.id = unit.person.x + unit.person.y + index;
                     new_cost = cost_so_far[current.id] + 1;
@@ -210,7 +210,7 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.checkFreeCoordWalls = function (cache, unit) {
             var result = false;
             cache.forEach(function (element) {
-                if (element.x == unit.x && element.y == unit.y) {
+                if (parseInt(element.x) == parseInt(unit.x) && parseInt(element.y) == parseInt(unit.y)) {
                     result = true;
                 }
             });
@@ -250,6 +250,7 @@ define(["require", "exports"], function (require, exports) {
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y), archers = this.unit_collection.getAiArchers();
             switch (type) {
                 case "archer":
+                    res += 10 * this.getEnemyInField(b, 2);
                     if (Math.abs(a.x - b.x) < 4) {
                         res += 10;
                         if (Math.abs(a.x - b.x) < 3) {
@@ -569,9 +570,9 @@ define(["require", "exports"], function (require, exports) {
                 else {
                     coord = coord_x;
                 }
-                console.log("coord", is_y, is_x, "\ncoord=>", coord, " | ", coord_x, coord_y, "\n getEnemyInField", this.getEnemyInField(coord, 3), enemie.domPerson, this.unit.domPerson);
+                console.log("coord", is_y, is_x, "\ncoord=>", coord, " | ", coord_x, coord_y, "\n getEnemyInField", this.getEnemyInField(coord, 3), enemie.domPerson, this.unit.domPerson, "getDistanceBetweenUnits", this.getDistanceBetweenUnits(coord, enemie));
             }
-            if (this.getEnemyInField(coord, 3) > 3) {
+            if (this.getEnemyInField(coord, 3) > 3 || this.getDistanceBetweenUnits(coord, enemie) <= 1) {
                 return { x: enemie.x - 4, y: enemie.y };
             }
             else {
@@ -601,7 +602,7 @@ define(["require", "exports"], function (require, exports) {
                         arr_down.push({ x: i, y: coord.y });
                 }
             }
-            console.log("!!!!!!!!11111111 direction", direction, arr_up, arr_down, this.unit.domPerson, coord);
+            console.log("!!!!!!!!11111111 direction", direction, arr_up, arr_down, this.unit.domPerson);
             arr_up = this.findFreeLine(arr_up, coord);
             arr_down = this.findFreeLine(arr_down, coord);
             console.log("!!!!!!!!1222222direction", direction, arr_up, arr_down, this.unit.domPerson);
@@ -630,7 +631,6 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getPointNearEnemy = function (cache, enemy) {
             var _this = this;
             var result = cache[cache.length - 1], max = 0, distance, water_blocks = this.scene.get("water_blocks");
-            console.log("\ngetPointNearEnemy", cache);
             if (cache.length == 0 || !cache) {
                 if (enemy.x > 4) {
                     return { x: enemy.x - 3, y: enemy.y };
@@ -681,7 +681,8 @@ define(["require", "exports"], function (require, exports) {
                                 find_closed_area = true;
                             }
                             else {
-                                new_cache.push(elem);
+                                if (!_this.checkFreeCoordWalls(new_cache, elem))
+                                    new_cache.push(elem);
                             }
                             return false;
                         }
@@ -690,12 +691,13 @@ define(["require", "exports"], function (require, exports) {
                         }
                     }
                     else {
-                        if (!(_this.unit.x == elem.x && _this.unit.y == elem.y)) {
+                        if (_this.unit.x == elem.x && _this.unit.y == elem.y) {
                             console.log("\n\n find_closed_area 222", elem, _this.unit_collection.checkFreeCoord(elem));
                             find_closed_area = true;
                         }
                         else {
-                            new_cache.push(elem);
+                            if (!_this.checkFreeCoordWalls(new_cache, elem) && _this.unit_collection.checkFreeCoord(elem))
+                                new_cache.push(elem);
                         }
                         return true;
                     }
@@ -710,7 +712,12 @@ define(["require", "exports"], function (require, exports) {
             }
             if (new_cache.length > 0) {
                 var last_point = new_cache[new_cache.length - 1];
-                if (this.checkFreeCoordWalls(water_blocks, last_point)) {
+                if (this.checkFreeCoordWalls(water_blocks, last_point) ||
+                    (!this.unit_collection.checkFreeCoord(last_point) &&
+                        this.unit.x != last_point.x &&
+                        this.unit.y != last_point.y)) {
+                    console.log("pop!!!!!!!!!!!!!!!!!!", last_point, !this.unit_collection.checkFreeCoord(last_point), this.checkFreeCoordWalls(water_blocks, last_point), this.checkFreeCoordWalls(water_blocks, last_point) ||
+                        !this.unit_collection.checkFreeCoord(last_point));
                     new_cache.pop();
                 }
             }

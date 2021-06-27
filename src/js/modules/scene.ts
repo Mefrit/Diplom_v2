@@ -214,7 +214,7 @@ export class Scene {
                             //             elem.stopAnimation("die_fighter");
                             //         }, 800);
                             //     }, 4000);
-                            // }, 7000);
+                            // }, 8000);
                             elem.setAnimation(skin.name, dragon);
                         }
                         if (skin.class == "evil_archer" && elem.person.class == "archer") {
@@ -238,7 +238,7 @@ export class Scene {
                             //             elem.stopAnimation("evil_archer_die");
                             //         }, 750);
                             //     }, 4000);
-                            // }, 7000);
+                            // }, 8000);
                             elem.setAnimation(skin.name, dragon);
                         }
                     } else {

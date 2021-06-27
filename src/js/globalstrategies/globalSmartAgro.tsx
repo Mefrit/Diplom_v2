@@ -71,6 +71,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 // if (this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length == 1) {
                 //     result += 500;
                 // }
+                result += 30 * (60 - curent_unit.person.health);
                 if (cache_enemies.length > 0) {
                     // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?

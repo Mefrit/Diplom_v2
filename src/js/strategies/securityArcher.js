@@ -68,62 +68,63 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                         }
                     });
                 }
-                if (near_enemies.length == 0) {
-                    pos_security.x = near_archer.x - 1;
+                near_enemies = _this.getEnemyInField(near_archer, 6);
+                var nearest_enemy = _this.findNearestEnemies(near_archer);
+                if (nearest_enemy.x > near_archer.x) {
+                    pos_security.x = near_archer.x + 1;
                 }
                 else {
-                    var nearest_enemy = _this.findNearestEnemies(_this.unit);
-                    if (nearest_enemy.x < near_archer.x) {
-                        pos_security.x = near_archer.x + 1;
-                    }
-                    else {
-                        pos_security.x = near_archer.x - 1;
-                    }
+                    pos_security.x = near_archer.x - 1;
                 }
                 pos_security.y = near_archer.y;
                 var wall_blocks = _this.scene.get("wall_blocks"), water_blocks = _this.scene.get("water_blocks");
-                if (Math.abs(_this.unit.x - near_archer.x) != 0 || Math.abs(_this.unit.y - near_archer.y) != 0) {
-                    near_enemies = _this.getEnemyInField({ x: _this.unit.x, y: _this.unit.y }, 6);
-                    if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y + 1 }) &&
-                        !_this.checkFreeCoordWalls(wall_blocks, { x: pos_security.x, y: near_archer.y + 1 }) &&
-                        !_this.checkFreeCoordWalls(water_blocks, { x: pos_security.x, y: near_archer.y + 1 })) {
-                        pos_security.y = near_archer.y + 1;
-                    }
-                    else {
-                        pos_security.y = near_archer.y - 1;
-                    }
-                    if (typeof near_enemy == "undefined" || atake) {
-                        near_enemy = _this.findNearestEnemies(_this.unit);
-                    }
-                    pos_security.near_archer = near_archer;
-                    var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");
-                    var checkArcherPosition = _this.checkArcherPosition(near_enemy);
-                    if (Math.abs(_this.unit.x - near_enemy.x) <= 1 && Math.abs(_this.unit.y - near_enemy.y) <= 1 && !atake) {
+                near_enemies = _this.getEnemyInField({ x: _this.unit.x, y: _this.unit.y }, 6);
+                if (_this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y + 1 }) &&
+                    !_this.checkFreeCoordWalls(wall_blocks, { x: pos_security.x, y: near_archer.y + 1 }) &&
+                    !_this.checkFreeCoordWalls(water_blocks, { x: pos_security.x, y: near_archer.y + 1 })) {
+                    pos_security.y = near_archer.y + 1;
+                }
+                else {
+                    pos_security.y = near_archer.y - 1;
+                }
+                if (typeof near_enemy == "undefined" || atake) {
+                    near_enemy = _this.findNearestEnemies(_this.unit);
+                }
+                pos_security.near_archer = near_archer;
+                console.log("pos_security", pos_security, near_archer.domPerson);
+                var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");
+                var checkArcherPosition = _this.checkArcherPosition(near_enemy);
+                if (Math.abs(_this.unit.x - near_enemy.x) <= 1 && Math.abs(_this.unit.y - near_enemy.y) <= 1 && !atake) {
+                    _this.unit.stopAnimation("default_fighter");
+                    _this.unit.playAnimation("atacke_fighter");
+                    setTimeout(function () {
+                        _this.unit.stopAnimation("atacke_fighter");
+                        _this.unit.playAnimation("default_fighter");
+                    }, 750);
+                    _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
+                }
+                else {
+                    var local_near_enemy = _this.findNearestEnemies(_this.unit);
+                    if (Math.abs(_this.unit.x - local_near_enemy.x) <= 1 &&
+                        Math.abs(_this.unit.y - local_near_enemy.y) <= 1) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
+                        atake = true;
                         setTimeout(function () {
                             _this.unit.stopAnimation("atacke_fighter");
                             _this.unit.playAnimation("default_fighter");
                         }, 750);
-                        _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
+                        _this.view.contactPersonsView(local_near_enemy.domPerson, local_near_enemy.image, _this.unit.person.damage);
                     }
-                    else {
-                        var local_near_enemy = _this.findNearestEnemies(_this.unit);
-                        if (Math.abs(_this.unit.x - local_near_enemy.x) <= 1 &&
-                            Math.abs(_this.unit.y - local_near_enemy.y) <= 1) {
-                            _this.unit.stopAnimation("default_fighter");
-                            _this.unit.playAnimation("atacke_fighter");
-                            atake = true;
-                            setTimeout(function () {
-                                _this.unit.stopAnimation("atacke_fighter");
-                                _this.unit.playAnimation("default_fighter");
-                            }, 750);
-                            _this.view.contactPersonsView(local_near_enemy.domPerson, local_near_enemy.image, _this.unit.person.damage);
-                        }
-                    }
-                    if (checkArcherPosition.result && !_this.unit.moveAction) {
-                        _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
-                    }
+                }
+                if (checkArcherPosition.result && !_this.unit.moveAction) {
+                    _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
+                }
+                if (_this.checkFreeCoordWalls(_this.unit_collection.getAICollection(), pos_security)) {
+                    pos_security.x = near_archer.x - 1;
+                }
+                else {
+                    pos_security.x = near_archer.x + 1;
                 }
                 _this.unit.setMoveAction(false);
                 setTimeout(function () {

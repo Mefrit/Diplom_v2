@@ -115,7 +115,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
         //         // }
         //     }
 
-        let result = 1000, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
+        let result = 800, cache_died = [], enemies_near_4, fighter_first = false, enemies_near_3, best_enemie, cache_enemies, first_archer, enemie_first_archer = undefined;
         // ввести кеш, тех мест где приблизительно будут находиться друзья,
         // ..когда пойжут мочить врагов
         // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
@@ -127,14 +127,14 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
             enemies_near_4.forEach(enemie => {
                 // учет возможных атак
                 if (enemie.person.class == "archer") {
-                    result += 500;
+                    result += 400;
                 } else {
-                    result += 300;
+                    result += 200;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 9 * Math.abs(70 - enemie.person.health);
+                    result += 6 * Math.abs(70 - enemie.person.health);
                 } else {
-                    result += 5 * Math.abs(100 - enemie.person.health);
+                    result += 4 * Math.abs(100 - enemie.person.health);
                 }
             });
             // result += (5 - this.unit_collection.getCountEnemy()) * 300;
@@ -163,7 +163,7 @@ export class ProtectArchers extends DefaultGlobalMethodsStrategy {
                 //     x: curent_unit.person.x,
                 //     y: curent_unit.person.y
                 // }, 3).length > 3) {\
-                result += enemy_near_archer_2.length * 1000;
+                result += enemy_near_archer_2.length * 1200;
                 result += enemy_near_archer_3.length * 200;
                 // }
                 if (cache_enemies.length > 0) {

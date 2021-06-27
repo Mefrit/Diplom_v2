@@ -110,14 +110,19 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             var friends, reverse = false, enemies;
             ai_units.forEach(function (element) {
                 if (_this.isArchers(element)) {
-                    friends = _this.getFriendsInField(element, 2);
-                    friends.forEach(function (near_friend) {
-                        if (!_this.isArchers(near_friend) && (near_friend.y == element.y)) {
-                            reverse = true;
-                        }
-                        else {
-                        }
-                    });
+                    friends = _this.getFriendsInField(element, 3);
+                    if (friends.length == 0) {
+                        reverse = true;
+                    }
+                    else {
+                        friends.forEach(function (near_friend) {
+                            if (!_this.isArchers(near_friend) && (near_friend.y == element.y)) {
+                                reverse = true;
+                            }
+                            else {
+                            }
+                        });
+                    }
                 }
             });
             console.log("reverse", reverse);

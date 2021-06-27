@@ -16,8 +16,8 @@ let arrPersons = [
     // { url: './src/images/hola2.png', x: 3, y: essssssssssssssses4, evil: false, class: 'fighter', damage: 12, health: 50, id: 2 },
     {
         url: "./src/images/hola_1.png",
-        x: 6,
-        y: 3,
+        x: 11,
+        y: 2,
         evil: false,
         class: "fighter",
         damage: 15,

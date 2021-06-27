@@ -60,6 +60,11 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");
                     if (res.findEnime == true) {
                         if (Math.abs(_this.unit.x - near_enemy.x) == 1) {
+                            _this.unit.playAnimation("atacke_fighter");
+                            setTimeout(function () {
+                                _this.unit.stopAnimation("atacke_fighter");
+                                _this.unit.playAnimation("default_fighter");
+                            }, 750);
                             _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
                             var checkArcherPosition = _this.checkArcherPosition(near_enemy);
                             if (checkArcherPosition.result && !_this.unit.moveAction) {

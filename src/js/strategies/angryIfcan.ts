@@ -62,7 +62,12 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
 
             if (res.findEnime == true) {
                 // attakedEnemie = this.findEnemieForAtake(res.enemie);
-
+                this.unit.stopAnimation("default_fighter");
+                this.unit.playAnimation("atacke_fighter");
+                setTimeout(() => {
+                    this.unit.stopAnimation("atacke_fighter");
+                    this.unit.playAnimation("default_fighter");
+                }, 750);
                 // запуск анимации атаки
                 this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
                 //FIX ME какая то неправильная функция

@@ -204,18 +204,22 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
         let friends, reverse = false, enemies;
         ai_units.forEach((element) => {
             if (this.isArchers(element)) {
-                friends = this.getFriendsInField(element, 2);
+                friends = this.getFriendsInField(element, 3);
+                if (friends.length == 0) {
+                    reverse = true;
+                } else {
+                    friends.forEach(near_friend => {
+                        if (!this.isArchers(near_friend) && (near_friend.y == element.y)) {
+                            reverse = true;
+                        } else {
+                            // friends = this.getFriendsInField(element, 3);
+                            // if (friends.length == 0) {
+                            //     reverse = true;
+                            // }
+                        }
+                    });
+                }
 
-                friends.forEach(near_friend => {
-                    if (!this.isArchers(near_friend) && (near_friend.y == element.y)) {
-                        reverse = true;
-                    } else {
-                        // friends = this.getFriendsInField(element, 3);
-                        // if (friends.length == 0) {
-                        //     reverse = true;
-                        // }
-                    }
-                });
 
             }
         });

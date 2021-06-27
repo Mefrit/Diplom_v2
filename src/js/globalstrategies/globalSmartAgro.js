@@ -82,6 +82,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 8);
+                    result += 30 * (60 - curent_unit.person.health);
                     if (cache_enemies.length > 0) {
                         if (enemie_first_archer) {
                             if (_this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
