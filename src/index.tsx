@@ -16,7 +16,7 @@ let arrPersons = [
     {
         url: "./images/hola_1.png",
         x: 11,
-        y: 2,
+        y: 7,
         evil: false,
         class: "fighter",
         damage: 15,
@@ -93,7 +93,7 @@ let arrPersons = [
         y: 2,
         evil: true,
         class: "fighter",
-        damage: 15,
+        damage: 16,
         health: 102,
         id: 4,
     },

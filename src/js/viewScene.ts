@@ -46,7 +46,7 @@ export class ViewScene {
         });
         if (damage > 0) {
             if (typeof obj != "undefined") {
-                if (obj.getHealth() >= 10) {
+                if (obj.getHealth() >= 5) {
                     obj.setHealth(obj.getHealth() - damage);
                 }
             }
@@ -62,7 +62,7 @@ export class ViewScene {
         canvas.classList.add("person-atacked");
         setTimeout(() => {
             canvas.classList.remove("person-atacked");
-        }, 800);
+        }, 900);
         this.changeHealth(ctx, { person: id }, damage);
     };
     drawImage(ctx, img) {

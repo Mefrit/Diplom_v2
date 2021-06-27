@@ -72,6 +72,9 @@ html {
 }
 .btn__out {
 }
+.chosen_unit {
+    box-shadow: 0 -3px rgb(199, 199, 199) inset;
+}
 .menu_chose {
     display: flex;
     flex-direction: row;
@@ -148,7 +151,7 @@ html {
     box-shadow: 0px 0px 20px rgb(245, 20, 20);
 }
 .ai:hover {
-    box-shadow: 0px 0px 20px rgb(245, 20, 20) !important;
+    box-shadow: 0px 0px 20px rgb(255, 136, 136) !important;
 }
 .ai {
     cursor: pointer !important;

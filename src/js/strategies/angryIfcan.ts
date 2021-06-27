@@ -105,12 +105,12 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 this.getDistanceBetweenUnits(this.unit, enemie) < 4
             ) {
                 // this.moveTo(this.unit, checkArcherPosition.point);
-                if (this.getDistanceBetweenUnits(checkArcherPosition.point, this.unit) <= 2.5) {
+                if (this.getDistanceBetweenUnits(checkArcherPosition.point, this.unit) <= 2.9) {
                     this.moveTo(this.unit, checkArcherPosition.point);
                 } else {
                     this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache_unit);
                 }
-                if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1.2) {
+                if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1.5) {
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
                     setTimeout(() => {
@@ -121,7 +121,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 } else {
                     let nearest = this.findNearestEnemies(this.unit);
 
-                    if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, nearest).toFixed(0)) <= 1.2) {
+                    if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, nearest).toFixed(0)) <= 1.5) {
                         this.unit.stopAnimation("default_fighter");
                         this.unit.playAnimation("atacke_fighter");
 
@@ -138,7 +138,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             } else {
                 // console.log("moveCarefully", enemie, this.unit);
                 res = this.moveCarefully(this.unit, enemie, "fighter", cache_unit);
-                if (res.findEnime == true && this.getDistanceBetweenUnits(res.enemie, this.unit) <= 1.2) {
+                if (res.findEnime == true && this.getDistanceBetweenUnits(res.enemie, this.unit) <= 1.5) {
                     // attakedEnemie = res.enemie;
                     // запуск анимации атаки
 
@@ -153,7 +153,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                     this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
                 } else {
                     enemie = this.findNearestEnemies(this.unit);
-                    if (this.getDistanceBetweenUnits(enemie, this.unit) <= 1.2) {
+                    if (this.getDistanceBetweenUnits(enemie, this.unit) <= 1.5) {
                         // attakedEnemie = res.enemie;
                         // запуск анимации атаки
 

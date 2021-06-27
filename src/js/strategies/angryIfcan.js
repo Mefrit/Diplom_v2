@@ -68,13 +68,13 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     checkArcherPosition.result &&
                     !_this.unit.moveAction &&
                     _this.getDistanceBetweenUnits(_this.unit, enemie) < 4) {
-                    if (_this.getDistanceBetweenUnits(checkArcherPosition.point, _this.unit) <= 2.5) {
+                    if (_this.getDistanceBetweenUnits(checkArcherPosition.point, _this.unit) <= 2.9) {
                         _this.moveTo(_this.unit, checkArcherPosition.point);
                     }
                     else {
                         _this.moveCarefully(_this.unit, checkArcherPosition.point, "fighter", cache_unit);
                     }
-                    if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1.2) {
+                    if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1.5) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         setTimeout(function () {
@@ -85,7 +85,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                     else {
                         var nearest = _this.findNearestEnemies(_this.unit);
-                        if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, nearest).toFixed(0)) <= 1.2) {
+                        if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, nearest).toFixed(0)) <= 1.5) {
                             _this.unit.stopAnimation("default_fighter");
                             _this.unit.playAnimation("atacke_fighter");
                             setTimeout(function () {
@@ -98,7 +98,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
                 else {
                     res = _this.moveCarefully(_this.unit, enemie, "fighter", cache_unit);
-                    if (res.findEnime == true && _this.getDistanceBetweenUnits(res.enemie, _this.unit) <= 1.2) {
+                    if (res.findEnime == true && _this.getDistanceBetweenUnits(res.enemie, _this.unit) <= 1.5) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         setTimeout(function () {
@@ -109,7 +109,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                     else {
                         enemie = _this.findNearestEnemies(_this.unit);
-                        if (_this.getDistanceBetweenUnits(enemie, _this.unit) <= 1.2) {
+                        if (_this.getDistanceBetweenUnits(enemie, _this.unit) <= 1.5) {
                             _this.unit.stopAnimation("default_fighter");
                             _this.unit.playAnimation("atacke_fighter");
                             setTimeout(function () {

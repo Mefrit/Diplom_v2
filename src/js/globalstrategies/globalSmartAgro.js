@@ -130,7 +130,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         else {
                             result += 300;
                         }
-                        if (_this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length == 1) {
+                        var enemy_near = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length;
+                        result += 100 * enemy_near.length;
+                        if (enemy_near.length == 1) {
                             result += 1000;
                         }
                     }

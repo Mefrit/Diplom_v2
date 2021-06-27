@@ -26,15 +26,20 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                 event.target.classList.remove("block__nonFree");
             };
             this.onMove = function (event) {
-                var posX = event.target.style.left, posY = event.target.style.top, activePerson = [];
-                if (true) {
-                    _this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
-                    _this.canvas.style.top = posY;
-                }
+                var posX = event.target.style.left, posY = event.target.style.top, coord = {}, activePerson = [];
                 activePerson = _this.person_collection.getCollection().filter(function (elem) {
                     if (elem.getId() == _this.canvas.getAttribute("data-id")) {
-                        elem.setCoord(parseInt(posX.split("px")) / 120, parseInt(posY.split("px")) / 120);
-                        elem.setMoveAction(true);
+                        coord = { x: parseInt(posX.split("px")) / 120, y: parseInt(posY.split("px")) / 120 };
+                        console.log(_this.getDistanceBetweenUnits(elem, coord));
+                        if (_this.getDistanceBetweenUnits(elem, coord) > 2.9) {
+                            alert("Юниты могут передвигаться в радиусе 2 клеток.");
+                        }
+                        else {
+                            elem.setCoord(coord.x, coord.y);
+                            _this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
+                            _this.canvas.style.top = posY;
+                            elem.setMoveAction(true);
+                        }
                     }
                     if (!elem.getMoveAction() && !elem.getKind()) {
                         return elem;
@@ -51,10 +56,24 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                 }
             };
             this.contactPersons = function (event) {
-                var canvas = event.target, img = _this.loader.get(event.target.getAttribute("data-image"));
+                var canvas_enemy = event.target, img = _this.loader.get(event.target.getAttribute("data-image"));
                 if (typeof _this.canvas != "undefined") {
-                    var id_person = parseInt(_this.canvas.getAttribute("data-id"));
-                    var unit_1 = _this.person_collection.getPersonById(id_person)[0];
+                    var id_person = parseInt(_this.canvas.getAttribute("data-id")), id_enemy = parseInt(canvas_enemy.getAttribute("data-id")), unit_1 = _this.person_collection.getPersonById(id_person)[0], enemy = _this.person_collection.getPersonById(id_enemy)[0];
+                    console.log("contactPersons", unit_1);
+                    if (_this.getDistanceBetweenUnits(unit_1, enemy) > 2 && unit_1.person.class == "fighter") {
+                        alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
+                        return;
+                    }
+                    if (_this.getDistanceBetweenUnits(unit_1, enemy) > 4) {
+                        alert("Режим Леголаса отменен. Лучники могут атаковать только в радиусе 4х клеток");
+                        return;
+                    }
+                    else {
+                        if (unit_1.person.class == "archer" && !(unit_1.x == enemy.x || enemy.y == unit_1.y)) {
+                            alert("Лучники могут атаковать только по прямой");
+                            return;
+                        }
+                    }
                     if (unit_1.person.class == "fighter") {
                         unit_1.stopAnimation("elf_fighter_default");
                         unit_1.playAnimation("elf_fighter_atacke");
@@ -71,11 +90,12 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                             unit_1.playAnimation("elf_archer_default");
                         }, 750);
                     }
-                    _this.view.contactPersonsView(canvas, img, unit_1.person.damage);
+                    _this.view.contactPersonsView(canvas_enemy, img, unit_1.person.damage);
                 }
             };
             this.onChangePerson = function (event) {
                 var canvas = event.target;
+                console.log("onChangePerson", canvas);
                 if (_this.canvas != undefined) {
                     _this.view.clearPrev(_this.canvas, _this.loader);
                 }
@@ -135,6 +155,12 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             }
         };
         Scene.prototype.setAIperson = function () { };
+        Scene.prototype.getDistanceBetweenUnits = function (unit1, unit2) {
+            var tmp_x, tmp_y;
+            tmp_x = unit1.x - unit2.x;
+            tmp_y = unit1.y - unit2.y;
+            return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+        };
         Scene.prototype.loadDragon = function () {
             var _this = this;
             var obj = this, image_domcache = [];

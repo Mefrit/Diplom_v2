@@ -72,23 +72,28 @@ export class Scene {
     onMove = (event) => {
         let posX = event.target.style.left,
             posY = event.target.style.top,
+            coord: any = {},
             activePerson = [];
         //условие что можно ходить в область
 
-        if (true) {
-            this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
-            this.canvas.style.top = posY;
-        }
         activePerson = this.person_collection.getCollection().filter((elem: any) => {
             if (elem.getId() == this.canvas.getAttribute("data-id")) {
-                elem.setCoord(parseInt(posX.split("px")) / 120, parseInt(posY.split("px")) / 120);
-
-                elem.setMoveAction(true);
+                coord = { x: parseInt(posX.split("px")) / 120, y: parseInt(posY.split("px")) / 120 };
+                console.log(this.getDistanceBetweenUnits(elem, coord));
+                if (this.getDistanceBetweenUnits(elem, coord) > 2.9) {
+                    alert("Юниты могут передвигаться в радиусе 2 клеток.");
+                } else {
+                    elem.setCoord(coord.x, coord.y);
+                    this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
+                    this.canvas.style.top = posY;
+                    elem.setMoveAction(true);
+                }
             }
             if (!elem.getMoveAction() && !elem.getKind()) {
                 return elem;
             }
         });
+
         if (activePerson.length == 0) {
             // optimizase
             this.person_collection.getCollection().forEach((elem: any) => {
@@ -137,6 +142,13 @@ export class Scene {
         }
     }
     setAIperson() {}
+    getDistanceBetweenUnits(unit1, unit2) {
+        // }
+        let tmp_x, tmp_y;
+        tmp_x = unit1.x - unit2.x;
+        tmp_y = unit1.y - unit2.y;
+        return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+    }
     loadDragon() {
         let obj = this,
             image_domcache = [];
@@ -277,13 +289,28 @@ export class Scene {
         });
     }
     contactPersons = (event) => {
-        let canvas = event.target,
+        let canvas_enemy = event.target,
             img = this.loader.get(event.target.getAttribute("data-image"));
 
         if (typeof this.canvas != "undefined") {
-            let id_person = parseInt(this.canvas.getAttribute("data-id"));
-            let unit: any = this.person_collection.getPersonById(id_person)[0];
-            // console.log(person);
+            let id_person = parseInt(this.canvas.getAttribute("data-id")),
+                id_enemy = parseInt(canvas_enemy.getAttribute("data-id")),
+                unit: any = this.person_collection.getPersonById(id_person)[0],
+                enemy = this.person_collection.getPersonById(id_enemy)[0];
+            console.log("contactPersons", unit);
+            if (this.getDistanceBetweenUnits(unit, enemy) > 2 && unit.person.class == "fighter") {
+                alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
+                return;
+            }
+            if (this.getDistanceBetweenUnits(unit, enemy) > 4) {
+                alert("Режим Леголаса отменен. Лучники могут атаковать только в радиусе 4х клеток");
+                return;
+            } else {
+                if (unit.person.class == "archer" && !(unit.x == enemy.x || enemy.y == unit.y)) {
+                    alert("Лучники могут атаковать только по прямой");
+                    return;
+                }
+            }
             if (unit.person.class == "fighter") {
                 unit.stopAnimation("elf_fighter_default");
                 unit.playAnimation("elf_fighter_atacke");
@@ -304,12 +331,12 @@ export class Scene {
                     unit.playAnimation("elf_archer_default");
                 }, 750);
             }
-            this.view.contactPersonsView(canvas, img, unit.person.damage);
+            this.view.contactPersonsView(canvas_enemy, img, unit.person.damage);
         }
     };
     onChangePerson = (event) => {
         let canvas = event.target;
-
+        console.log("onChangePerson", canvas);
         if (this.canvas != undefined) {
             this.view.clearPrev(this.canvas, this.loader);
         }

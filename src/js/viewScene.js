@@ -40,7 +40,7 @@ define(["require", "exports"], function (require, exports) {
                 });
                 if (damage > 0) {
                     if (typeof obj != "undefined") {
-                        if (obj.getHealth() >= 10) {
+                        if (obj.getHealth() >= 5) {
                             obj.setHealth(obj.getHealth() - damage);
                         }
                     }
@@ -56,7 +56,7 @@ define(["require", "exports"], function (require, exports) {
                 canvas.classList.add("person-atacked");
                 setTimeout(function () {
                     canvas.classList.remove("person-atacked");
-                }, 800);
+                }, 900);
                 _this.changeHealth(ctx, { person: id }, damage);
             };
             this.arrObjPersons = arrObjPlayers;
