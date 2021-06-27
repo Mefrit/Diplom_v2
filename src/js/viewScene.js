@@ -115,49 +115,49 @@ define(["require", "exports"], function (require, exports) {
             block.style.left = posX + "px";
             block.style.top = posY + "px";
             var random = this.randomInteger(0, 40);
-            block.src = "src/images/block3.png";
-            block.src = "src/images/block2.png";
+            block.src = "images/block3.png";
+            block.src = "images/block2.png";
             if (random < 20) {
-                block.src = "src/images/block3.png";
+                block.src = "images/block3.png";
             }
             if (i == 8 && j == 1) {
-                block.src = "src/images/block1.png";
+                block.src = "images/block1.png";
             }
             if (i == 4 && j == 3) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             if (i == 4 && j == 3) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             if (i == 4 && j == 2) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             if (i == 4 && j == 1) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             if (i == 8 && j == 4) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             if (i == 8 && j == 5) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             if (i == 8 && j == 6) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             if (i == 5 && j == 7) {
-                block.src = "src/images/block1.png";
+                block.src = "images/block1.png";
             }
             if (i == 2 && j == 2) {
-                block.src = "src/images/block1.png";
+                block.src = "images/block1.png";
             }
             if (i == 7 && j == 5) {
-                block.src = "src/images/block1.png";
+                block.src = "images/block1.png";
             }
             if (i == 7 && j == 5) {
-                block.src = "src/images/block1.png";
+                block.src = "images/block1.png";
             }
             if (i == 2 && j == 5) {
-                block.src = "src/images/block4.png";
+                block.src = "images/block4.png";
             }
             return block;
         };
