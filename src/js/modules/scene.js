@@ -154,7 +154,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             var _this = this;
             this.renderArena();
             var cache_skins = [], tmp = {};
-            this.loader.loadElement("./src/images/rip.png");
             this.loader.load(this.person_collection);
             this.loadDragon();
             this.loader.onReady(function () {

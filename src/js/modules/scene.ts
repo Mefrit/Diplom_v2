@@ -157,7 +157,7 @@ export class Scene {
         this.renderArena();
         let cache_skins = [],
             tmp: any = {};
-        this.loader.loadElement("./src/images/rip.png");
+        // this.loader.loadElement("./src/images/rip.png");
         this.loader.load(this.person_collection);
         this.loadDragon();
 
