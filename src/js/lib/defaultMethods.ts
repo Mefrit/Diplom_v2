@@ -371,7 +371,7 @@ export class DefaultMethodsStrategy {
             min_count = 1000,
             count_enemy = 0;
 
-        if (parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) == 2) {
+        if (parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 2) {
             points = this.getPointsField(this.unit, 1);
         } else {
             points = this.getPointsField(enemie, 1);

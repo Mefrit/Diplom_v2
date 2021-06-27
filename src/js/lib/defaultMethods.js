@@ -408,7 +408,7 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.checkArcherPosition = function (enemie) {
             var _this = this;
             var res = { point: { x: enemie.x - 1, y: enemie.y }, result: false }, points = [], min_count = 1000, count_enemy = 0;
-            if (parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) == 2) {
+            if (parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 2) {
                 points = this.getPointsField(this.unit, 1);
             }
             else {
