@@ -147,10 +147,10 @@ html {
     box-shadow: 0px 0px 20px rgb(245, 20, 20);
 }
 .ai:hover {
-    box-shadow: 0px 0px 20px rgb(245, 20, 20);
+    box-shadow: 0px 0px 20px rgb(245, 20, 20) !important;
 }
 .ai {
-    cursor: pointer;
+    cursor: pointer !important;
 }
 .canvas {
     width: 100%;
