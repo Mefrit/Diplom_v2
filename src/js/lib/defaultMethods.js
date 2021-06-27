@@ -304,8 +304,17 @@ define(["require", "exports"], function (require, exports) {
             return res;
         };
         DefaultMethodsStrategy.prototype.heuristicSecurityArcher = function (a, b, type, near_archer) {
+            var archers = this.unit_collection.getAiArchers();
             var res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
             res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+            archers.forEach(function (element) {
+                if (b.y == element.y) {
+                    res += 10;
+                }
+                if (b.x == element.x) {
+                    res += 10;
+                }
+            });
             if (b.x == near_archer.x) {
                 res += 20;
             }

@@ -129,7 +129,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                     x: curent_unit.person.x,
                     y: curent_unit.person.y
                 }, 8);
-                result += 200 * (5 - enemies_near_3.length)
+                result += 80 * (5 - enemies_near_3.length)
                 if (cache_enemies.length > 0) {
                     // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
                     // вопрос, когда лучше удалять этих чуваков?
@@ -163,7 +163,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
             } else {
                 // if (enemies_near_3.length > 0) {
-                result += 200 * (5 - enemies_near_3.length)
+                result += 50 * (5 - enemies_near_3.length)
                 //     best_enemie = this.getBestEnemie(enemies_near_3, curent_unit);
                 //     // console.log("cache_died fighter", curent_unit.person.damage, best_enemie.person.health, this.getDistanceBetweenUnits(curent_unit, best_enemie));
                 //     if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {

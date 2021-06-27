@@ -244,8 +244,18 @@ export class DefaultMethodsStrategy {
     }
     heuristicSecurityArcher(a, b, type, near_archer) {
         //a - куда нужно, b - возможные варианты
+        let archers = this.unit_collection.getAiArchers();
         let res = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
         res += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+        archers.forEach((element) => {
+            if (b.y == element.y) {
+                res += 10;
+            }
+            if (b.x == element.x) {
+                res += 10;
+            }
+        });
+
         // if()
         if (b.x == near_archer.x) {
             res += 20;
