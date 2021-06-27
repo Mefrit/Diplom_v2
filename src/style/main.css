@@ -158,6 +158,7 @@ html {
     width: 20px;
     height: 20px;
     float: left;
+    cursor: pointer;
 }
 .person-die {
     display: none;
