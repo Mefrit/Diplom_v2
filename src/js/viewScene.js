@@ -9,7 +9,7 @@ define(["require", "exports"], function (require, exports) {
                 var ctx;
                 cnvsElem.style.position = "absolute";
                 cnvsElem.classList.add("person");
-                if (elem.evil) {
+                if (elem.person.evil) {
                     cnvsElem.classList.add("ai");
                 }
                 else {

@@ -12,7 +12,7 @@ export class ViewScene {
         let ctx;
         cnvsElem.style.position = "absolute";
         cnvsElem.classList.add("person");
-        if (elem.evil) {
+        if (elem.person.evil) {
             cnvsElem.classList.add("ai");
         } else {
             cnvsElem.classList.add("players");
