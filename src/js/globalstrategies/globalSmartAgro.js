@@ -82,7 +82,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 8);
-                    result += 30 * (60 - curent_unit.person.health);
+                    result += 30 * Math.abs((70 - curent_unit.person.health));
                     if (cache_enemies.length > 0) {
                         if (enemie_first_archer) {
                             if (_this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
@@ -130,8 +130,9 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         else {
                             result += 300;
                         }
-                        var enemy_near = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length;
-                        result += 100 * enemy_near.length;
+                        var enemy_near = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+                        console.log(enemy_near);
+                        result += 100 * parseInt(enemy_near.length);
                         if (enemy_near.length == 1) {
                             result += 1000;
                         }

@@ -16,7 +16,7 @@ let arrPersons = [
     {
         url: "./images/hola_1.png",
         x: 11,
-        y: 7,
+        y: 2,
         evil: false,
         class: "fighter",
         damage: 15,
@@ -93,7 +93,7 @@ let arrPersons = [
         y: 2,
         evil: true,
         class: "fighter",
-        damage: 16,
+        damage: 17,
         health: 102,
         id: 4,
     },
@@ -411,6 +411,7 @@ class Director {
     }
     // deleteOneUser(){}
     startAI = () => {
+        this.scene.removeCacheUnits();
         this.ai.step();
     };
 }

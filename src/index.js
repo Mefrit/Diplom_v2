@@ -6,7 +6,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
         {
             url: "./images/hola_1.png",
             x: 11,
-            y: 7,
+            y: 2,
             evil: false,
             class: "fighter",
             damage: 15,
@@ -79,7 +79,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             y: 2,
             evil: true,
             class: "fighter",
-            damage: 16,
+            damage: 17,
             health: 102,
             id: 4,
         },
@@ -356,6 +356,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
                 document.getElementById('parent_popup').style.display = 'none';
             };
             this.startAI = function () {
+                _this.scene.removeCacheUnits();
                 _this.ai.step();
             };
             this.ai = new ai_1.Ai([]);

@@ -718,7 +718,7 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {
             var _this = this;
             return this.unit_collection.getUserCollection().filter(function (elem) {
-                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
+                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
                     return elem;
                 }
             });
@@ -727,7 +727,7 @@ define(["require", "exports"], function (require, exports) {
             var _this = this;
             var real_unit = coord_unit.hasOwnProperty("perosn") ? true : false;
             return this.unit_collection.getAICollection().filter(function (elem) {
-                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
+                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
                     if (real_unit) {
                         if (coord_unit.person.id != elem.person.id)
                             return elem;

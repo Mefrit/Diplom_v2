@@ -69,7 +69,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 // if (this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length == 1) {
                 //     result += 500;
                 // }
-                result += 30 * (60 - curent_unit.person.health);
+                result += 30 * Math.abs((70 - curent_unit.person.health));
                 if (cache_enemies.length > 0) {
                     if (enemie_first_archer) {
                         if (this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
@@ -122,8 +122,9 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     } else {
                         result += 300;
                     }
-                    let enemy_near = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3).length;
-                    result += 100 * enemy_near.length;
+                    let enemy_near = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
+                    console.log(enemy_near);
+                    result += 100 * parseInt(enemy_near.length);
                     if (enemy_near.length == 1) {
                         result += 1000;
                     }

@@ -249,7 +249,7 @@ export class DragonAnimationUpdate {
         // ctx.translate(590, 820);
         ctx.lineWidth = 65;
         if (typeof unit != "undefined") {
-            if (unit.getHealth() <= 10) {
+            if (unit.getHealth() <= 12) {
                 // unit.setHealth(unit.getHealth());
 
                 ctx.strokeStyle = "red";
@@ -303,7 +303,7 @@ export class DragonAnimationUpdate {
             this.canvas.width = 1250;
             this.canvas.height = 1400;
             ctx = this.canvas.getContext("2d");
-            arrCanvas.sort(function(elem1, elem2): any {
+            arrCanvas.sort(function (elem1, elem2): any {
                 if (elem1.pos.z > elem2.pos.z) {
                     return 1;
                 } else {
@@ -313,7 +313,7 @@ export class DragonAnimationUpdate {
             ctx.clearRect(0, 0, 2000, 1000);
             this.drawHealth(ctx, this.unit);
 
-            arrCanvas.forEach(function(elem) {
+            arrCanvas.forEach(function (elem) {
                 ctx.save();
 
                 ctx.translate(elem.pos.x + 590, elem.pos.y + 840);

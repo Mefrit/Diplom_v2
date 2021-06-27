@@ -31,14 +31,28 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                     if (elem.getId() == _this.canvas.getAttribute("data-id")) {
                         coord = { x: parseInt(posX.split("px")) / 120, y: parseInt(posY.split("px")) / 120 };
                         console.log(_this.getDistanceBetweenUnits(elem, coord));
-                        if (_this.getDistanceBetweenUnits(elem, coord) > 2.9) {
-                            alert("Юниты могут передвигаться в радиусе 2 клеток.");
+                        if (_this.checkFreeCoordWalls(_this.wall_blocks, coord) ||
+                            _this.checkFreeCoordWalls(_this.water_blocks, coord) ||
+                            _this.person_collection.checkFreeCoord(elem)) {
+                            alert("Перемещение на данную позицию невозможно.");
                         }
                         else {
-                            elem.setCoord(coord.x, coord.y);
-                            _this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
-                            _this.canvas.style.top = posY;
-                            elem.setMoveAction(true);
+                            if (_this.getDistanceBetweenUnits(elem, coord) > 2.9) {
+                                alert("Юниты могут передвигаться в радиусе 2 клеток.");
+                            }
+                            else {
+                                if (_this.checkUnitAction(_this.cache_moved_units, elem)) {
+                                    alert("На текущем ходу вы уже переместились.");
+                                }
+                                else {
+                                    console.log(" this.cache_moved_units", _this.cache_moved_units);
+                                    _this.cache_moved_units.push(elem);
+                                    elem.setCoord(coord.x, coord.y);
+                                    _this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
+                                    _this.canvas.style.top = posY;
+                                    elem.setMoveAction(true);
+                                }
+                            }
                         }
                     }
                     if (!elem.getMoveAction() && !elem.getKind()) {
@@ -59,7 +73,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                 var canvas_enemy = event.target, img = _this.loader.get(event.target.getAttribute("data-image"));
                 if (typeof _this.canvas != "undefined") {
                     var id_person = parseInt(_this.canvas.getAttribute("data-id")), id_enemy = parseInt(canvas_enemy.getAttribute("data-id")), unit_1 = _this.person_collection.getPersonById(id_person)[0], enemy = _this.person_collection.getPersonById(id_enemy)[0];
-                    console.log("contactPersons", unit_1);
+                    console.log("contactPersons", unit_1, enemy, id_enemy);
                     if (_this.getDistanceBetweenUnits(unit_1, enemy) > 2 && unit_1.person.class == "fighter") {
                         alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
                         return;
@@ -74,6 +88,12 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                             return;
                         }
                     }
+                    console.log("cache_set_atacke_units", _this.cache_set_atacke_units);
+                    if (_this.checkUnitAction(_this.cache_set_atacke_units, unit_1)) {
+                        alert("За этот ход вы уже кого-то побили.");
+                        return;
+                    }
+                    _this.cache_set_atacke_units.push(unit_1);
                     if (unit_1.person.class == "fighter") {
                         unit_1.stopAnimation("elf_fighter_default");
                         unit_1.playAnimation("elf_fighter_atacke");
@@ -110,6 +130,8 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             this.config_skins = config_skins;
             this.person_collection = new person_collection_1.Collection(arrImg);
             this.wall_blocks = [];
+            this.cache_moved_units = [];
+            this.cache_set_atacke_units = [];
             this.view = new viewScene_1.ViewScene(this.person_collection, this.loader);
             this.curentPerson = undefined;
             this.water_blocks = [];
@@ -121,8 +143,39 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
         Scene.prototype.getCoordFromStyle = function (elem) {
             return parseInt(elem.split("px")[0]);
         };
+        Scene.prototype.checkUnitAction = function (cache, unit) {
+            var find = false;
+            cache.forEach(function (elem) {
+                console.log(elem);
+                if (unit.person) {
+                    if (elem.person.id == unit.person.id) {
+                        find = true;
+                    }
+                }
+                else {
+                    if (elem.x == unit.x && elem.y == unit.y) {
+                        find = true;
+                    }
+                }
+            });
+            console.log(cache, unit, find);
+            return find;
+        };
         Scene.prototype.getPerson = function () {
             return this.person_collection;
+        };
+        Scene.prototype.removeCacheUnits = function () {
+            this.cache_moved_units = [];
+            this.cache_set_atacke_units = [];
+        };
+        Scene.prototype.checkFreeCoordWalls = function (cache, unit) {
+            var result = false;
+            cache.forEach(function (element) {
+                if (parseInt(element.x) == parseInt(unit.x) && parseInt(element.y) == parseInt(unit.y)) {
+                    result = true;
+                }
+            });
+            return result;
         };
         Scene.prototype.renderElement = function (element) {
             this.view.renderElement(element);

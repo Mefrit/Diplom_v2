@@ -15,6 +15,8 @@ export class Scene {
     skins: any;
     water_blocks: any[];
     wall_blocks: any[]; // кеш стен
+    cache_moved_units: any[];
+    cache_set_atacke_units: any[];
     constructor(loader, arrImg, config_skins, ai) {
         this.loader = loader;
         this.chosePerson = false;
@@ -25,6 +27,8 @@ export class Scene {
         //  arrImg.map(elem => {
         //     return new Person(elem);
         // });
+        this.cache_moved_units = [];
+        this.cache_set_atacke_units = [];
         this.view = new ViewScene(this.person_collection, this.loader);
         this.curentPerson = undefined;
         this.water_blocks = [];
@@ -36,8 +40,30 @@ export class Scene {
     getCoordFromStyle(elem) {
         return parseInt(elem.split("px")[0]);
     }
+    checkUnitAction(cache, unit) {
+        let find = false;
+
+        cache.forEach((elem) => {
+            console.log(elem);
+            if (unit.person) {
+                if (elem.person.id == unit.person.id) {
+                    find = true;
+                }
+            } else {
+                if (elem.x == unit.x && elem.y == unit.y) {
+                    find = true;
+                }
+            }
+        });
+        console.log(cache, unit, find);
+        return find;
+    }
     getPerson() {
         return this.person_collection;
+    }
+    removeCacheUnits() {
+        this.cache_moved_units = [];
+        this.cache_set_atacke_units = [];
     }
     onBlock = (event) => {
         let block = event.target,
@@ -80,13 +106,27 @@ export class Scene {
             if (elem.getId() == this.canvas.getAttribute("data-id")) {
                 coord = { x: parseInt(posX.split("px")) / 120, y: parseInt(posY.split("px")) / 120 };
                 console.log(this.getDistanceBetweenUnits(elem, coord));
-                if (this.getDistanceBetweenUnits(elem, coord) > 2.9) {
-                    alert("Юниты могут передвигаться в радиусе 2 клеток.");
+                if (
+                    this.checkFreeCoordWalls(this.wall_blocks, coord) ||
+                    this.checkFreeCoordWalls(this.water_blocks, coord) ||
+                    this.person_collection.checkFreeCoord(elem)
+                ) {
+                    alert("Перемещение на данную позицию невозможно.");
                 } else {
-                    elem.setCoord(coord.x, coord.y);
-                    this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
-                    this.canvas.style.top = posY;
-                    elem.setMoveAction(true);
+                    if (this.getDistanceBetweenUnits(elem, coord) > 2.9) {
+                        alert("Юниты могут передвигаться в радиусе 2 клеток.");
+                    } else {
+                        if (this.checkUnitAction(this.cache_moved_units, elem)) {
+                            alert("На текущем ходу вы уже переместились.");
+                        } else {
+                            console.log(" this.cache_moved_units", this.cache_moved_units);
+                            this.cache_moved_units.push(elem);
+                            elem.setCoord(coord.x, coord.y);
+                            this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
+                            this.canvas.style.top = posY;
+                            elem.setMoveAction(true);
+                        }
+                    }
                 }
             }
             if (!elem.getMoveAction() && !elem.getKind()) {
@@ -106,6 +146,16 @@ export class Scene {
             }, 200);
         }
     };
+    checkFreeCoordWalls(cache, unit) {
+        let result = false;
+
+        cache.forEach((element) => {
+            if (parseInt(element.x) == parseInt(unit.x) && parseInt(element.y) == parseInt(unit.y)) {
+                result = true;
+            }
+        });
+        return result;
+    }
     renderElement(element) {
         this.view.renderElement(element);
     }
@@ -297,7 +347,8 @@ export class Scene {
                 id_enemy = parseInt(canvas_enemy.getAttribute("data-id")),
                 unit: any = this.person_collection.getPersonById(id_person)[0],
                 enemy = this.person_collection.getPersonById(id_enemy)[0];
-            console.log("contactPersons", unit);
+            console.log("contactPersons", unit, enemy, id_enemy);
+
             if (this.getDistanceBetweenUnits(unit, enemy) > 2 && unit.person.class == "fighter") {
                 alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
                 return;
@@ -311,6 +362,12 @@ export class Scene {
                     return;
                 }
             }
+            console.log("cache_set_atacke_units", this.cache_set_atacke_units);
+            if (this.checkUnitAction(this.cache_set_atacke_units, unit)) {
+                alert("За этот ход вы уже кого-то побили.");
+                return;
+            }
+            this.cache_set_atacke_units.push(unit);
             if (unit.person.class == "fighter") {
                 unit.stopAnimation("elf_fighter_default");
                 unit.playAnimation("elf_fighter_atacke");

@@ -1018,7 +1018,7 @@ export class DefaultMethodsStrategy {
     // }
     getEnemyInField(coord_unit, field_step) {
         return this.unit_collection.getUserCollection().filter((elem) => {
-            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
+            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
                 return elem;
             }
         });
@@ -1026,7 +1026,7 @@ export class DefaultMethodsStrategy {
     getFriendsInField(coord_unit, field_step) {
         let real_unit = coord_unit.hasOwnProperty("perosn") ? true : false;
         return this.unit_collection.getAICollection().filter((elem) => {
-            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
+            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
                 if (real_unit) {
                     if (coord_unit.person.id != elem.person.id) return elem;
                 } else {

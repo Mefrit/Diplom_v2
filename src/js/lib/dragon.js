@@ -22,7 +22,7 @@ define(["require", "exports"], function (require, exports) {
                 ctx.moveTo(20, 10);
                 ctx.lineWidth = 65;
                 if (typeof unit != "undefined") {
-                    if (unit.getHealth() <= 10) {
+                    if (unit.getHealth() <= 12) {
                         ctx.strokeStyle = "red";
                         _this.killUnit(_this.unit);
                         ctx.clearRect(0, 0, 1000, 1000);
