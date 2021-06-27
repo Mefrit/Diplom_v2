@@ -78,6 +78,7 @@ html {
     width: 100%;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 .menu_chose-icon {
     width: 40px;
