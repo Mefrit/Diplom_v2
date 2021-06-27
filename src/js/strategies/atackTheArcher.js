@@ -125,9 +125,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     else {
                         resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                     }
-                    if (resCheck.free) {
-                        this.tryAtakeArcher(resCheck, enemie);
-                    }
+                    this.tryAtakeArcher(resCheck, enemie);
                 }
             }
             else {
@@ -136,15 +134,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
                 maxX = Math.abs(enemie.person.x - this.unit.person.x);
                 maxY = Math.abs(enemie.person.y - this.unit.person.y);
-                if (maxY > maxX) {
-                    resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
-                }
-                else {
-                    resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
-                }
-                if (resCheck.free) {
-                    this.tryAtakeArcher(resCheck, enemie);
-                }
+                this.tryAtakeArcher(resCheck, enemie);
             }
         };
         AtackTheArcher.prototype.start = function (cache) {

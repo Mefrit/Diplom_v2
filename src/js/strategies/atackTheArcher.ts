@@ -143,9 +143,9 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 } else {
                     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                 }
-                if (resCheck.free) {
-                    this.tryAtakeArcher(resCheck, enemie);
-                }
+                // if (resCheck.free) {
+                this.tryAtakeArcher(resCheck, enemie);
+                // }
             }
         } else {
             if (!this.unit.moveAction) {
@@ -154,14 +154,14 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             maxX = Math.abs(enemie.person.x - this.unit.person.x);
             maxY = Math.abs(enemie.person.y - this.unit.person.y);
 
-            if (maxY > maxX) {
-                resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
-            } else {
-                resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
-            }
-            if (resCheck.free) {
-                this.tryAtakeArcher(resCheck, enemie);
-            }
+            // if (maxY > maxX) {
+            //     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
+            // } else {
+            //     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
+            // }
+            // if (resCheck.free) {
+            this.tryAtakeArcher(resCheck, enemie);
+            // }
         }
     }
     start(cache) {
