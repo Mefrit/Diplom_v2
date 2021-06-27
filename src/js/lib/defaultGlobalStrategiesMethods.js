@@ -116,6 +116,9 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                             best_enemie = elem;
                         }
                         else {
+                            if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
+                                best_enemie = elem;
+                            }
                         }
                     }
                 }
