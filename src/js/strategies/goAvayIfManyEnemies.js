@@ -32,7 +32,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 cache.enemies_near_5 = enemies;
             }
             result += 150 * cache.enemies_near_5.length;
-            console.log("result\n \n \n", Math.round(result));
             return { total: Math.round(result), cache: cache };
         };
         GoAwayIfManyEnemies.prototype.heuristicSave = function (point, near_enemies, nearest_friend) {
@@ -109,7 +108,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     _this.go2friendsSafety(nearest_friend, false);
                 }
                 _this.unit.setMoveAction(false);
-                console.log("nearest_friend", nearest_friend, enemie);
                 setTimeout(function () {
                     resolve("Promise4");
                 }, 320);

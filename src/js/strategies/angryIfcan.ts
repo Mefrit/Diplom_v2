@@ -95,6 +95,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             if (this.checkNearArchersPosition()) {
                 checkArcherPosition = this.checkArcherPosition(enemie);
             }
+            console.log("enemie checkArcherPosition", enemie, checkArcherPosition);
             if (enemie.isNotDied()) {
                 enemie = this.findNearestEnemies(this.unit);
             }
@@ -106,7 +107,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             ) {
                 // this.moveTo(this.unit, checkArcherPosition.point);
                 this.moveTo(this.unit, checkArcherPosition.point);
-                if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1) {
+                if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1.2) {
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
                     setTimeout(() => {
@@ -117,7 +118,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 } else {
                     let nearest = this.findNearestEnemies(this.unit);
 
-                    if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, nearest).toFixed(0)) <= 1) {
+                    if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, nearest).toFixed(0)) <= 1.2) {
                         this.unit.stopAnimation("default_fighter");
                         this.unit.playAnimation("atacke_fighter");
 
@@ -132,8 +133,9 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
 
                 // запуск анимации атаки
             } else {
+                // console.log("moveCarefully", enemie, this.unit);
                 res = this.moveCarefully(this.unit, enemie, "fighter", cache_unit);
-                if (res.findEnime == true) {
+                if (res.findEnime == true && this.getDistanceBetweenUnits(res.enemie, this.unit) <= 1.2) {
                     // attakedEnemie = res.enemie;
                     // запуск анимации атаки
 
@@ -146,6 +148,22 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                         this.unit.playAnimation("default_fighter");
                     }, 750);
                     this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
+                } else {
+                    enemie = this.findNearestEnemies(this.unit);
+                    if (this.getDistanceBetweenUnits(enemie, this.unit) <= 1.2) {
+                        // attakedEnemie = res.enemie;
+                        // запуск анимации атаки
+
+                        this.unit.stopAnimation("default_fighter");
+                        this.unit.playAnimation("atacke_fighter");
+
+                        // animation.stop();
+                        setTimeout(() => {
+                            this.unit.stopAnimation("atacke_fighter");
+                            this.unit.playAnimation("default_fighter");
+                        }, 750);
+                        this.view.contactPersonsView(enemie.domPerson, enemie.image, this.unit.person.damage);
+                    }
                 }
             }
             this.unit.setMoveAction(false);

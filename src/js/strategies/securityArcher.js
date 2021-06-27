@@ -91,7 +91,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     near_enemy = _this.findNearestEnemies(_this.unit);
                 }
                 pos_security.near_archer = near_archer;
-                console.log("pos_security", pos_security, near_archer.domPerson);
                 var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");
                 var checkArcherPosition = _this.checkArcherPosition(near_enemy);
                 if (Math.abs(_this.unit.x - near_enemy.x) <= 1 && Math.abs(_this.unit.y - near_enemy.y) <= 1 && !atake) {
@@ -105,8 +104,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
                 else {
                     var local_near_enemy = _this.findNearestEnemies(_this.unit);
-                    if (Math.abs(_this.unit.x - local_near_enemy.x) <= 1 &&
-                        Math.abs(_this.unit.y - local_near_enemy.y) <= 1) {
+                    if ((Math.abs(_this.unit.x - local_near_enemy.x) <= 1 &&
+                        Math.abs(_this.unit.y - local_near_enemy.y) <= 1) ||
+                        _this.getDistanceBetweenUnits(_this.unit, local_near_enemy) <= 1.5) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         atake = true;

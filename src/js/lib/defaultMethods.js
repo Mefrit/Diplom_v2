@@ -463,16 +463,13 @@ define(["require", "exports"], function (require, exports) {
                 if (!unit.isNotDied()) {
                     for (var i = 0; i < points.length; i++) {
                         if (points[i].x < 0 || points[i].x > 11) {
-                            console.log("!1");
                             res.free = false;
                         }
                         if (points[i].y < 0 || points[i].y > 8) {
-                            console.log("!2");
                             res.free = false;
                         }
                         if (unit.x == points[i].x && points[i].y == unit.y && curent_unit.hasOwnProperty("person")) {
                             if (unit.person.id != curent_unit.person.id) {
-                                console.log("!3");
                                 res.free = false;
                             }
                             else {
@@ -480,7 +477,6 @@ define(["require", "exports"], function (require, exports) {
                             }
                         }
                         if (_this.checkFreeCoordWalls(wall_blocks, points[i])) {
-                            console.log("!4");
                             res.free = false;
                         }
                     }
@@ -570,7 +566,6 @@ define(["require", "exports"], function (require, exports) {
                 else {
                     coord = coord_x;
                 }
-                console.log("coord", is_y, is_x, "\ncoord=>", coord, " | ", coord_x, coord_y, "\n getEnemyInField", this.getEnemyInField(coord, 3), enemie.domPerson, this.unit.domPerson, "getDistanceBetweenUnits", this.getDistanceBetweenUnits(coord, enemie));
             }
             if (this.getEnemyInField(coord, 3) > 3 || this.getDistanceBetweenUnits(coord, enemie) <= 1) {
                 return { x: enemie.x - 4, y: enemie.y };
@@ -602,10 +597,8 @@ define(["require", "exports"], function (require, exports) {
                         arr_down.push({ x: i, y: coord.y });
                 }
             }
-            console.log("!!!!!!!!11111111 direction", direction, arr_up, arr_down, this.unit.domPerson);
             arr_up = this.findFreeLine(arr_up, coord);
             arr_down = this.findFreeLine(arr_down, coord);
-            console.log("!!!!!!!!1222222direction", direction, arr_up, arr_down, this.unit.domPerson);
             var tmp_up = this.getPointNearEnemy(arr_up, coord), tmp_down = this.getPointNearEnemy(arr_down, coord);
             if (arr_down.length == 0) {
                 tmp_down.empty_arr = true;
@@ -677,7 +670,6 @@ define(["require", "exports"], function (require, exports) {
                         !find_closed_area) {
                         if (_this.getDistanceBetweenUnits(elem, start_point) <= i) {
                             if (_this.checkFreeCoordWalls(wall_blocks, elem)) {
-                                console.log("\n\n find_closed_area 1 ", elem);
                                 find_closed_area = true;
                             }
                             else {
@@ -692,7 +684,6 @@ define(["require", "exports"], function (require, exports) {
                     }
                     else {
                         if (_this.unit.x == elem.x && _this.unit.y == elem.y) {
-                            console.log("\n\n find_closed_area 222", elem, _this.unit_collection.checkFreeCoord(elem));
                             find_closed_area = true;
                         }
                         else {
@@ -716,8 +707,6 @@ define(["require", "exports"], function (require, exports) {
                     (!this.unit_collection.checkFreeCoord(last_point) &&
                         this.unit.x != last_point.x &&
                         this.unit.y != last_point.y)) {
-                    console.log("pop!!!!!!!!!!!!!!!!!!", last_point, !this.unit_collection.checkFreeCoord(last_point), this.checkFreeCoordWalls(water_blocks, last_point), this.checkFreeCoordWalls(water_blocks, last_point) ||
-                        !this.unit_collection.checkFreeCoord(last_point));
                     new_cache.pop();
                 }
             }

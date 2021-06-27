@@ -130,9 +130,9 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                     ) {
                         best_enemie = elem;
                     } else {
-                        if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
-                            best_enemie = elem;
-                        }
+                        // if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
+                        //     best_enemie = elem;
+                        // }
                     }
                 }
             }

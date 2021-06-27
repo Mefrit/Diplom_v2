@@ -78,6 +78,36 @@ define(["require", "exports", "../strategies/cacheGlobalStrategy"], function (re
             });
             return best_ai;
         };
+        Ai.prototype.choseGlobalStr_new = function (ai_units) {
+            var _this = this;
+            var tmp_ai = {}, assessment, max = -1, tmp_cache = {}, best_ai = {};
+            var result_assessment = cacheGlobalStrategy_1.cacheGlobalAI.map(function (AI) {
+                tmp_ai = new AI({
+                    scene: _this.scene,
+                    ai_units: ai_units,
+                    view: _this.view,
+                    unit_collection: _this.unit_collection,
+                });
+                assessment = tmp_ai.assessment(_this.initEmptyGlobalCache);
+                console.log("assessment.cache ", assessment.cache);
+                return { assessment: assessment.total, ai: tmp_ai, cache: assessment.cache };
+            });
+            console.log("-----------------");
+            result_assessment.forEach(function (elem) {
+                if (max == -1) {
+                    max = elem.assessment;
+                    best_ai = elem.ai;
+                }
+                if (elem.assessment > max) {
+                    max = elem.assessment;
+                    best_ai = elem.ai;
+                    tmp_cache = elem.cache;
+                }
+            });
+            console.log("tmp_cache", tmp_cache);
+            this.CACHE = tmp_cache;
+            return best_ai;
+        };
         Ai.prototype.stepAi = function (ai_units, index) {
             if (index === void 0) { index = 0; }
             var best_strategy = this.choseGlobalStr(ai_units);

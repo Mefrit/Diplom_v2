@@ -20,7 +20,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             cache.enemies_near_5 = enemies;
         }
         result += 150 * cache.enemies_near_5.length;
-        console.log("result\n \n \n", Math.round(result));
+        // console.log("result\n \n \n", Math.round(result));
         return { total: Math.round(result), cache: cache };
         // return Math.floor(Math.random() * Math.floor(100));
     }
@@ -121,7 +121,7 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
                 this.go2friendsSafety(nearest_friend, false);
             }
             this.unit.setMoveAction(false);
-            console.log("nearest_friend", nearest_friend, enemie);
+            // console.log("nearest_friend", nearest_friend, enemie);
             setTimeout(() => {
                 resolve("Promise4");
             }, 320);

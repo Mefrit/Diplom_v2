@@ -54,10 +54,10 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         result += 300;
                     }
                     if (curent_unit.person.class == "archer") {
-                        result += 10 * Math.abs(70 - enemie.person.health);
+                        result += 12 * Math.abs(70 - enemie.person.health);
                     }
                     else {
-                        result += 8 * Math.abs(100 - enemie.person.health);
+                        result += 10 * Math.abs(100 - enemie.person.health);
                     }
                 });
                 enemies_near_3 = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
@@ -94,12 +94,13 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
                 }
                 else {
-                    result -= 200 * enemies_near_3.length;
+                    result -= 300 * enemies_near_3.length;
                     result += 10 * (100 - parseInt(curent_unit.person.health));
                 }
             });
             result += 10 * (5 - this.ai_units.length);
             result -= 15 * (5 - this.unit_collection.getUserCollection().length);
+            result -= (2 - this.unit_collection.getAiArchers().length) * 1000;
             console.log("Distance Agro", Math.round(result), cache);
             return { total: Math.round(result), cache: cache };
         };
@@ -110,22 +111,14 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             var friends, reverse = false, enemies;
             ai_units.forEach(function (element) {
                 if (_this.isArchers(element)) {
-                    friends = _this.getFriendsInField(element, 3);
+                    friends = _this.getFriendsInField(element, 2);
                     if (friends.length == 0) {
                         reverse = true;
                     }
                     else {
-                        friends.forEach(function (near_friend) {
-                            if (!_this.isArchers(near_friend) && (near_friend.y == element.y)) {
-                                reverse = true;
-                            }
-                            else {
-                            }
-                        });
                     }
                 }
             });
-            console.log("reverse", reverse);
             return reverse ? __spreadArrays(ai_units).reverse() : ai_units;
         };
         DistanceAgro.prototype.startMove = function (cache_unit, index) {

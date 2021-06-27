@@ -126,7 +126,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 near_enemy = this.findNearestEnemies(this.unit);
             }
             pos_security.near_archer = near_archer;
-            console.log("pos_security", pos_security, near_archer.domPerson);
+            // console.log("pos_/security", pos_security, near_archer.domPerson);
             var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
 
             //атака , если лучник не далеко
@@ -148,8 +148,9 @@ export class SecurityArcher extends DefaultMethodsStrategy {
             } else {
                 let local_near_enemy = this.findNearestEnemies(this.unit);
                 if (
-                    Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
-                    Math.abs(this.unit.y - local_near_enemy.y) <= 1
+                    (Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
+                        Math.abs(this.unit.y - local_near_enemy.y) <= 1) ||
+                    this.getDistanceBetweenUnits(this.unit, local_near_enemy) <= 1.5
                 ) {
                     // запуск анимации атаки
                     this.unit.stopAnimation("default_fighter");

@@ -69,7 +69,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         x: curent_unit.person.x,
                         y: curent_unit.person.y
                     }, 2);
-                    result += enemy_near_archer_2.length * 1200;
+                    result += enemy_near_archer_2.length * 3500;
                     result += enemy_near_archer_3.length * 200;
                     if (cache_enemies.length > 0) {
                         if (enemie_first_archer) {
@@ -111,6 +111,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                     }
                 }
             });
+            result -= (2 - this.unit_collection.getAiArchers().length) * 1000;
             console.log("Protect Arcgers", Math.round(result), cache);
             return { total: Math.round(result), cache: cache };
         };

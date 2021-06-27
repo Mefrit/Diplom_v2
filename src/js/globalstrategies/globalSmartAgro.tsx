@@ -12,8 +12,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         this.unit_collection = props.unit_collection;
         this.ai_units = props.ai_units;
         this.scene = props.scene;
-        // window.stop()
-        // throw "stop";
+
         this.global_cache = {};
         this.view = props.view;
     }
@@ -38,7 +37,6 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         // ввести кеш, тех мест где приблизительно будут находиться друзья,
         // ..когда пойжут мочить врагов
         // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
-
         this.ai_units.forEach(curent_unit => {
             if (curent_unit.person.health < 30) {
                 result -= 400;
@@ -73,25 +71,13 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 // }
                 result += 30 * (60 - curent_unit.person.health);
                 if (cache_enemies.length > 0) {
-                    // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
-                    // вопрос, когда лучше удалять этих чуваков?
-                    // if (enemie_first_archer) {
-                    //     if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
-                    //         (Math.abs(first_archer.x - curent_unit.x) < 3 ||
-                    //             Math.abs(first_archer.y - curent_unit.y) < 3)) {
-                    //         cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
-                    //     }
-                    // }
                     if (enemie_first_archer) {
                         if (this.getEnemyInField(enemie_first_archer, 2).length > 1 &&
                             (Math.abs(first_archer.x - curent_unit.x) < 2 ||
                                 Math.abs(first_archer.y - curent_unit.y) < 2)) {
-
                             cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
                         }
                     }
-
-
                     cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache_died);
                     if (cache_enemies.length > 0) {
                         best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
@@ -101,7 +87,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                 } else {
                     best_enemie = this.findNearestEnemies(curent_unit);
                 }
-                // console.log("countEnemyWnenMoveToEnemy => ", this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie));
+
                 result -= 200 * this.countEnemyWnenMoveToEnemy(curent_unit, best_enemie);
 
                 if (curent_unit.person.damage >= (best_enemie.person.health - 5) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 7) {
@@ -141,6 +127,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                     }
 
                 } else {
+
                     cache.units_purpose.push({ enemie: this.findNearestEnemies(curent_unit), id: curent_unit.person.id });
                 }
             }

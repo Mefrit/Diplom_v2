@@ -1,5 +1,4 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+
 import { Downloader } from "./js/loader";
 import { Ai } from "./js/modules/ai";
 import { Scene } from "./js/modules/scene";
@@ -75,7 +74,7 @@ let arrPersons = [
         evil: true,
         class: "archer",
         damage: 12,
-        health: 65,
+        health: 66,
         id: 6,
     },
     {
@@ -85,7 +84,7 @@ let arrPersons = [
         evil: true,
         class: "archer",
         damage: 12,
-        health: 65,
+        health: 67,
         id: 5,
     },
     {
@@ -95,7 +94,7 @@ let arrPersons = [
         evil: true,
         class: "fighter",
         damage: 17,
-        health: 100,
+        health: 102,
         id: 4,
     },
     {
@@ -105,7 +104,7 @@ let arrPersons = [
         evil: true,
         class: "fighter",
         damage: 17,
-        health: 100,
+        health: 102,
         id: 8,
     },
 
@@ -115,8 +114,8 @@ let arrPersons = [
         y: 0,
         evil: true,
         class: "fighter",
-        damage: 17,
-        health: 100,
+        damage: 18,
+        health: 103,
         id: 7,
     },
 ];
@@ -354,24 +353,65 @@ class Director {
     scene: any;
     ai: any;
     persController: any;
-    constructor(loader, arrPersons) {
+    loader: any;
+    arrPersons: any;
+    mode: string;
+    config_skins: any;
+    constructor(loader, arrPersons, config_skins) {
         this.ai = new Ai([]);
-        this.scene = new Scene(loader, arrPersons, config_skins, this.ai);
+        this.loader = loader;
+        this.arrPersons = arrPersons;
+        this.config_skins = config_skins;
+        // this.scene = new Scene(this.loader, arrPersons, this.config_skins, this.ai);
+
+        // this.ai.initScene(this.scene);
+        this.start();
+
+    }
+    setAdvancedMode = (ev) => {
+        this.mode = "advanced";
+        this.startGame("advanced");
+    }
+    setDefaultMode = (ev) => {
+        this.mode = "default";
+        this.startGame("default")
+    }
+    startGame = (mode) => {
+        let arrPersons = this.arrPersons, delete_unit = false, tmp;
+        if (mode == "advanced") {
+            arrPersons.forEach(elem => {
+
+                if (elem.class == "fighter" && !elem.evil && !delete_unit) {
+                    delete_unit = true;
+                    elem.health = 10;
+
+                }
+            });
+
+            arrPersons = this.arrPersons
+        }
+
+
+        this.scene = new Scene(this.loader, arrPersons, this.config_skins, this.ai);
 
         this.ai.initScene(this.scene);
-        this.start();
+        document.getElementById('parent_popup').style.display = 'none'
     }
     start() {
-        // let play = document.createElement("input");
-        // play.type = "button";
-        // play.classList.add("button");
-        // play.value = "Ход соперника";
+
+        let default_btn = document.getElementById("default");
+        let advanced_btn = document.getElementById("advanced");
         let play = document.getElementById("play_btn");
+
+        advanced_btn.addEventListener("click", this.setAdvancedMode);
+        default_btn.addEventListener("click", this.setDefaultMode);
+
         play.addEventListener("click", this.startAI);
         document.getElementById("container").appendChild(play);
     }
+    // deleteOneUser(){}
     startAI = () => {
         this.ai.step();
     };
 }
-new Director(loader, arrPersons);
+new Director(loader, arrPersons, config_skins);

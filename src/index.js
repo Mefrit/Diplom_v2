@@ -60,7 +60,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             evil: true,
             class: "archer",
             damage: 12,
-            health: 65,
+            health: 66,
             id: 6,
         },
         {
@@ -70,7 +70,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             evil: true,
             class: "archer",
             damage: 12,
-            health: 65,
+            health: 67,
             id: 5,
         },
         {
@@ -80,7 +80,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             evil: true,
             class: "fighter",
             damage: 17,
-            health: 100,
+            health: 102,
             id: 4,
         },
         {
@@ -90,7 +90,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             evil: true,
             class: "fighter",
             damage: 17,
-            health: 100,
+            health: 102,
             id: 8,
         },
         {
@@ -99,8 +99,8 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             y: 0,
             evil: true,
             class: "fighter",
-            damage: 17,
-            health: 100,
+            damage: 18,
+            health: 103,
             id: 7,
         },
     ];
@@ -330,22 +330,50 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
         }
     ];
     var Director = (function () {
-        function Director(loader, arrPersons) {
+        function Director(loader, arrPersons, config_skins) {
             var _this = this;
+            this.setAdvancedMode = function (ev) {
+                _this.mode = "advanced";
+                _this.startGame("advanced");
+            };
+            this.setDefaultMode = function (ev) {
+                _this.mode = "default";
+                _this.startGame("default");
+            };
+            this.startGame = function (mode) {
+                var arrPersons = _this.arrPersons, delete_unit = false, tmp;
+                if (mode == "advanced") {
+                    arrPersons.forEach(function (elem) {
+                        if (elem.class == "fighter" && !elem.evil && !delete_unit) {
+                            delete_unit = true;
+                            elem.health = 10;
+                        }
+                    });
+                    arrPersons = _this.arrPersons;
+                }
+                _this.scene = new scene_1.Scene(_this.loader, arrPersons, _this.config_skins, _this.ai);
+                _this.ai.initScene(_this.scene);
+                document.getElementById('parent_popup').style.display = 'none';
+            };
             this.startAI = function () {
                 _this.ai.step();
             };
             this.ai = new ai_1.Ai([]);
-            this.scene = new scene_1.Scene(loader, arrPersons, config_skins, this.ai);
-            this.ai.initScene(this.scene);
+            this.loader = loader;
+            this.arrPersons = arrPersons;
+            this.config_skins = config_skins;
             this.start();
         }
         Director.prototype.start = function () {
+            var default_btn = document.getElementById("default");
+            var advanced_btn = document.getElementById("advanced");
             var play = document.getElementById("play_btn");
+            advanced_btn.addEventListener("click", this.setAdvancedMode);
+            default_btn.addEventListener("click", this.setDefaultMode);
             play.addEventListener("click", this.startAI);
             document.getElementById("container").appendChild(play);
         };
         return Director;
     }());
-    new Director(loader, arrPersons);
+    new Director(loader, arrPersons, config_skins);
 });

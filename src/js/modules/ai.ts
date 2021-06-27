@@ -20,7 +20,7 @@ export class Ai {
         this.scene = {};
         //тут храняться занятые координаты( то бишь, что бы не на 1 клетку ходили )\
         this.cache_coord_bots = [];
-        this.syncUnit = function() {
+        this.syncUnit = function () {
             console.log("default");
         };
     }
@@ -100,7 +100,49 @@ export class Ai {
 
         return best_ai;
     }
+    choseGlobalStr_new(ai_units) {
+        // тут будет выбор между стратегиями
+        // var global_strategy = new GlobalSTRMaxAgro({
+        //     scene: this.scene,
+        //     unit_collection: this.unit_collection,
+        //     // view: this.view
+        // });
+        // return global_strategy;
+        let tmp_ai: any = {},
+            assessment,
+            max = -1,
+            tmp_cache = {},
+            best_ai = {};
+        let result_assessment = cacheGlobalAI.map((AI) => {
+            tmp_ai = new AI({
+                scene: this.scene,
+                ai_units: ai_units,
+                view: this.view,
+                unit_collection: this.unit_collection,
+            });
 
+            assessment = tmp_ai.assessment(this.initEmptyGlobalCache);
+            // this.CACHE = assessment.cache;
+            // console.log("ai ", tmp_ai.getInfo(), "total ", assessment.total);
+            console.log("assessment.cache ", assessment.cache);
+            return { assessment: assessment.total, ai: tmp_ai, cache: assessment.cache };
+        });
+        console.log("-----------------");
+        result_assessment.forEach((elem) => {
+            if (max == -1) {
+                max = elem.assessment;
+                best_ai = elem.ai;
+            }
+            if (elem.assessment > max) {
+                max = elem.assessment;
+                best_ai = elem.ai;
+                tmp_cache = elem.cache;
+            }
+        });
+        console.log("tmp_cache", tmp_cache);
+        this.CACHE = tmp_cache;
+        return best_ai;
+    }
     stepAi(ai_units, index = 0) {
         // вообщем я сделал стратегии длоя 1го персонажа, теперь нужно сделать надстройку, которая будет управлять этими персонажами
         // ..сходили 1м чуваком, и нужно заного искать стратегию...

@@ -117,9 +117,9 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                     result += 300;
                 }
                 if (curent_unit.person.class == "archer") {
-                    result += 10 * Math.abs(70 - enemie.person.health);
+                    result += 12 * Math.abs(70 - enemie.person.health);
                 } else {
-                    result += 8 * Math.abs(100 - enemie.person.health);
+                    result += 10 * Math.abs(100 - enemie.person.health);
                 }
             });
             enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
@@ -163,7 +163,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
                 cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
             } else {
                 // if (enemies_near_3.length > 0) {
-                result -= 200 * enemies_near_3.length
+                result -= 300 * enemies_near_3.length
                 //     best_enemie = this.getBestEnemie(enemies_near_3, curent_unit);
                 //     // console.log("cache_died fighter", curent_unit.person.damage, best_enemie.person.health, this.getDistanceBetweenUnits(curent_unit, best_enemie));
                 //     if (curent_unit.person.damage >= (best_enemie.person.health - 10) && this.getDistanceBetweenUnits(curent_unit, best_enemie) < 4) {
@@ -194,6 +194,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
         });
         result += 10 * (5 - this.ai_units.length);
         result -= 15 * (5 - this.unit_collection.getUserCollection().length);
+        result -= (2 - this.unit_collection.getAiArchers().length) * 1000;
         console.log("Distance Agro", Math.round(result), cache);
         return { total: Math.round(result), cache: cache };
     }
@@ -204,20 +205,20 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
         let friends, reverse = false, enemies;
         ai_units.forEach((element) => {
             if (this.isArchers(element)) {
-                friends = this.getFriendsInField(element, 3);
+                friends = this.getFriendsInField(element, 2);
                 if (friends.length == 0) {
                     reverse = true;
                 } else {
-                    friends.forEach(near_friend => {
-                        if (!this.isArchers(near_friend) && (near_friend.y == element.y)) {
-                            reverse = true;
-                        } else {
-                            // friends = this.getFriendsInField(element, 3);
-                            // if (friends.length == 0) {
-                            //     reverse = true;
-                            // }
-                        }
-                    });
+                    // friends.forEach(near_friend => {
+                    //     if (!this.isArchers(near_friend) && (near_friend.y == element.y)) {
+                    //         reverse = true;
+                    //     } else {
+                    //         // friends = this.getFriendsInField(element, 3);
+                    //         // if (friends.length == 0) {
+                    //         //     reverse = true;
+                    //         // }
+                    //     }
+                    // });
                 }
 
 
@@ -239,7 +240,7 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
         //         }
         //     });
         // }
-        console.log("reverse", reverse);
+
         return reverse ? [...ai_units].reverse() : ai_units;
     }
     startMove(cache_unit, index) {

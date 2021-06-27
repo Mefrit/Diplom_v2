@@ -108,7 +108,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         };
         RunAwayArcher.prototype.runAwayArcher = function (enemy) {
             if (this.unit.x < 11) {
-                this.moveAutoStepStupid(this.unit, point, "archer");
+                this.moveAutoStepStupid(this.unit, enemy, "archer");
             }
         };
         RunAwayArcher.prototype.got2AttackePosition = function (enemie) {
@@ -189,7 +189,6 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         };
         RunAwayArcher.prototype.atackeChosenUnit = function (cache, enemie) {
             var _this = this;
-            console.log(enemie);
             return new Promise(function (resolve, reject) {
                 if (enemie.isNotDied()) {
                     enemie = _this.findNearestEnemies(_this.unit);

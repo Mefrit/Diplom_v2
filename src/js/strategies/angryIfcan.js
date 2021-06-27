@@ -61,6 +61,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (_this.checkNearArchersPosition()) {
                     checkArcherPosition = _this.checkArcherPosition(enemie);
                 }
+                console.log("enemie checkArcherPosition", enemie, checkArcherPosition);
                 if (enemie.isNotDied()) {
                     enemie = _this.findNearestEnemies(_this.unit);
                 }
@@ -69,7 +70,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     !_this.unit.moveAction &&
                     _this.getDistanceBetweenUnits(_this.unit, enemie) < 4) {
                     _this.moveTo(_this.unit, checkArcherPosition.point);
-                    if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1) {
+                    if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1.2) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         setTimeout(function () {
@@ -80,7 +81,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                     else {
                         var nearest = _this.findNearestEnemies(_this.unit);
-                        if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, nearest).toFixed(0)) <= 1) {
+                        if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, nearest).toFixed(0)) <= 1.2) {
                             _this.unit.stopAnimation("default_fighter");
                             _this.unit.playAnimation("atacke_fighter");
                             setTimeout(function () {
@@ -93,7 +94,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
                 else {
                     res = _this.moveCarefully(_this.unit, enemie, "fighter", cache_unit);
-                    if (res.findEnime == true) {
+                    if (res.findEnime == true && _this.getDistanceBetweenUnits(res.enemie, _this.unit) <= 1.2) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         setTimeout(function () {
@@ -101,6 +102,18 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                             _this.unit.playAnimation("default_fighter");
                         }, 750);
                         _this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, _this.unit.person.damage);
+                    }
+                    else {
+                        enemie = _this.findNearestEnemies(_this.unit);
+                        if (_this.getDistanceBetweenUnits(enemie, _this.unit) <= 1.2) {
+                            _this.unit.stopAnimation("default_fighter");
+                            _this.unit.playAnimation("atacke_fighter");
+                            setTimeout(function () {
+                                _this.unit.stopAnimation("atacke_fighter");
+                                _this.unit.playAnimation("default_fighter");
+                            }, 750);
+                            _this.view.contactPersonsView(enemie.domPerson, enemie.image, _this.unit.person.damage);
+                        }
                     }
                 }
                 _this.unit.setMoveAction(false);

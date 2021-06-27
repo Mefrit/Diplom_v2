@@ -105,7 +105,7 @@ export class RunAwayArcher extends DefaultMethodsStrategy {
     //если на лучника атакуют, то он убегает
     runAwayArcher(enemy) {
         if (this.unit.x < 11) {
-            this.moveAutoStepStupid(this.unit, point, "archer");
+            this.moveAutoStepStupid(this.unit, enemy, "archer");
         }
     }
     got2AttackePosition(enemie) {
@@ -202,7 +202,7 @@ export class RunAwayArcher extends DefaultMethodsStrategy {
     //     this.runAwayArcher(point);
     // }
     atackeChosenUnit(cache, enemie) {
-        console.log(enemie);
+        // console.log(enemie);
         return new Promise((resolve, reject) => {
             if (enemie.isNotDied()) {
                 enemie = this.findNearestEnemies(this.unit);
