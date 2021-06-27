@@ -471,12 +471,6 @@ define(["require", "exports"], function (require, exports) {
             this.unit_collection.getCollection().forEach(function (unit) {
                 if (!unit.isNotDied()) {
                     for (var i = 0; i < points.length; i++) {
-                        if (points[i].x < 0 || points[i].x > 11) {
-                            res.free = false;
-                        }
-                        if (points[i].y < 0 || points[i].y > 8) {
-                            res.free = false;
-                        }
                         if (unit.x == points[i].x && points[i].y == unit.y && curent_unit.hasOwnProperty("person")) {
                             if (unit.person.id != curent_unit.person.id) {
                                 res.free = false;
