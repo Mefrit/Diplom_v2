@@ -226,6 +226,7 @@ export class Scene {
         this.loadDragon();
 
         this.loader.onReady(() => {
+            document.getElementById('icon_loader').style.display = "none";
             this.config_skins.forEach((skin) => {
                 skin.children.forEach((elem) => {
                     // this.loader.loadJSON(elem.src_json);

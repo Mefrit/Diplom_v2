@@ -13,6 +13,7 @@ html {
     background-attachment: fixed;
     background-size: cover;
 }
+
 .liana {
     position: absolute;
     left: 0;
@@ -20,19 +21,23 @@ html {
     width: 600px;
     z-index: 10;
 }
+
 .liana__left {
     left: -210px;
     top: 210px;
     transform: rotate(30deg);
 }
+
 .liana__right {
     left: 1390px;
     top: 210px;
     transform: rotate(30deg);
 }
+
 .background {
     /* background-image: url("../images/back.jpg"); */
 }
+
 .container {
     /* height: 100vh; */
     /* position: absolute;
@@ -44,9 +49,9 @@ html {
     /* flex-direction: row;
     position: absolute;
     justify-content: space-between; */
-
     height: auto;
 }
+
 .btn_group {
     /* display: flex; */
     flex-direction: column;
@@ -56,6 +61,7 @@ html {
     margin-top: 80px;
     margin-left: 30px;
 }
+
 .scene {
     position: relative;
     left: 0;
@@ -70,11 +76,13 @@ html {
     border-radius: 20px;
     /* display: block; */
 }
-.btn__out {
-}
+
+.btn__out {}
+
 .chosen_unit {
     box-shadow: 0 -3px rgb(199, 199, 199) inset;
 }
+
 .menu_chose {
     display: flex;
     flex-direction: row;
@@ -83,16 +91,17 @@ html {
     align-items: center;
     cursor: pointer;
 }
+
 .menu_chose-icon {
     width: 40px;
     /* margin-top: 5px; */
 }
+
 .btn {
     /* float: left;
     position: relative;
     top: 1002px;
     left: 100px; */
-
     font-size: 0.8vw;
     font-weight: 700;
     font-weight: 700;
@@ -112,17 +121,22 @@ html {
     z-index: 100;
     text-align: center;
 }
+
 .btn__step {
     background: rgb(53, 167, 110);
     box-shadow: 0 -3px rgb(53, 167, 110) inset;
 }
+
 .btn:hover {
     background: rgb(53, 167, 110);
 }
+
+
 /* .btn:active {
     background: rgb(33, 147, 90);
     box-shadow: 0 3px rgb(33, 147, 90) inset;
 } */
+
 .sence__block {
     /* background-image: url("../images/block.png") ; */
     /* float: left; */
@@ -134,15 +148,19 @@ html {
     padding: 3px;
     border: 1px solid black;
 }
+
 .sence__block:hover {
     box-shadow: 0px 0px 20px white;
 }
+
 .block__free {
     box-shadow: 0px 0px 20px rgb(0, 255, 34);
 }
+
 .block__free:hover {
     box-shadow: 0px 0px 20px rgb(0, 255, 34);
 }
+
 .block__nonFree {
     box-shadow: 0px 0px 20px rgb(245, 20, 20);
 }
@@ -150,17 +168,21 @@ html {
 .block__nonFree:hover {
     box-shadow: 0px 0px 20px rgb(245, 20, 20);
 }
+
 .ai:hover {
     box-shadow: 0px 0px 20px rgb(255, 136, 136) !important;
 }
+
 .ai {
     cursor: pointer !important;
 }
+
 .canvas {
     width: 100%;
     max-width: 1280px;
     height: 90vh;
 }
+
 .person {
     position: absolute;
     z-index: 100;
@@ -169,21 +191,26 @@ html {
     float: left;
     cursor: pointer;
 }
+
 .person-die {
     display: none;
 }
+
 .person-atacked {
     box-shadow: inset 0px 0px 20px rgb(245, 20, 20), 0px 0px 20px rgb(245, 20, 20);
 }
+
 .person:hover {
     box-shadow: inset 0px 0px 5px rgb(221, 221, 221), 0px 0px 10px rgb(221, 221, 221);
 }
+
 #block_information {
     width: 200px;
     height: 100px;
     float: left;
     background-color: #333232;
 }
+
 #parent_popup {
     background: rgb(63, 63, 63);
     height: 100%;
@@ -194,6 +221,7 @@ html {
     top: 0;
     left: 0;
 }
+
 #popup {
     background-color: rgb(39, 39, 41);
     height: 300px;
@@ -205,4 +233,66 @@ html {
     text-align: center;
     padding: 20px;
     font-size: 25px;
+}
+
+.cssload-container {
+    width: 80px;
+    height: 49px;
+    text-align: center;
+    margin-top: 30px;
+    margin-left: 10px;
+    position: absolute;
+    left: 2%;
+    top: 2%;
+}
+
+.cssload-crazy-arrow {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    border: 5px solid;
+    border-top-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
+    border-color: rgb(146, 219, 109);
+    animation: cssload-spin 460ms infinite linear;
+    -o-animation: cssload-spin 460ms infinite linear;
+    -ms-animation: cssload-spin 460ms infinite linear;
+    -webkit-animation: cssload-spin 460ms infinite linear;
+    -moz-animation: cssload-spin 460ms infinite linear;
+}
+
+@keyframes cssload-spin {
+    100% {
+        transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes cssload-spin {
+    100% {
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-ms-keyframes cssload-spin {
+    100% {
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes cssload-spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes cssload-spin {
+    100% {
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }

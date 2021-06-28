@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <title>Game of the Herous</title>
-        <link href="./style/main.css" rel="stylesheet" type="text/css" />
-    </head>
 
-    <body>
-        <div id="parent_popup">
-            <div id="popup">
-                <p>Выберите режим сложности</p>
-                <form action=""></form>
-                <label class="menu_chose"
-                    ><input type="checkbox" id="default" />
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Game of the Herous</title>
+    <link href="./style/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div id="parent_popup">
+        <div id="popup">
+            <p>Выберите режим сложности</p>
+            <form action=""></form>
+            <label class="menu_chose"><input type="checkbox" id="default" />
                     <img src="./images/choldren_icon.png" class="menu_chose-icon" alt="Default" /> Default</label
                 ><br />
                 <label class="menu_chose"
@@ -27,6 +27,9 @@
             </div>
         </div>
         <div id="container" class="container">
+            <div class="cssload-container" id="icon_loader">
+                <div class="cssload-crazy-arrow"></div>
+            </div>
             <div id="scene" class="scene"></div>
 
             <input type="button" class="btn btn__step" id="play_btn" value="Завершить ход" />

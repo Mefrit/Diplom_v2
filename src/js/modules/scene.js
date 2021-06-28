@@ -229,6 +229,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             this.loader.load(this.person_collection);
             this.loadDragon();
             this.loader.onReady(function () {
+                document.getElementById('icon_loader').style.display = "none";
                 _this.config_skins.forEach(function (skin) {
                     skin.children.forEach(function (elem) {
                         tmp.cahce_image = [];
