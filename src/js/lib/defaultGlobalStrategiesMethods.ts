@@ -29,7 +29,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                         if (Math.abs(tmp - distance_best) < 2) {
                             if (best_enemie.person.health > elem.person.health) {
                                 best_enemie = elem;
-                                if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
+                                if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer" && this.getEnemyInField(elem, 2).length < 2) {
                                     // if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
                                     have_best_choise = true;
                                     // }
@@ -235,12 +235,12 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
 
     sortArchersFirst(cacheAi) {
         let res = cacheAi.sort((prev, next) => {
-                if (prev.person.class == "archer") {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }),
+            if (prev.person.class == "archer") {
+                return -1;
+            } else {
+                return 1;
+            }
+        }),
             tmp;
         if (cacheAi.length < 2) {
             return res;

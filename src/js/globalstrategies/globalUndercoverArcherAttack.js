@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.UndercoverArcherAttack = void 0;
     var UndercoverArcherAttack = (function (_super) {
         __extends(UndercoverArcherAttack, _super);
         function UndercoverArcherAttack(props) {

@@ -123,7 +123,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
                         result += 300;
                     }
                     let enemy_near = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
-                    console.log(enemy_near);
+
                     result += 100 * parseInt(enemy_near.length);
                     if (enemy_near.length == 1) {
                         result += 1000;

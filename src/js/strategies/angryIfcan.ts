@@ -110,7 +110,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 } else {
                     this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache_unit);
                 }
-                if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, enemie).toFixed(0)) <= 1.5) {
+                if (this.getDistanceBetweenUnits(this.unit, enemie) <= 1.5) {
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
                     setTimeout(() => {
@@ -121,7 +121,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 } else {
                     let nearest = this.findNearestEnemies(this.unit);
 
-                    if (Number.parseInt(this.getDistanceBetweenUnits(this.unit, nearest).toFixed(0)) <= 1.5) {
+                    if (this.getDistanceBetweenUnits(this.unit, nearest) <= 1.5) {
                         this.unit.stopAnimation("default_fighter");
                         this.unit.playAnimation("atacke_fighter");
 

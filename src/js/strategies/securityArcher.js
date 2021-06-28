@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SecurityArcher = void 0;
     var SecurityArcher = (function (_super) {
         __extends(SecurityArcher, _super);
         function SecurityArcher(props) {
@@ -120,7 +119,8 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (checkArcherPosition.result && !_this.unit.moveAction) {
                     _this.moveAutoStepStupid(_this.unit, checkArcherPosition.point, "securityArcher");
                 }
-                if (_this.checkFreeCoordWalls(_this.unit_collection.getAICollection(), pos_security)) {
+                if (_this.checkFreeCoordWalls(_this.unit_collection.getAICollection(), pos_security) &&
+                    _this.getFriendsInField({ x: near_archer.x + 1, y: pos_security.y }, 2).length > 2) {
                     pos_security.x = near_archer.x - 1;
                 }
                 else {

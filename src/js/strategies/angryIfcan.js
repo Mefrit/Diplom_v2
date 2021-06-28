@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.FightIfYouCan = void 0;
     var FightIfYouCan = (function (_super) {
         __extends(FightIfYouCan, _super);
         function FightIfYouCan(props) {
@@ -74,7 +73,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     else {
                         _this.moveCarefully(_this.unit, checkArcherPosition.point, "fighter", cache_unit);
                     }
-                    if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, enemie).toFixed(0)) <= 1.5) {
+                    if (_this.getDistanceBetweenUnits(_this.unit, enemie) <= 1.5) {
                         _this.unit.stopAnimation("default_fighter");
                         _this.unit.playAnimation("atacke_fighter");
                         setTimeout(function () {
@@ -85,7 +84,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                     else {
                         var nearest = _this.findNearestEnemies(_this.unit);
-                        if (Number.parseInt(_this.getDistanceBetweenUnits(_this.unit, nearest).toFixed(0)) <= 1.5) {
+                        if (_this.getDistanceBetweenUnits(_this.unit, nearest) <= 1.5) {
                             _this.unit.stopAnimation("default_fighter");
                             _this.unit.playAnimation("atacke_fighter");
                             setTimeout(function () {

@@ -59,10 +59,15 @@ export class DefaultMethodsStrategy {
     // }
     getDistanceBetweenUnits(unit1, unit2) {
         // }
-        let tmp_x, tmp_y;
-        tmp_x = unit1.x - unit2.x;
-        tmp_y = unit1.y - unit2.y;
-        return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+        if (unit1.x && unit1.y && unit2.x && unit2.y) {
+            let tmp_x, tmp_y;
+            tmp_x = unit1.x - unit2.x;
+            tmp_y = unit1.y - unit2.y;
+            return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+        } else {
+            return 7;
+        }
+
     }
     deleteBusyEnemies(cache_enemies, units_purpose) {
         let find = false;
@@ -413,7 +418,7 @@ export class DefaultMethodsStrategy {
     checkUnitNotStatyOnArhcersAtacke(unit, units_purpose, cache_archers) {
         // првоеряет по хорошему, что юнит не стоит на позиции атаки лучника
         let result = false;
-        units_purpose.forEach((element) => {});
+        units_purpose.forEach((element) => { });
     }
     // автоматический путь к задангным координатам без учета возможных опасностей
     moveAutoStepStupid = (unit, obj2go, type = "fighter") => {
@@ -1153,9 +1158,9 @@ export class DefaultMethodsStrategy {
     }
     getNearFriendsUnit(unit, cacheUnits) {
         var coord_min = {
-                x: cacheUnits[0].x,
-                y: cacheUnits[0].y,
-            },
+            x: cacheUnits[0].x,
+            y: cacheUnits[0].y,
+        },
             hypotenuse_min,
             hypotenuse_elem;
         //FIX ME если придется добавлять препятствие, то этот кусок кода нужно бюудет переписывать
@@ -1186,6 +1191,10 @@ export class DefaultMethodsStrategy {
             coefI = tmp;
         } else {
             return res;
+        }
+        if ((enemie.x == unit.x || enemie.y == unit.y) && this.getDistanceBetweenUnits(unit, enemie) <= 1) {
+
+            return { free: true, arrayPoit: [], direction: direction, runAway: false };
         }
         for (let i = 1; i <= coefI - 1; i++) {
             tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };

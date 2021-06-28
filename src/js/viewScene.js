@@ -1,7 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ViewScene = void 0;
     var ViewScene = (function () {
         function ViewScene(arrObjPlayers, loader) {
             var _this = this;
@@ -123,13 +122,10 @@ define(["require", "exports"], function (require, exports) {
             if (i == 8 && j == 1) {
                 block.src = "images/block1.png";
             }
-            if (i == 4 && j == 3) {
+            if (i == 4 && j == 0) {
                 block.src = "images/block4.png";
             }
-            if (i == 4 && j == 3) {
-                block.src = "images/block4.png";
-            }
-            if (i == 4 && j == 2) {
+            if (i == 3 && j == 0) {
                 block.src = "images/block4.png";
             }
             if (i == 4 && j == 1) {
@@ -147,7 +143,7 @@ define(["require", "exports"], function (require, exports) {
             if (i == 5 && j == 7) {
                 block.src = "images/block1.png";
             }
-            if (i == 2 && j == 2) {
+            if (i == 2 && j == 3) {
                 block.src = "images/block1.png";
             }
             if (i == 7 && j == 5) {

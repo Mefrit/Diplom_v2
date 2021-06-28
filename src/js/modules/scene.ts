@@ -44,7 +44,7 @@ export class Scene {
         let find = false;
 
         cache.forEach((elem) => {
-            console.log(elem);
+            // console.log(elem);
             if (unit.person) {
                 if (elem.person.id == unit.person.id) {
                     find = true;
@@ -55,7 +55,7 @@ export class Scene {
                 }
             }
         });
-        console.log(cache, unit, find);
+        // console.log(cache, unit, find);
         return find;
     }
     getPerson() {
@@ -109,17 +109,19 @@ export class Scene {
                 if (
                     this.checkFreeCoordWalls(this.wall_blocks, coord) ||
                     this.checkFreeCoordWalls(this.water_blocks, coord) ||
-                    this.person_collection.checkFreeCoord(elem)
+                    !this.person_collection.checkFreeCoord(coord)
                 ) {
+
                     alert("Перемещение на данную позицию невозможно.");
                 } else {
+                    // console.log("checkFreeCoord", this.person_collection.checkFreeCoord(elem), elem);
                     if (this.getDistanceBetweenUnits(elem, coord) > 2.9) {
                         alert("Юниты могут передвигаться в радиусе 2 клеток.");
                     } else {
                         if (this.checkUnitAction(this.cache_moved_units, elem)) {
                             alert("На текущем ходу вы уже переместились.");
                         } else {
-                            console.log(" this.cache_moved_units", this.cache_moved_units);
+
                             this.cache_moved_units.push(elem);
                             elem.setCoord(coord.x, coord.y);
                             this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
@@ -191,7 +193,7 @@ export class Scene {
             posY += 120;
         }
     }
-    setAIperson() {}
+    setAIperson() { }
     getDistanceBetweenUnits(unit1, unit2) {
         // }
         let tmp_x, tmp_y;
@@ -347,7 +349,7 @@ export class Scene {
                 id_enemy = parseInt(canvas_enemy.getAttribute("data-id")),
                 unit: any = this.person_collection.getPersonById(id_person)[0],
                 enemy = this.person_collection.getPersonById(id_enemy)[0];
-            console.log("contactPersons", unit, enemy, id_enemy);
+            // console.log("contactPersons", unit, enemy, id_enemy);
 
             if (this.getDistanceBetweenUnits(unit, enemy) > 2 && unit.person.class == "fighter") {
                 alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
@@ -362,7 +364,7 @@ export class Scene {
                     return;
                 }
             }
-            console.log("cache_set_atacke_units", this.cache_set_atacke_units);
+            // console.log("cache_set_atacke_units", this.cache_set_atacke_units);
             if (this.checkUnitAction(this.cache_set_atacke_units, unit)) {
                 alert("За этот ход вы уже кого-то побили.");
                 return;
@@ -393,7 +395,6 @@ export class Scene {
     };
     onChangePerson = (event) => {
         let canvas = event.target;
-        console.log("onChangePerson", canvas);
         if (this.canvas != undefined) {
             this.view.clearPrev(this.canvas, this.loader);
         }
@@ -405,5 +406,5 @@ export class Scene {
 
         this.view.showAvailabeMovies(this.canvas);
     };
-    renderAiPerson() {}
+    renderAiPerson() { }
 }

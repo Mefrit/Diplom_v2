@@ -8,7 +8,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -154,10 +153,15 @@ define(["require", "exports"], function (require, exports) {
             return nearArcher;
         };
         DefaultMethodsStrategy.prototype.getDistanceBetweenUnits = function (unit1, unit2) {
-            var tmp_x, tmp_y;
-            tmp_x = unit1.x - unit2.x;
-            tmp_y = unit1.y - unit2.y;
-            return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+            if (unit1.x && unit1.y && unit2.x && unit2.y) {
+                var tmp_x = void 0, tmp_y = void 0;
+                tmp_x = unit1.x - unit2.x;
+                tmp_y = unit1.y - unit2.y;
+                return Math.sqrt(tmp_x * tmp_x + tmp_y * tmp_y);
+            }
+            else {
+                return 7;
+            }
         };
         DefaultMethodsStrategy.prototype.deleteBusyEnemies = function (cache_enemies, units_purpose) {
             var find = false;
@@ -879,6 +883,9 @@ define(["require", "exports"], function (require, exports) {
             }
             else {
                 return res;
+            }
+            if ((enemie.x == unit.x || enemie.y == unit.y) && this.getDistanceBetweenUnits(unit, enemie) <= 1) {
+                return { free: true, arrayPoit: [], direction: direction, runAway: false };
             }
             for (var i = 1; i <= coefI - 1; i++) {
                 tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };

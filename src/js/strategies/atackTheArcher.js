@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.AtackTheArcher = void 0;
     var AtackTheArcher = (function (_super) {
         __extends(AtackTheArcher, _super);
         function AtackTheArcher(props) {
@@ -79,9 +78,8 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
             }
             if (coord) {
-                if (this.getEnemyInField(coord, 3).length > 4 &&
-                    this.getFriendsInField(coord, 3).length < 2 &&
-                    this.unit_collection.getAICollection().length > 3) {
+                if (this.getEnemyInField(coord, 2).length > 2 &&
+                    this.getFriendsInField(coord, 2).length < 2) {
                     var near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAICollection()), obj2go = { x: near_friend.x, y: near_friend.y };
                     if (near_friend.x > 2) {
                         obj2go.x = near_friend.x - 2;
@@ -103,7 +101,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         };
         AtackTheArcher.prototype.findPointAtackArcher = function (enemie, is_protect_strategy) {
             if (is_protect_strategy === void 0) { is_protect_strategy = false; }
-            var maxX = Math.abs(enemie.person.x - this.unit.person.x), maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res;
+            var maxX = Math.abs(enemie.person.x - this.unit.person.x), maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, res = { result: false };
             if (maxY > maxX) {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
             }
@@ -112,7 +110,12 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
             if (resCheck.free) {
                 this.got2AttackePosition(enemie);
-                res = this.tryAtakeArcher(resCheck, enemie);
+                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                    res = this.tryAtakeArcher(resCheck, enemie);
+                }
+                else {
+                    res.result = false;
+                }
                 if (!res.result) {
                     if (!this.unit.moveAction) {
                         this.got2AttackePosition(enemie);
@@ -125,8 +128,22 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     else {
                         resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                     }
-                    if (resCheck.free) {
+                    if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
                         this.tryAtakeArcher(resCheck, enemie);
+                    }
+                    else {
+                        enemie = this.findNearestEnemies(this.unit);
+                        maxX = Math.abs(enemie.person.x - this.unit.person.x);
+                        maxY = Math.abs(enemie.person.y - this.unit.person.y);
+                        if (maxY > maxX) {
+                            resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
+                        }
+                        else {
+                            resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
+                        }
+                        if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                            this.tryAtakeArcher(resCheck, enemie);
+                        }
                     }
                 }
             }
@@ -142,8 +159,22 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 else {
                     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                 }
-                if (resCheck.free) {
+                if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
                     this.tryAtakeArcher(resCheck, enemie);
+                }
+                else {
+                    enemie = this.findNearestEnemies(this.unit);
+                    maxX = Math.abs(enemie.person.x - this.unit.person.x);
+                    maxY = Math.abs(enemie.person.y - this.unit.person.y);
+                    if (maxY > maxX) {
+                        resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
+                    }
+                    else {
+                        resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
+                    }
+                    if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                        this.tryAtakeArcher(resCheck, enemie);
+                    }
                 }
             }
         };

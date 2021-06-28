@@ -21,7 +21,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DistanceAgro = void 0;
     var DistanceAgro = (function (_super) {
         __extends(DistanceAgro, _super);
         function DistanceAgro(props) {

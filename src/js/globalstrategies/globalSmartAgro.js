@@ -21,7 +21,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -131,7 +130,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                             result += 300;
                         }
                         var enemy_near = _this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
-                        console.log(enemy_near);
                         result += 100 * parseInt(enemy_near.length);
                         if (enemy_near.length == 1) {
                             result += 1000;

@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "./defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.DefaultGlobalMethodsStrategy = void 0;
     var DefaultGlobalMethodsStrategy = (function (_super) {
         __extends(DefaultGlobalMethodsStrategy, _super);
         function DefaultGlobalMethodsStrategy(props) {
@@ -42,7 +41,7 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                             if (Math.abs(tmp - distance_best) < 2) {
                                 if (best_enemie.person.health > elem.person.health) {
                                     best_enemie = elem;
-                                    if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
+                                    if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer" && _this.getEnemyInField(elem, 2).length < 2) {
                                         have_best_choise = true;
                                     }
                                 }

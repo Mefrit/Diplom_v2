@@ -176,7 +176,8 @@ export class SecurityArcher extends DefaultMethodsStrategy {
             }
             // }
 
-            if (this.checkFreeCoordWalls(this.unit_collection.getAICollection(), pos_security)) {
+            if (this.checkFreeCoordWalls(this.unit_collection.getAICollection(), pos_security) &&
+                this.getFriendsInField({ x: near_archer.x + 1, y: pos_security.y }, 2).length > 2) {
                 pos_security.x = near_archer.x - 1;
             } else {
                 pos_security.x = near_archer.x + 1;

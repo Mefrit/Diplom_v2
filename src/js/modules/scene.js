@@ -1,7 +1,6 @@
 define(["require", "exports", "../viewScene", "./person_collection", "../lib/dragon"], function (require, exports, viewScene_1, person_collection_1, dragon_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Scene = void 0;
     var Scene = (function () {
         function Scene(loader, arrImg, config_skins, ai) {
             var _this = this;
@@ -33,7 +32,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                         console.log(_this.getDistanceBetweenUnits(elem, coord));
                         if (_this.checkFreeCoordWalls(_this.wall_blocks, coord) ||
                             _this.checkFreeCoordWalls(_this.water_blocks, coord) ||
-                            _this.person_collection.checkFreeCoord(elem)) {
+                            !_this.person_collection.checkFreeCoord(coord)) {
                             alert("Перемещение на данную позицию невозможно.");
                         }
                         else {
@@ -45,7 +44,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                                     alert("На текущем ходу вы уже переместились.");
                                 }
                                 else {
-                                    console.log(" this.cache_moved_units", _this.cache_moved_units);
                                     _this.cache_moved_units.push(elem);
                                     elem.setCoord(coord.x, coord.y);
                                     _this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
@@ -73,7 +71,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                 var canvas_enemy = event.target, img = _this.loader.get(event.target.getAttribute("data-image"));
                 if (typeof _this.canvas != "undefined") {
                     var id_person = parseInt(_this.canvas.getAttribute("data-id")), id_enemy = parseInt(canvas_enemy.getAttribute("data-id")), unit_1 = _this.person_collection.getPersonById(id_person)[0], enemy = _this.person_collection.getPersonById(id_enemy)[0];
-                    console.log("contactPersons", unit_1, enemy, id_enemy);
                     if (_this.getDistanceBetweenUnits(unit_1, enemy) > 2 && unit_1.person.class == "fighter") {
                         alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
                         return;
@@ -88,7 +85,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                             return;
                         }
                     }
-                    console.log("cache_set_atacke_units", _this.cache_set_atacke_units);
                     if (_this.checkUnitAction(_this.cache_set_atacke_units, unit_1)) {
                         alert("За этот ход вы уже кого-то побили.");
                         return;
@@ -115,7 +111,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             };
             this.onChangePerson = function (event) {
                 var canvas = event.target;
-                console.log("onChangePerson", canvas);
                 if (_this.canvas != undefined) {
                     _this.view.clearPrev(_this.canvas, _this.loader);
                 }
@@ -146,7 +141,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
         Scene.prototype.checkUnitAction = function (cache, unit) {
             var find = false;
             cache.forEach(function (elem) {
-                console.log(elem);
                 if (unit.person) {
                     if (elem.person.id == unit.person.id) {
                         find = true;
@@ -158,7 +152,6 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                     }
                 }
             });
-            console.log(cache, unit, find);
             return find;
         };
         Scene.prototype.getPerson = function () {
