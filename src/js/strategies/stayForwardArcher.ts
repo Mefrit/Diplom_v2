@@ -64,7 +64,7 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
 
                 pos_security.near_archer = near_archer;
                 var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
-                if (res.findEnime == true) {
+                if (res.findEnime == true && !this.unit.atackeAction && !this.unit.atackeAction) {
                     //атака , если лучник не далеко
 
                     if (Math.abs(this.unit.x - near_enemy.x) == 1) {
@@ -74,6 +74,7 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
                             this.unit.stopAnimation("atacke_fighter");
                             this.unit.playAnimation("default_fighter");
                         }, 750);
+                        this.unit.setAtackeAction(true);
                         this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, this.unit.person.damage);
 
                         var checkArcherPosition = this.checkArcherPosition(near_enemy);
@@ -89,6 +90,7 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
                 }
             }
             this.unit.setMoveAction(false);
+            this.unit.setAtackeAction(false);
             setTimeout(() => {
                 resolve("Promise2");
             }, 320);

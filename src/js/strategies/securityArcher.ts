@@ -31,10 +31,11 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 near_enemy = this.findNearestEnemies(this.unit);
             }
 
-            if (Math.abs(this.unit.x - near_enemy.x) <= 1 && Math.abs(this.unit.y - near_enemy.y) <= 1) {
+            if (Math.abs(this.unit.x - near_enemy.x) <= 1 && !this.unit.atackeAction && Math.abs(this.unit.y - near_enemy.y) <= 1) {
                 // запуск анимации атаки
                 this.unit.stopAnimation("default_fighter");
                 this.unit.playAnimation("atacke_fighter");
+                this.unit.setAtackeAction(true);
                 atake = true;
                 // animation.stop();
                 setTimeout(() => {
@@ -48,9 +49,11 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 let local_near_enemy = this.findNearestEnemies(this.unit);
                 if (
                     Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
-                    Math.abs(this.unit.y - local_near_enemy.y) <= 1
+                    Math.abs(this.unit.y - local_near_enemy.y) <= 1 &&
+                    !this.unit.atackeAction
                 ) {
                     // запуск анимации атаки
+                    this.unit.setAtackeAction(true);
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
                     atake = true;
@@ -132,11 +135,11 @@ export class SecurityArcher extends DefaultMethodsStrategy {
             //атака , если лучник не далеко
             var checkArcherPosition = this.checkArcherPosition(near_enemy);
 
-            if (Math.abs(this.unit.x - near_enemy.x) <= 1 && Math.abs(this.unit.y - near_enemy.y) <= 1 && !atake) {
+            if (Math.abs(this.unit.x - near_enemy.x) <= 1 && Math.abs(this.unit.y - near_enemy.y) <= 1 && !atake && !this.unit.atackeAction) {
                 // запуск анимации атаки
                 this.unit.stopAnimation("default_fighter");
                 this.unit.playAnimation("atacke_fighter");
-
+                this.unit.setAtackeAction(true);
                 // animation.stop();
                 setTimeout(() => {
                     this.unit.stopAnimation("atacke_fighter");
@@ -151,11 +154,13 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                     (Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
                         Math.abs(this.unit.y - local_near_enemy.y) <= 1) ||
                     this.getDistanceBetweenUnits(this.unit, local_near_enemy) <= 1.5
+                    && !this.unit.atackeAction
                 ) {
                     // запуск анимации атаки
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
                     atake = true;
+                    this.unit.setAtackeAction(true);
                     // animation.stop();
                     setTimeout(() => {
                         this.unit.stopAnimation("atacke_fighter");

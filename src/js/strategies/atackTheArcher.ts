@@ -127,7 +127,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
 
         if (resCheck.free) {
             this.got2AttackePosition(enemie);
-            if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+            if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
+                this.unit.setAtackeAction(true);
                 res = this.tryAtakeArcher(resCheck, enemie);
             } else {
                 res.result = false;
@@ -147,20 +148,20 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 } else {
                     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                 }
-                if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                if (resCheck.free && !this.unit.atackeAction && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                    this.unit.setAtackeAction(true);
                     this.tryAtakeArcher(resCheck, enemie);
                 } else {
                     enemie = this.findNearestEnemies(this.unit);
                     maxX = Math.abs(enemie.person.x - this.unit.person.x);
                     maxY = Math.abs(enemie.person.y - this.unit.person.y);
-
                     if (maxY > maxX) {
                         resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
                     } else {
                         resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                     }
-
-                    if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                    if (resCheck.free && !this.unit.atackeAction && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                        this.unit.setAtackeAction(true);
                         this.tryAtakeArcher(resCheck, enemie);
                     }
                 }
@@ -169,6 +170,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             if (!this.unit.moveAction) {
                 this.got2AttackePosition(enemie);
             }
+
             maxX = Math.abs(enemie.person.x - this.unit.person.x);
             maxY = Math.abs(enemie.person.y - this.unit.person.y);
 
@@ -178,7 +180,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
             }
 
-            if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+            if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
+                this.unit.setAtackeAction(true);
                 this.tryAtakeArcher(resCheck, enemie);
             } else {
                 enemie = this.findNearestEnemies(this.unit);
@@ -191,7 +194,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                 }
 
-                if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
+                    this.unit.setAtackeAction(true);
                     this.tryAtakeArcher(resCheck, enemie);
                 }
             }
@@ -204,6 +208,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
 
             this.findPointAtackArcher(enemie);
             this.unit.setMoveAction(false);
+            this.unit.setAtackeAction(false);
             setTimeout(() => {
                 resolve("Promise");
             }, 520);
@@ -217,6 +222,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             }
             this.findPointAtackArcher(enemie, is_protect_strategy);
             this.unit.setMoveAction(false);
+            this.unit.setAtackeAction(false);
             setTimeout(() => {
                 resolve("Promise5");
             }, 320);

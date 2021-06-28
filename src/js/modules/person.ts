@@ -10,12 +10,14 @@ export class Person {
     interval_animation: any;
     animation: any[];
     domPerson: any;
+    atackeAction: boolean;
     image: any; // картинка персонажа
     constructor(person) {
         this.person = person;
         this.x = person.x;
         this.y = person.y;
         this.moveAction = false;
+        this.atackeAction = false;
         this.domPerson = undefined;
         this.animation = [];
         this.coordPrevPoint = {};
@@ -99,4 +101,8 @@ export class Person {
     setMoveAction(value) {
         this.moveAction = value;
     }
+    setAtackeAction(value) {
+        this.atackeAction = value;
+    }
+
 }

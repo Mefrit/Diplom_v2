@@ -1118,7 +1118,7 @@ export class DefaultMethodsStrategy {
                         this.moveAutoStepStupid(this.unit, enemie, "archer");
                     }
                 }
-                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
                     this.atakeArcher(enemie);
                 } else {
                     res.result = false;
@@ -1133,7 +1133,7 @@ export class DefaultMethodsStrategy {
                         this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
                     }
                 }
-                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
                     this.atakeArcher(enemie);
                 } else {
                     res.result = false;
@@ -1146,6 +1146,7 @@ export class DefaultMethodsStrategy {
         return res;
     }
     atakeArcher(enemie) {
+        this.unit.setAtackeAction(true);
         this.unit.stopAnimation("default_archer");
         this.unit.playAnimation("atacke_archer");
 
