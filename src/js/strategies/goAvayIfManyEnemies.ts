@@ -124,6 +124,8 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             this.unit.setAtackeAction(false);
             // console.log("nearest_friend", nearest_friend, enemie);
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise4");
             }, 320);
         });
@@ -161,9 +163,10 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             if (resCheck.free) {
                 this.tryAtakeArcher(resCheck, enemie);
             }
-            this.unit.setMoveAction(false);
-            this.unit.setAtackeAction(false);
+
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise4");
             }, 320);
         });
@@ -182,6 +185,8 @@ export class GoAwayIfManyEnemies extends DefaultMethodsStrategy {
             this.unit.setAtackeAction(false);
             // console.log("nearest_friend", nearest_friend);
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise4");
             }, 320);
         });

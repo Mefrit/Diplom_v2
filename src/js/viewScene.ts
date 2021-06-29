@@ -174,7 +174,7 @@ export class ViewScene {
         if (i == 3 && j == 0) {
             block.src = "images/block4.png";
         }
-        if (i == 4 && j == 1) {
+        if (i == 3 && j == 1) {
             block.src = "images/block4.png";
         }
         if (i == 8 && j == 4) {

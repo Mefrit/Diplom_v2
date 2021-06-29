@@ -69,8 +69,20 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 "fighter"
             );
         }
-        let res = this.checkFreeWay2Atack(enemie, this.unit, "x"),
-            coord;
+        let maxX = Math.abs(enemie.person.x - this.unit.person.x),
+            maxY = Math.abs(enemie.person.y - this.unit.person.y),
+            resCheck,
+            coord,
+            res: any = { result: false };
+        if (maxY > maxX) {
+            // console.log("Y");
+            res = this.checkFreeWay2Atack(enemie, this.unit, "y");
+        } else {
+            // console.log("X");
+            res = this.checkFreeWay2Atack(enemie, this.unit, "x");
+        }
+        // let res = this.checkFreeWay2Atack(enemie, this.unit, "x"),
+        //     coord;
 
         if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
@@ -87,10 +99,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         if (coord) {
             // return this.moveAutoStepStupid(this.unit, coord, "archer");
             // console.log("coord2", coord);
-            if (
-                this.getEnemyInField(coord, 2).length > 2 &&
-                this.getFriendsInField(coord, 2).length < 2
-            ) {
+            if (this.getEnemyInField(coord, 2).length > 2 && this.getFriendsInField(coord, 2).length < 2) {
                 let near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAICollection()),
                     obj2go = { x: near_friend.x, y: near_friend.y };
                 if (near_friend.x > 2) {
@@ -105,10 +114,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 // console.log("HERE STUPId");
                 return this.moveAutoStepStupid(this.unit, obj2go, "fighter");
             }
-            // if (this.getDistanceBetweenUnits(coord, this.unit) <= 1) {
-            //     return this.moveAutoStepStupid(this.unit, enemie, "archer");
-            // }
-            // console.log("coord", coord);
+
+            console.log("coord", coord);
             return this.moveAutoStepStupid(this.unit, coord, "stupid");
         } else {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");
@@ -120,15 +127,17 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             resCheck,
             res = { result: false };
         if (maxY > maxX) {
+            // console.log("Y");
             resCheck = this.checkFreeWay2Atack(enemie, this.unit, "y");
         } else {
+            // console.log("X");
             resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
         }
 
         if (resCheck.free) {
             this.got2AttackePosition(enemie);
+
             if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
-                this.unit.setAtackeAction(true);
                 res = this.tryAtakeArcher(resCheck, enemie);
             } else {
                 res.result = false;
@@ -160,7 +169,12 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                     } else {
                         resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                     }
-                    if (resCheck.free && !this.unit.atackeAction && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                    console.log("checkFreeWay2Atack", resCheck, !this.unit.atackeAction);
+                    if (
+                        resCheck.free &&
+                        !this.unit.atackeAction &&
+                        (enemie.x == this.unit.x || enemie.y == this.unit.y)
+                    ) {
                         this.unit.setAtackeAction(true);
                         this.tryAtakeArcher(resCheck, enemie);
                     }
@@ -179,9 +193,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             } else {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
             }
-
+            // console.log("HERE", resCheck);
             if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
-                this.unit.setAtackeAction(true);
                 this.tryAtakeArcher(resCheck, enemie);
             } else {
                 enemie = this.findNearestEnemies(this.unit);
@@ -195,7 +208,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 }
 
                 if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
-                    this.unit.setAtackeAction(true);
                     this.tryAtakeArcher(resCheck, enemie);
                 }
             }
@@ -207,9 +219,10 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             this.last_enemie = enemie;
 
             this.findPointAtackArcher(enemie);
-            this.unit.setMoveAction(false);
-            this.unit.setAtackeAction(false);
+
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise");
             }, 520);
         });
@@ -224,6 +237,8 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
             this.unit.setMoveAction(false);
             this.unit.setAtackeAction(false);
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise5");
             }, 320);
         });

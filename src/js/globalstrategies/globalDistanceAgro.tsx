@@ -202,23 +202,18 @@ export class DistanceAgro extends DefaultGlobalMethodsStrategy {
 
     }
     choseTurnUnits(ai_units) {
-        let friends, reverse = false, enemies;
+        let friends, reverse = false, nearest_friend, nearest_enemy;
         ai_units.forEach((element) => {
             if (this.isArchers(element)) {
                 friends = this.getFriendsInField(element, 2);
                 if (friends.length == 0) {
                     reverse = true;
                 } else {
-                    // friends.forEach(near_friend => {
-                    //     if (!this.isArchers(near_friend) && (near_friend.y == element.y)) {
-                    //         reverse = true;
-                    //     } else {
-                    //         // friends = this.getFriendsInField(element, 3);
-                    //         // if (friends.length == 0) {
-                    //         //     reverse = true;
-                    //         // }
-                    //     }
-                    // });
+                    nearest_enemy = this.findNearestEnemies(element);
+                    nearest_friend = this.getNearFriendsUnit(element, friends);
+                    if (this.getDistanceBetweenUnits(nearest_enemy, nearest_friend) < this.getDistanceBetweenUnits(element, nearest_friend)) {
+                        reverse = true;
+                    }
                 }
 
 

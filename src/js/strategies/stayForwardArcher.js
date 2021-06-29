@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.StayForwardArcher = void 0;
     var StayForwardArcher = (function (_super) {
         __extends(StayForwardArcher, _super);
         function StayForwardArcher(props) {
@@ -57,13 +58,14 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                     pos_security.near_archer = near_archer;
                     var res = _this.moveCarefully(_this.unit, pos_security, "securityArcher");
-                    if (res.findEnime == true) {
+                    if (res.findEnime == true && !_this.unit.atackeAction && !_this.unit.atackeAction) {
                         if (Math.abs(_this.unit.x - near_enemy.x) == 1) {
                             _this.unit.playAnimation("atacke_fighter");
                             setTimeout(function () {
                                 _this.unit.stopAnimation("atacke_fighter");
                                 _this.unit.playAnimation("default_fighter");
                             }, 750);
+                            _this.unit.setAtackeAction(true);
                             _this.view.contactPersonsView(near_enemy.domPerson, near_enemy.image, _this.unit.person.damage);
                             var checkArcherPosition = _this.checkArcherPosition(near_enemy);
                             if (checkArcherPosition.result && !_this.unit.moveAction) {
@@ -75,7 +77,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                 }
                 _this.unit.setMoveAction(false);
+                _this.unit.setAtackeAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise2");
                 }, 320);
             });

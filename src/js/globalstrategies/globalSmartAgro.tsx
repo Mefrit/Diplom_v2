@@ -144,7 +144,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
 
         let unit = cache_unit[index];
         let cache_enemies = [], best_enemie: any = {}, ChoosenStrategy;
-
+        console.log(cache_unit, index);
         best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
 
         if (!best_enemie) {
@@ -179,6 +179,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         });
 
         ai.atackeChosenUnit(cache_unit, best_enemie).then(() => {
+            console.log("END!!!!!!!!!!!");
             if (index < cache_unit.length - 1) {
                 this.startMove(cache_unit, index + 1);
             }

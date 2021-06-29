@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.AtackTheArcher = void 0;
     var AtackTheArcher = (function (_super) {
         __extends(AtackTheArcher, _super);
         function AtackTheArcher(props) {
@@ -66,7 +67,13 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             if (this.parent_strategy == "UndercoverArcherAttack") {
                 return this.moveAutoStepStupid(this.unit, this.getCoordForAtackeForrwarArcher(this.unit, enemie, "StayForwardArcher"), "fighter");
             }
-            var res = this.checkFreeWay2Atack(enemie, this.unit, "x"), coord;
+            var maxX = Math.abs(enemie.person.x - this.unit.person.x), maxY = Math.abs(enemie.person.y - this.unit.person.y), resCheck, coord, res = { result: false };
+            if (maxY > maxX) {
+                res = this.checkFreeWay2Atack(enemie, this.unit, "y");
+            }
+            else {
+                res = this.checkFreeWay2Atack(enemie, this.unit, "x");
+            }
             if (this.getDistanceBetweenUnits(enemie, this.unit) > 6) {
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
@@ -78,8 +85,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
             }
             if (coord) {
-                if (this.getEnemyInField(coord, 2).length > 2 &&
-                    this.getFriendsInField(coord, 2).length < 2) {
+                if (this.getEnemyInField(coord, 2).length > 2 && this.getFriendsInField(coord, 2).length < 2) {
                     var near_friend = this.getNearFriendsUnit(this.unit, this.unit_collection.getAICollection()), obj2go = { x: near_friend.x, y: near_friend.y };
                     if (near_friend.x > 2) {
                         obj2go.x = near_friend.x - 2;
@@ -93,6 +99,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     }
                     return this.moveAutoStepStupid(this.unit, obj2go, "fighter");
                 }
+                console.log("coord", coord);
                 return this.moveAutoStepStupid(this.unit, coord, "stupid");
             }
             else {
@@ -110,7 +117,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             }
             if (resCheck.free) {
                 this.got2AttackePosition(enemie);
-                if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
                     res = this.tryAtakeArcher(resCheck, enemie);
                 }
                 else {
@@ -128,7 +135,8 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     else {
                         resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                     }
-                    if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                    if (resCheck.free && !this.unit.atackeAction && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                        this.unit.setAtackeAction(true);
                         this.tryAtakeArcher(resCheck, enemie);
                     }
                     else {
@@ -141,7 +149,11 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                         else {
                             resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                         }
-                        if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                        console.log("checkFreeWay2Atack", resCheck, !this.unit.atackeAction);
+                        if (resCheck.free &&
+                            !this.unit.atackeAction &&
+                            (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                            this.unit.setAtackeAction(true);
                             this.tryAtakeArcher(resCheck, enemie);
                         }
                     }
@@ -159,7 +171,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 else {
                     resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                 }
-                if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
                     this.tryAtakeArcher(resCheck, enemie);
                 }
                 else {
@@ -172,7 +184,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     else {
                         resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
                     }
-                    if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y)) {
+                    if (resCheck.free && (enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
                         this.tryAtakeArcher(resCheck, enemie);
                     }
                 }
@@ -184,8 +196,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 var enemie = _this.findNearestEnemies(_this.unit);
                 _this.last_enemie = enemie;
                 _this.findPointAtackArcher(enemie);
-                _this.unit.setMoveAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise");
                 }, 520);
             });
@@ -200,7 +213,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
                 _this.findPointAtackArcher(enemie, is_protect_strategy);
                 _this.unit.setMoveAction(false);
+                _this.unit.setAtackeAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise5");
                 }, 320);
             });

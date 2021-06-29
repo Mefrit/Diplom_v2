@@ -31,7 +31,11 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 near_enemy = this.findNearestEnemies(this.unit);
             }
 
-            if (Math.abs(this.unit.x - near_enemy.x) <= 1 && !this.unit.atackeAction && Math.abs(this.unit.y - near_enemy.y) <= 1) {
+            if (
+                Math.abs(this.unit.x - near_enemy.x) <= 1 &&
+                !this.unit.atackeAction &&
+                Math.abs(this.unit.y - near_enemy.y) <= 1
+            ) {
                 // запуск анимации атаки
                 this.unit.stopAnimation("default_fighter");
                 this.unit.playAnimation("atacke_fighter");
@@ -124,18 +128,33 @@ export class SecurityArcher extends DefaultMethodsStrategy {
             } else {
                 pos_security.y = near_archer.y - 1;
             }
-
+            ai_archers.forEach((unit) => {
+                if (unit.person.id != near_archer.person.id) {
+                    if (unit.y == this.unit.y || unit.x == this.unit.x) {
+                        if (unit.y < 6 && unit.y + 1 != near_archer.y) {
+                            pos_security.y = unit.y + 1;
+                        } else {
+                            pos_security.y = unit.y - 1;
+                        }
+                    }
+                }
+            });
             if (typeof near_enemy == "undefined" || atake) {
                 near_enemy = this.findNearestEnemies(this.unit);
             }
             pos_security.near_archer = near_archer;
-            // console.log("pos_/security", pos_security, near_archer.domPerson);
+            console.log("pos_/security", pos_security, near_archer.domPerson, this.unit.domPerson);
             var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
 
             //атака , если лучник не далеко
             var checkArcherPosition = this.checkArcherPosition(near_enemy);
 
-            if (Math.abs(this.unit.x - near_enemy.x) <= 1 && Math.abs(this.unit.y - near_enemy.y) <= 1 && !atake && !this.unit.atackeAction) {
+            if (
+                Math.abs(this.unit.x - near_enemy.x) <= 1 &&
+                Math.abs(this.unit.y - near_enemy.y) <= 1 &&
+                !atake &&
+                !this.unit.atackeAction
+            ) {
                 // запуск анимации атаки
                 this.unit.stopAnimation("default_fighter");
                 this.unit.playAnimation("atacke_fighter");
@@ -153,8 +172,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 if (
                     (Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
                         Math.abs(this.unit.y - local_near_enemy.y) <= 1) ||
-                    this.getDistanceBetweenUnits(this.unit, local_near_enemy) <= 1.5
-                    && !this.unit.atackeAction
+                    (this.getDistanceBetweenUnits(this.unit, local_near_enemy) <= 1.5 && !this.unit.atackeAction)
                 ) {
                     // запуск анимации атаки
                     this.unit.stopAnimation("default_fighter");
@@ -181,8 +199,10 @@ export class SecurityArcher extends DefaultMethodsStrategy {
             }
             // }
 
-            if (this.checkFreeCoordWalls(this.unit_collection.getAICollection(), pos_security) &&
-                this.getFriendsInField({ x: near_archer.x + 1, y: pos_security.y }, 2).length > 2) {
+            if (
+                this.checkFreeCoordWalls(this.unit_collection.getAICollection(), pos_security) &&
+                this.getFriendsInField({ x: near_archer.x + 1, y: pos_security.y }, 2).length > 2
+            ) {
                 pos_security.x = near_archer.x - 1;
             } else {
                 pos_security.x = near_archer.x + 1;

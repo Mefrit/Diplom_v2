@@ -67,7 +67,6 @@ export class DefaultMethodsStrategy {
         } else {
             return 7;
         }
-
     }
     deleteBusyEnemies(cache_enemies, units_purpose) {
         let find = false;
@@ -418,7 +417,7 @@ export class DefaultMethodsStrategy {
     checkUnitNotStatyOnArhcersAtacke(unit, units_purpose, cache_archers) {
         // првоеряет по хорошему, что юнит не стоит на позиции атаки лучника
         let result = false;
-        units_purpose.forEach((element) => { });
+        units_purpose.forEach((element) => {});
     }
     // автоматический путь к задангным координатам без учета возможных опасностей
     moveAutoStepStupid = (unit, obj2go, type = "fighter") => {
@@ -555,7 +554,7 @@ export class DefaultMethodsStrategy {
                 bestPoint = element;
             }
         });
-
+        console.log("bestPoint", bestPoint);
         if (frontier.length > 0) {
             this.moveTo(unit, bestPoint.next);
         }
@@ -589,7 +588,16 @@ export class DefaultMethodsStrategy {
                     // if (points[i].y < 0 || points[i].y > 8) {
                     //     res.free = false;
                     // }
+                    // console.log(
+                    //     unit.domPerson,
+                    //     unit.x,
+                    //     points[i].x,
+                    //     "!!!!!!!!!!!!!!!!!",
+                    //     unit.x == points[i].x,
+                    //     points[i].y == unit.y
+                    // );
                     if (unit.x == points[i].x && points[i].y == unit.y && curent_unit.hasOwnProperty("person")) {
+                        console.log(unit);
                         if (unit.person.id != curent_unit.person.id) {
                             res.free = false;
                         } else {
@@ -1023,7 +1031,7 @@ export class DefaultMethodsStrategy {
     // }
     getEnemyInField(coord_unit, field_step) {
         return this.unit_collection.getUserCollection().filter((elem) => {
-            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
+            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
                 return elem;
             }
         });
@@ -1031,7 +1039,7 @@ export class DefaultMethodsStrategy {
     getFriendsInField(coord_unit, field_step) {
         let real_unit = coord_unit.hasOwnProperty("perosn") ? true : false;
         return this.unit_collection.getAICollection().filter((elem) => {
-            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
+            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
                 if (real_unit) {
                     if (coord_unit.person.id != elem.person.id) return elem;
                 } else {
@@ -1119,6 +1127,7 @@ export class DefaultMethodsStrategy {
                     }
                 }
                 if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
+                    this.unit.setAtackeAction(true);
                     this.atakeArcher(enemie);
                 } else {
                     res.result = false;
@@ -1134,6 +1143,7 @@ export class DefaultMethodsStrategy {
                     }
                 }
                 if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
+                    this.unit.setAtackeAction(true);
                     this.atakeArcher(enemie);
                 } else {
                     res.result = false;
@@ -1159,9 +1169,9 @@ export class DefaultMethodsStrategy {
     }
     getNearFriendsUnit(unit, cacheUnits) {
         var coord_min = {
-            x: cacheUnits[0].x,
-            y: cacheUnits[0].y,
-        },
+                x: cacheUnits[0].x,
+                y: cacheUnits[0].y,
+            },
             hypotenuse_min,
             hypotenuse_elem;
         //FIX ME если придется добавлять препятствие, то этот кусок кода нужно бюудет переписывать
@@ -1194,22 +1204,22 @@ export class DefaultMethodsStrategy {
             return res;
         }
         if ((enemie.x == unit.x || enemie.y == unit.y) && this.getDistanceBetweenUnits(unit, enemie) <= 1) {
-
             return { free: true, arrayPoit: [], direction: direction, runAway: false };
         }
         for (let i = 1; i <= coefI - 1; i++) {
             tmp = direction == "x" ? { x: enemie.x - sgn * i, y: enemie.y } : { x: enemie.x, y: enemie.y - sgn * i };
             arrayPoit.push(tmp);
         }
-        tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
 
+        tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
+        console.log("arrayPoit tmp", arrayPoit, tmp, unit.domPerson);
         res.free = tmp.free;
         res.runAway = tmp.runAway;
         if (tmp.deleteLastPoint) {
             arrayPoit.splice(arrayPoit.length - 1, 1);
         }
         res.arrayPoit = arrayPoit;
-
+        console.log("checkFreeWay2Atack return", res);
         return res;
     }
 }

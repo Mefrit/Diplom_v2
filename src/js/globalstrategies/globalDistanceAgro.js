@@ -21,6 +21,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DistanceAgro = void 0;
     var DistanceAgro = (function (_super) {
         __extends(DistanceAgro, _super);
         function DistanceAgro(props) {
@@ -108,7 +109,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
         };
         DistanceAgro.prototype.choseTurnUnits = function (ai_units) {
             var _this = this;
-            var friends, reverse = false, enemies;
+            var friends, reverse = false, nearest_friend, nearest_enemy;
             ai_units.forEach(function (element) {
                 if (_this.isArchers(element)) {
                     friends = _this.getFriendsInField(element, 2);
@@ -116,6 +117,11 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                         reverse = true;
                     }
                     else {
+                        nearest_enemy = _this.findNearestEnemies(element);
+                        nearest_friend = _this.getNearFriendsUnit(element, friends);
+                        if (_this.getDistanceBetweenUnits(nearest_enemy, nearest_friend) < _this.getDistanceBetweenUnits(element, nearest_friend)) {
+                            reverse = true;
+                        }
                     }
                 }
             });

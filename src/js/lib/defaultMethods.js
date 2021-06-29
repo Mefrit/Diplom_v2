@@ -8,6 +8,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.DefaultMethodsStrategy = void 0;
     var DefaultMethodsStrategy = (function () {
         function DefaultMethodsStrategy(props) {
             var _this = this;
@@ -116,6 +117,7 @@ define(["require", "exports"], function (require, exports) {
                         bestPoint = element;
                     }
                 });
+                console.log("bestPoint", bestPoint);
                 if (frontier.length > 0) {
                     _this.moveTo(unit, bestPoint.next);
                 }
@@ -476,6 +478,7 @@ define(["require", "exports"], function (require, exports) {
                 if (!unit.isNotDied()) {
                     for (var i = 0; i < points.length; i++) {
                         if (unit.x == points[i].x && points[i].y == unit.y && curent_unit.hasOwnProperty("person")) {
+                            console.log(unit);
                             if (unit.person.id != curent_unit.person.id) {
                                 res.free = false;
                             }
@@ -722,7 +725,7 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {
             var _this = this;
             return this.unit_collection.getUserCollection().filter(function (elem) {
-                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
+                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
                     return elem;
                 }
             });
@@ -731,7 +734,7 @@ define(["require", "exports"], function (require, exports) {
             var _this = this;
             var real_unit = coord_unit.hasOwnProperty("perosn") ? true : false;
             return this.unit_collection.getAICollection().filter(function (elem) {
-                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step + 0.95) {
+                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
                     if (real_unit) {
                         if (coord_unit.person.id != elem.person.id)
                             return elem;
@@ -815,7 +818,8 @@ define(["require", "exports"], function (require, exports) {
                             this.moveAutoStepStupid(this.unit, enemie, "archer");
                         }
                     }
-                    if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                    if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
+                        this.unit.setAtackeAction(true);
                         this.atakeArcher(enemie);
                     }
                     else {
@@ -832,7 +836,8 @@ define(["require", "exports"], function (require, exports) {
                             this.moveCarefully(this.unit, { x: enemie.person.x, y: 0 }, "fighter", {});
                         }
                     }
-                    if (enemie.x == this.unit.x || enemie.y == this.unit.y) {
+                    if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {
+                        this.unit.setAtackeAction(true);
                         this.atakeArcher(enemie);
                     }
                     else {
@@ -847,6 +852,7 @@ define(["require", "exports"], function (require, exports) {
         };
         DefaultMethodsStrategy.prototype.atakeArcher = function (enemie) {
             var _this = this;
+            this.unit.setAtackeAction(true);
             this.unit.stopAnimation("default_archer");
             this.unit.playAnimation("atacke_archer");
             setTimeout(function () {
@@ -892,12 +898,14 @@ define(["require", "exports"], function (require, exports) {
                 arrayPoit.push(tmp);
             }
             tmp = this.checkFreePointsArcher(arrayPoit, "archer", unit);
+            console.log("arrayPoit tmp", arrayPoit, tmp, unit.domPerson);
             res.free = tmp.free;
             res.runAway = tmp.runAway;
             if (tmp.deleteLastPoint) {
                 arrayPoit.splice(arrayPoit.length - 1, 1);
             }
             res.arrayPoit = arrayPoit;
+            console.log("checkFreeWay2Atack return", res);
             return res;
         };
         return DefaultMethodsStrategy;

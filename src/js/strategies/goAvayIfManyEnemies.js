@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.GoAwayIfManyEnemies = void 0;
     var GoAwayIfManyEnemies = (function (_super) {
         __extends(GoAwayIfManyEnemies, _super);
         function GoAwayIfManyEnemies(props) {
@@ -107,7 +108,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     _this.go2friendsSafety(nearest_friend, false);
                 }
                 _this.unit.setMoveAction(false);
+                _this.unit.setAtackeAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise4");
                 }, 320);
             });
@@ -141,8 +145,9 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 if (resCheck.free) {
                     _this.tryAtakeArcher(resCheck, enemie);
                 }
-                _this.unit.setMoveAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise4");
                 }, 320);
             });
@@ -158,7 +163,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                     _this.go2friendsSafety(nearest_friend, false);
                 }
                 _this.unit.setMoveAction(false);
+                _this.unit.setAtackeAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise4");
                 }, 320);
             });

@@ -59,7 +59,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             y: 4,
             evil: true,
             class: "archer",
-            damage: 12,
+            damage: 11,
             health: 67,
             id: 6,
         },
@@ -70,7 +70,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             evil: true,
             class: "archer",
             damage: 12,
-            health: 67,
+            health: 63,
             id: 5,
         },
         {
@@ -79,8 +79,8 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             y: 2,
             evil: true,
             class: "fighter",
-            damage: 16,
-            health: 102,
+            damage: 15,
+            health: 97,
             id: 4,
         },
         {
@@ -90,7 +90,7 @@ define(["require", "exports", "./js/loader", "./js/modules/ai", "./js/modules/sc
             evil: true,
             class: "fighter",
             damage: 16,
-            health: 102,
+            health: 97,
             id: 8,
         },
         {

@@ -1,12 +1,14 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Person = void 0;
     var Person = (function () {
         function Person(person) {
             this.person = person;
             this.x = person.x;
             this.y = person.y;
             this.moveAction = false;
+            this.atackeAction = false;
             this.domPerson = undefined;
             this.animation = [];
             this.coordPrevPoint = {};
@@ -87,6 +89,9 @@ define(["require", "exports"], function (require, exports) {
         };
         Person.prototype.setMoveAction = function (value) {
             this.moveAction = value;
+        };
+        Person.prototype.setAtackeAction = function (value) {
+            this.atackeAction = value;
         };
         return Person;
     }());

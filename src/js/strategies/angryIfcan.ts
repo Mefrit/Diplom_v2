@@ -78,7 +78,11 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                     this.moveCarefully(this.unit, checkArcherPosition.point, "fighter", cache);
                 }
             }
+            this.unit.setMoveAction(false);
+            this.unit.setAtackeAction(false);
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise3");
             }, 320);
         });
@@ -92,18 +96,25 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 attakedEnemie,
                 checkArcherPosition = { result: false, point: {} },
                 archers = this.unit_collection.getAiArchers();
+            setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
+                resolve("Promise3");
+            }, 540);
             coord = { x: enemie.person.x, y: enemie.person.y };
+            // console.log("atackeChosenUnit ==>  !this.unit.atackeAction", !this.unit.atackeAction);
             if (this.checkNearArchersPosition()) {
                 checkArcherPosition = this.checkArcherPosition(enemie);
             }
             if (enemie.isNotDied()) {
                 enemie = this.findNearestEnemies(this.unit);
             }
+            // console.log("enemie.domPerson", enemie.domPerson, this.unit.domPerson);
             if (
                 archers.length != 0 &&
                 checkArcherPosition.result &&
                 !this.unit.moveAction &&
-                this.getDistanceBetweenUnits(this.unit, enemie) < 4
+                this.getDistanceBetweenUnits(this.unit, enemie) < 3
             ) {
                 // this.moveTo(this.unit, checkArcherPosition.point);
                 if (this.getDistanceBetweenUnits(checkArcherPosition.point, this.unit) <= 2.9) {
@@ -128,7 +139,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                         this.unit.stopAnimation("default_fighter");
                         this.unit.playAnimation("atacke_fighter");
 
-                        this.unit.setAtackeAction(true);      // animation.stop();
+                        this.unit.setAtackeAction(true); // animation.stop();
                         setTimeout(() => {
                             this.unit.stopAnimation("atacke_fighter");
                             this.unit.playAnimation("default_fighter");
@@ -140,9 +151,14 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
 
                 // запуск анимации атаки
             } else {
-                // console.log("moveCarefully", enemie, this.unit);
                 res = this.moveCarefully(this.unit, enemie, "fighter", cache_unit);
-                if (res.findEnime == true && this.getDistanceBetweenUnits(res.enemie, this.unit) <= 1.5 && !this.unit.atackeAction) {
+                // console.log("moveCarefully!!!!!!", enemie, this.unit, res, "!!!!!!!!!,", !this.unit.atackeAction);
+
+                if (
+                    res.findEnime == true &&
+                    this.getDistanceBetweenUnits(res.enemie, this.unit) <= 1.6 &&
+                    !this.unit.atackeAction
+                ) {
                     // attakedEnemie = res.enemie;
                     // запуск анимации атаки
                     this.unit.setAtackeAction(true);
@@ -157,8 +173,21 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                     this.view.contactPersonsView(res.enemie.domPerson, res.enemie.image, this.unit.person.damage);
                     return;
                 } else {
-                    enemie = this.findNearestEnemies(this.unit);
-                    if (this.getDistanceBetweenUnits(enemie, this.unit) <= 1.5 && !this.unit.atackeAction) {
+                    // enemie = this.findNearestEnemies(this.unit);
+                    let enemies = this.getEnemyInField(this.unit, 2);
+                    if (enemies.length != 0) {
+                        enemie = enemies[0];
+                    } else {
+                        enemie = this.findNearestEnemies(this.unit);
+                    }
+                    // console.log(
+                    //     ":!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+                    //     enemie,
+                    //     enemies,
+                    //     !this.unit.atackeAction,
+                    //     this.getDistanceBetweenUnits(enemie, this.unit)
+                    // );
+                    if (this.getDistanceBetweenUnits(enemie, this.unit) <= 1.6 && !this.unit.atackeAction) {
                         // attakedEnemie = res.enemie;
                         // запуск анимации атаки
                         this.unit.setAtackeAction(true);
@@ -177,9 +206,6 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
             }
             this.unit.setMoveAction(false);
             this.unit.setAtackeAction(false);
-            setTimeout(() => {
-                resolve("Promise3");
-            }, 300);
         });
     }
     findEnemieForAtake(enemie) {

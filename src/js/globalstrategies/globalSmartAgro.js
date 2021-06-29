@@ -21,6 +21,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strategies/cacheUnitSingleStrategy"], function (require, exports, defaultGlobalStrategiesMethods_1, cacheUnitSingleStrategy_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SmartAgro = void 0;
     var SmartAgro = (function (_super) {
         __extends(SmartAgro, _super);
         function SmartAgro(props) {
@@ -147,6 +148,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
             var _this = this;
             var unit = cache_unit[index];
             var cache_enemies = [], best_enemie = {}, ChoosenStrategy;
+            console.log(cache_unit, index);
             best_enemie = this.getEnemieFromCachePurpose(this.global_cache.units_purpose, unit.person.id);
             if (!best_enemie) {
                 cache_enemies = this.getEnemyInField({
@@ -177,6 +179,7 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 global_cache: this.global_cache
             });
             ai.atackeChosenUnit(cache_unit, best_enemie).then(function () {
+                console.log("END!!!!!!!!!!!");
                 if (index < cache_unit.length - 1) {
                     _this.startMove(cache_unit, index + 1);
                 }

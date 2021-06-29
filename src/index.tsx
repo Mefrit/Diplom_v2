@@ -83,7 +83,7 @@ let arrPersons = [
         y: 3,
         evil: true,
         class: "archer",
-        damage: 11,
+        damage: 12,
         health: 63,
         id: 5,
     },

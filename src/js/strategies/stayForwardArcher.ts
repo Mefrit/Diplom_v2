@@ -92,6 +92,8 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
             this.unit.setMoveAction(false);
             this.unit.setAtackeAction(false);
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise2");
             }, 320);
         });

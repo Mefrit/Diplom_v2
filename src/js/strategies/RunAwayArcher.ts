@@ -194,6 +194,8 @@ export class RunAwayArcher extends DefaultMethodsStrategy {
             this.unit.setMoveAction(false);
             this.unit.setAtackeAction(false);
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise");
             }, 520);
         });
@@ -212,6 +214,8 @@ export class RunAwayArcher extends DefaultMethodsStrategy {
             this.unit.setMoveAction(false);
             this.unit.setAtackeAction(false);
             setTimeout(() => {
+                this.unit.setMoveAction(false);
+                this.unit.setAtackeAction(false);
                 resolve("Promise5");
             }, 320);
         });

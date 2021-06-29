@@ -14,6 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "../lib/defaultMethods"], function (require, exports, defaultMethods_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.RunAwayArcher = void 0;
     var RunAwayArcher = (function (_super) {
         __extends(RunAwayArcher, _super);
         function RunAwayArcher(props) {
@@ -181,7 +182,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 _this.last_enemie = enemie;
                 _this.findPointAtackArcher(enemie);
                 _this.unit.setMoveAction(false);
+                _this.unit.setAtackeAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise");
                 }, 520);
             });
@@ -194,7 +198,10 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
                 }
                 _this.runAwayArcher(enemie);
                 _this.unit.setMoveAction(false);
+                _this.unit.setAtackeAction(false);
                 setTimeout(function () {
+                    _this.unit.setMoveAction(false);
+                    _this.unit.setAtackeAction(false);
                     resolve("Promise5");
                 }, 320);
             });
