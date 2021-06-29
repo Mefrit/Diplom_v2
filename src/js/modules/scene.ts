@@ -111,7 +111,6 @@ export class Scene {
                     this.checkFreeCoordWalls(this.water_blocks, coord) ||
                     !this.person_collection.checkFreeCoord(coord)
                 ) {
-
                     alert("Перемещение на данную позицию невозможно.");
                 } else {
                     // console.log("checkFreeCoord", this.person_collection.checkFreeCoord(elem), elem);
@@ -121,7 +120,6 @@ export class Scene {
                         if (this.checkUnitAction(this.cache_moved_units, elem)) {
                             alert("На текущем ходу вы уже переместились.");
                         } else {
-
                             this.cache_moved_units.push(elem);
                             elem.setCoord(coord.x, coord.y);
                             this.canvas.style.left = parseInt(posX.split("px")[0]) + 18 + "px";
@@ -193,7 +191,7 @@ export class Scene {
             posY += 120;
         }
     }
-    setAIperson() { }
+    setAIperson() {}
     getDistanceBetweenUnits(unit1, unit2) {
         // }
         let tmp_x, tmp_y;
@@ -226,7 +224,7 @@ export class Scene {
         this.loadDragon();
 
         this.loader.onReady(() => {
-            document.getElementById('icon_loader').style.display = "none";
+            document.getElementById("icon_loader").style.display = "none";
             this.config_skins.forEach((skin) => {
                 skin.children.forEach((elem) => {
                     // this.loader.loadJSON(elem.src_json);
@@ -352,7 +350,7 @@ export class Scene {
                 enemy = this.person_collection.getPersonById(id_enemy)[0];
             // console.log("contactPersons", unit, enemy, id_enemy);
 
-            if (this.getDistanceBetweenUnits(unit, enemy) > 2 && unit.person.class == "fighter") {
+            if (this.getDistanceBetweenUnits(unit, enemy) >= 2 && unit.person.class == "fighter") {
                 alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
                 return;
             }
@@ -407,5 +405,5 @@ export class Scene {
 
         this.view.showAvailabeMovies(this.canvas);
     };
-    renderAiPerson() { }
+    renderAiPerson() {}
 }

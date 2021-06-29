@@ -115,6 +115,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
             else {
                 resCheck = this.checkFreeWay2Atack(enemie, this.unit, "x");
             }
+            console.log(" !this.unit.atackeAction", !this.unit.atackeAction);
             if (resCheck.free) {
                 this.got2AttackePosition(enemie);
                 if ((enemie.x == this.unit.x || enemie.y == this.unit.y) && !this.unit.atackeAction) {

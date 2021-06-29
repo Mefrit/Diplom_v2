@@ -554,7 +554,7 @@ export class DefaultMethodsStrategy {
                 bestPoint = element;
             }
         });
-        console.log("bestPoint", bestPoint);
+
         if (frontier.length > 0) {
             this.moveTo(unit, bestPoint.next);
         }
@@ -887,6 +887,7 @@ export class DefaultMethodsStrategy {
             max = 0,
             distance,
             water_blocks = this.scene.get("water_blocks");
+
         // console.log("\ngetPointNearEnemy", cache);
         if (cache.length == 0 || !cache) {
             if (enemy.x > 4) {
@@ -1031,8 +1032,10 @@ export class DefaultMethodsStrategy {
     // }
     getEnemyInField(coord_unit, field_step) {
         return this.unit_collection.getUserCollection().filter((elem) => {
-            if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
-                return elem;
+            if (elem) {
+                if (this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
+                    return elem;
+                }
             }
         });
     }
@@ -1219,7 +1222,7 @@ export class DefaultMethodsStrategy {
             arrayPoit.splice(arrayPoit.length - 1, 1);
         }
         res.arrayPoit = arrayPoit;
-        console.log("checkFreeWay2Atack return", res);
+        console.log("checkFreeWay2Atack return", res, enemie.domPerson);
         return res;
     }
 }

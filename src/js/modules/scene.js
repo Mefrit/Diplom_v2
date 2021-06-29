@@ -72,7 +72,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
                 var canvas_enemy = event.target, img = _this.loader.get(event.target.getAttribute("data-image"));
                 if (typeof _this.canvas != "undefined") {
                     var id_person = parseInt(_this.canvas.getAttribute("data-id")), id_enemy = parseInt(canvas_enemy.getAttribute("data-id")), unit_1 = _this.person_collection.getPersonById(id_person)[0], enemy = _this.person_collection.getPersonById(id_enemy)[0];
-                    if (_this.getDistanceBetweenUnits(unit_1, enemy) > 2 && unit_1.person.class == "fighter") {
+                    if (_this.getDistanceBetweenUnits(unit_1, enemy) >= 2 && unit_1.person.class == "fighter") {
                         alert("Бойцы ближнего боя могут атаковать только по прямойв радиусе 2х клеток");
                         return;
                     }
@@ -230,7 +230,7 @@ define(["require", "exports", "../viewScene", "./person_collection", "../lib/dra
             this.loader.load(this.person_collection);
             this.loadDragon();
             this.loader.onReady(function () {
-                document.getElementById('icon_loader').style.display = "none";
+                document.getElementById("icon_loader").style.display = "none";
                 _this.config_skins.forEach(function (skin) {
                     skin.children.forEach(function (elem) {
                         tmp.cahce_image = [];

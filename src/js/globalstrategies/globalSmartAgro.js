@@ -179,7 +179,6 @@ define(["require", "exports", "../lib/defaultGlobalStrategiesMethods", "../strat
                 global_cache: this.global_cache
             });
             ai.atackeChosenUnit(cache_unit, best_enemie).then(function () {
-                console.log("END!!!!!!!!!!!");
                 if (index < cache_unit.length - 1) {
                     _this.startMove(cache_unit, index + 1);
                 }

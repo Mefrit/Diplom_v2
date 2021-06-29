@@ -124,6 +124,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                 }
                 if (this.getDistanceBetweenUnits(this.unit, enemie) <= 1.5 && !this.unit.atackeAction) {
                     this.unit.setAtackeAction(true);
+
                     this.unit.stopAnimation("default_fighter");
                     this.unit.playAnimation("atacke_fighter");
                     setTimeout(() => {
@@ -140,6 +141,7 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
                         this.unit.playAnimation("atacke_fighter");
 
                         this.unit.setAtackeAction(true); // animation.stop();
+
                         setTimeout(() => {
                             this.unit.stopAnimation("atacke_fighter");
                             this.unit.playAnimation("default_fighter");

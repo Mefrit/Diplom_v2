@@ -104,5 +104,4 @@ export class Person {
     setAtackeAction(value) {
         this.atackeAction = value;
     }
-
 }

@@ -18,14 +18,14 @@ export class Collection {
     }
     getAICollection() {
         return this.collection.filter((element) => {
-            if (element.person.evil && element.person.health > 10) {
+            if (element.person.evil && element.person.health > 12) {
                 return element;
             }
         });
     }
     getUserCollection() {
         return this.collection.filter((element) => {
-            if (!element.person.evil && element.person.health > 10) {
+            if (!element.person.evil && element.person.health > 12) {
                 return element;
             }
         });

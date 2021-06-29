@@ -56,6 +56,7 @@ define(["require", "exports", "../lib/defaultMethods"], function (require, expor
         };
         RunAwayArcher.prototype.tryAtakeArcher = function (resCheck, enemie) {
             var pointPosition, xLineCondition, yLineCondition, res = { pointPosition: [], result: true };
+            F;
             if (resCheck.arrayPoit.length > 0) {
                 pointPosition = resCheck.arrayPoit[resCheck.arrayPoit.length - 1];
                 res.pointPosition = pointPosition;

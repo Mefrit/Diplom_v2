@@ -179,7 +179,7 @@ export class SmartAgro extends DefaultGlobalMethodsStrategy {
         });
 
         ai.atackeChosenUnit(cache_unit, best_enemie).then(() => {
-            console.log("END!!!!!!!!!!!");
+
             if (index < cache_unit.length - 1) {
                 this.startMove(cache_unit, index + 1);
             }

@@ -143,7 +143,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 near_enemy = this.findNearestEnemies(this.unit);
             }
             pos_security.near_archer = near_archer;
-            console.log("pos_/security", pos_security, near_archer.domPerson, this.unit.domPerson);
+
             var res = this.moveCarefully(this.unit, pos_security, "securityArcher");
 
             //атака , если лучник не далеко
@@ -172,23 +172,25 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 if (
                     (Math.abs(this.unit.x - local_near_enemy.x) <= 1 &&
                         Math.abs(this.unit.y - local_near_enemy.y) <= 1) ||
-                    (this.getDistanceBetweenUnits(this.unit, local_near_enemy) <= 1.5 && !this.unit.atackeAction)
+                    this.getDistanceBetweenUnits(this.unit, local_near_enemy) <= 1.5
                 ) {
+                    if (!this.unit.atackeAction) {
+                        this.unit.stopAnimation("default_fighter");
+                        this.unit.playAnimation("atacke_fighter");
+                        atake = true;
+                        this.unit.setAtackeAction(true);
+                        // animation.stop();
+                        setTimeout(() => {
+                            this.unit.stopAnimation("atacke_fighter");
+                            this.unit.playAnimation("default_fighter");
+                        }, 750);
+                        this.view.contactPersonsView(
+                            local_near_enemy.domPerson,
+                            local_near_enemy.image,
+                            this.unit.person.damage
+                        );
+                    }
                     // запуск анимации атаки
-                    this.unit.stopAnimation("default_fighter");
-                    this.unit.playAnimation("atacke_fighter");
-                    atake = true;
-                    this.unit.setAtackeAction(true);
-                    // animation.stop();
-                    setTimeout(() => {
-                        this.unit.stopAnimation("atacke_fighter");
-                        this.unit.playAnimation("default_fighter");
-                    }, 750);
-                    this.view.contactPersonsView(
-                        local_near_enemy.domPerson,
-                        local_near_enemy.image,
-                        this.unit.person.damage
-                    );
 
                     // только если олучник стреляет сделать то бишь на позиции
                 }

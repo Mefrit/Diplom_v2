@@ -54,6 +54,7 @@ export class RunAwayArcher extends DefaultMethodsStrategy {
             xLineCondition,
             yLineCondition,
             res = { pointPosition: [], result: true };
+        F;
         if (resCheck.arrayPoit.length > 0) {
             pointPosition = resCheck.arrayPoit[resCheck.arrayPoit.length - 1];
             res.pointPosition = pointPosition;

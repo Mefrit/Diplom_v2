@@ -26,7 +26,6 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
         DefaultGlobalMethodsStrategy.prototype.getBestEnemie = function (cache_enemies, unit) {
             var _this = this;
             var best_enemie = cache_enemies[0], distance_best, tmp, have_best_choise = false;
-            console.log(cache_enemies);
             if (cache_enemies.length > 0) {
                 distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
             }
@@ -37,7 +36,6 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
             cache_enemies.forEach(function (elem) {
                 tmp = Math.round(_this.getDistanceBetweenUnits(elem, unit));
                 if (!have_best_choise) {
-                    console.log(distance_best, tmp, tmp <= distance_best);
                     if (tmp <= distance_best) {
                         if ((best_enemie.x != elem.x || best_enemie.y != elem.y) &&
                             _this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length < 4) {
@@ -56,7 +54,6 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                                 }
                             }
                             else {
-                                console.log("HEREEE");
                                 best_enemie = elem;
                                 distance_best = tmp;
                             }
@@ -173,7 +170,6 @@ define(["require", "exports", "./defaultMethods"], function (require, exports, d
                     }
                 }
             });
-            console.log("best_enemie", best_enemie.domPerson, unit.domPerson);
             return best_enemie;
         };
         DefaultGlobalMethodsStrategy.prototype.deleteEqualEnemyFromCache = function (cache_enemies, units_purpose) {

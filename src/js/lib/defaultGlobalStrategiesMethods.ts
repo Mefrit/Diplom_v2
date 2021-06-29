@@ -12,7 +12,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
             distance_best,
             tmp,
             have_best_choise = false;
-        console.log(cache_enemies);
+        // console.log(cache_enemies);
         if (cache_enemies.length > 0) {
             distance_best = Math.round(this.getDistanceBetweenUnits(best_enemie, unit));
         } else {
@@ -22,7 +22,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
         cache_enemies.forEach((elem) => {
             tmp = Math.round(this.getDistanceBetweenUnits(elem, unit));
             if (!have_best_choise) {
-                console.log(distance_best, tmp, tmp <= distance_best);
+                // console.log(distance_best, tmp, tmp <= distance_best);
                 if (tmp <= distance_best) {
                     if (
                         (best_enemie.x != elem.x || best_enemie.y != elem.y) &&
@@ -44,7 +44,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                                 }
                             }
                         } else {
-                            console.log("HEREEE");
+                            // console.log("HEREEE");
                             best_enemie = elem;
                             distance_best = tmp;
                             // if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
@@ -186,7 +186,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                 }
             }
         });
-        console.log("best_enemie", best_enemie.domPerson, unit.domPerson);
+        // console.log("best_enemie", best_enemie.domPerson, unit.domPerson);
         return best_enemie;
     }
     // удаляет врагов которые уже заняты в кеше и предоставляет незанятых врагов

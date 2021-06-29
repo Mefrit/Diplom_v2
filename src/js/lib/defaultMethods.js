@@ -117,7 +117,6 @@ define(["require", "exports"], function (require, exports) {
                         bestPoint = element;
                     }
                 });
-                console.log("bestPoint", bestPoint);
                 if (frontier.length > 0) {
                     _this.moveTo(unit, bestPoint.next);
                 }
@@ -725,8 +724,10 @@ define(["require", "exports"], function (require, exports) {
         DefaultMethodsStrategy.prototype.getEnemyInField = function (coord_unit, field_step) {
             var _this = this;
             return this.unit_collection.getUserCollection().filter(function (elem) {
-                if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
-                    return elem;
+                if (elem) {
+                    if (_this.getDistanceBetweenUnits(coord_unit, elem) < field_step) {
+                        return elem;
+                    }
                 }
             });
         };
@@ -905,7 +906,7 @@ define(["require", "exports"], function (require, exports) {
                 arrayPoit.splice(arrayPoit.length - 1, 1);
             }
             res.arrayPoit = arrayPoit;
-            console.log("checkFreeWay2Atack return", res);
+            console.log("checkFreeWay2Atack return", res, enemie.domPerson);
             return res;
         };
         return DefaultMethodsStrategy;

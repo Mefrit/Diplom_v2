@@ -20,14 +20,14 @@ define(["require", "exports", "./person"], function (require, exports, person_1)
         };
         Collection.prototype.getAICollection = function () {
             return this.collection.filter(function (element) {
-                if (element.person.evil && element.person.health > 10) {
+                if (element.person.evil && element.person.health > 12) {
                     return element;
                 }
             });
         };
         Collection.prototype.getUserCollection = function () {
             return this.collection.filter(function (element) {
-                if (!element.person.evil && element.person.health > 10) {
+                if (!element.person.evil && element.person.health > 12) {
                     return element;
                 }
             });
