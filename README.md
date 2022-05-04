@@ -1,2 +1,4 @@
+npm install
+tsc -w
 Запустить проект:
-npmr run start
+php -S localhost:8000
