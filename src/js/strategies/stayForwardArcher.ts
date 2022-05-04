@@ -21,8 +21,6 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
             var near_archer = this.findNearestArchers(this.unit);
             var pos_security: any = {};
             var near_enemies = [];
-            // if (near_enemy.y >= this.unit.y) {
-            // if (this.unit.y + 1 < 5 ) {
             pos_security.y = near_archer.y;
 
             if (Math.abs(this.unit.x - near_archer.x) != 0 || Math.abs(this.unit.y - near_archer.y) != 0) {
@@ -32,20 +30,6 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
                 } else {
                     pos_security.x = near_archer.x + 1;
                 }
-                // if (near_enemies.length == 0) {
-                //     pos_security.x = near_archer.x - 1;
-                // } else {
-                //     near_enemies.forEach((elem) => {
-                //         //FIX ME  как то это нужно пооптимизировать
-                //         if (elem.x < near_archer.x) {
-                //             pos_security.x = near_archer.x + 1;
-                //         } else {
-                //             pos_security.x = near_archer.x - 1;
-                //         }
-                //     });
-                // }
-
-                //
 
                 if (this.unit_collection.checkFreeCoord({ x: pos_security.x, y: near_archer.y })) {
                     pos_security.y = near_archer.y;
@@ -93,7 +77,6 @@ export class StayForwardArcher extends DefaultMethodsStrategy {
                 resolve("Promise2");
             }, 320);
         });
-        // this.findNearestEnemies(this.unit)
         // мы нашли ближайшего врага и лучника, следует двигаться к позиции стрельбы лучника,
         // либо, как можно ближе к лучнику, что бы его защитить
         // console.log("get Nearest res=> ", res);

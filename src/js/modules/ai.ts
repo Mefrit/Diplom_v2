@@ -1,8 +1,3 @@
-// import { MoveRandomPerson } from "../strategies/move";
-
-import { AtackTheArcher } from "../strategies/atackTheArcher";
-// import { SecurityArcher } from "../strategies/sucurityArcher";
-
 import { cacheGlobalAI } from "../strategies/cacheGlobalStrategy";
 // FightIfYouCan
 export class Ai {
@@ -62,13 +57,6 @@ export class Ai {
     }
 
     choseGlobalStr(ai_units) {
-        // тут будет выбор между стратегиями
-        // var global_strategy = new GlobalSTRMaxAgro({
-        //     scene: this.scene,
-        //     unit_collection: this.unit_collection,
-        //     // view: this.view
-        // });
-        // return global_strategy;
         let tmp_ai: any = {},
             assessment,
             max = -1,
@@ -102,12 +90,7 @@ export class Ai {
     }
     choseGlobalStr_new(ai_units) {
         // тут будет выбор между стратегиями
-        // var global_strategy = new GlobalSTRMaxAgro({
-        //     scene: this.scene,
-        //     unit_collection: this.unit_collection,
-        //     // view: this.view
-        // });
-        // return global_strategy;
+
         let tmp_ai: any = {},
             assessment,
             max = -1,
@@ -122,9 +105,7 @@ export class Ai {
             });
 
             assessment = tmp_ai.assessment(this.initEmptyGlobalCache);
-            // this.CACHE = assessment.cache;
-            // console.log("ai ", tmp_ai.getInfo(), "total ", assessment.total);
-            console.log("assessment.cache ", assessment.cache);
+
             return { assessment: assessment.total, ai: tmp_ai, cache: assessment.cache };
         });
         console.log("-----------------");
@@ -139,7 +120,6 @@ export class Ai {
                 tmp_cache = elem.cache;
             }
         });
-        console.log("tmp_cache", tmp_cache);
         this.CACHE = tmp_cache;
         return best_ai;
     }

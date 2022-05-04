@@ -41,74 +41,6 @@ export class UndercoverArcherAttack extends DefaultGlobalMethodsStrategy {
         return res_1.cache.concat(res_2.cache);
     }
     assessment(cache) {
-        // тут нужно выбрать кто куда будет ходить
-        // let result = 1000,
-        //     enemies,
-        //     enemies_near_6,
-        //     enemies_near_3,
-        //     best_enemie,
-        //     cache_enemies;
-        // this.ai_units.forEach((curent_unit) => {
-        //     if (curent_unit.person.health > 30) {
-        //         result += 300;
-        //     }
-        //     if (curent_unit.person.health > 20 && curent_unit.person.health < 30) {
-        //         result += 100;
-        //     }
-        //     enemies_near_6 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 5);
-        //     enemies = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 4);
-        //     if (enemies_near_6.length > 0 && enemies.length == 0) {
-        //         result += 500 * enemies_near_6.length;
-        //     }
-
-        //     enemies_near_6.forEach((enemie) => {
-        //         // учет возможных атак
-        //         if (enemie.person.class == "archer") {
-        //             result -= 300;
-        //         } else {
-        //             result -= 500;
-        //         }
-        //         if (curent_unit.person.class == "archer") {
-        //             result += 2 * Math.abs(80 - enemie.person.health);
-        //         } else {
-        //             result += 10 * Math.abs(80 - enemie.person.health);
-        //         }
-        //     });
-
-        //     if (curent_unit.isArchers()) {
-        //         cache_enemies = enemies_near_6;
-
-        //         if (cache_enemies.length > 0) {
-        //             cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
-
-        //             if (cache_enemies.length > 0) {
-        //                 best_enemie = this.getBestEnemie(cache_enemies, curent_unit);
-        //             } else {
-        //                 best_enemie = this.findNearestEnemies(curent_unit, cache.units_purpose);
-        //                 // какой то баг с этим свойством
-        //                 if (best_enemie.hasOwnProperty("enemie")) {
-        //                     best_enemie = best_enemie.enemie;
-        //                 }
-        //             }
-        //         } else {
-        //             best_enemie = this.findNearestEnemies(curent_unit, cache.units_purpose);
-        //             if (best_enemie.hasOwnProperty("enemie")) {
-        //                 best_enemie = best_enemie.enemie;
-        //             }
-        //         }
-
-        //         cache.units_purpose.push({ enemie: best_enemie, id: curent_unit.person.id });
-        //     } else {
-        //         enemies_near_3 = this.getEnemyInField({ x: curent_unit.x, y: curent_unit.y }, 3);
-
-        //         if (enemies_near_3.length > 0) {
-        //             cache.units_purpose.push({
-        //                 enemie: this.getBestEnemie(enemies_near_3, curent_unit),
-        //                 id: curent_unit.person.id,
-        //             });
-        //         }
-        //     }
-        // });
         let result = 1000,
             cache_died = [],
             enemies_near_4,
@@ -118,10 +50,6 @@ export class UndercoverArcherAttack extends DefaultGlobalMethodsStrategy {
             cache_enemies,
             first_archer,
             enemie_first_archer = undefined;
-        // ввести кеш, тех мест где приблизительно будут находиться друзья,
-        // ..когда пойжут мочить врагов
-        // надо что бы они вместе длержались, те выбор врагов и напрввление удара по количеству союзников рядом
-
         this.ai_units.forEach((curent_unit) => {
             if (curent_unit.person.health < 30) {
                 result -= 400;
@@ -154,17 +82,7 @@ export class UndercoverArcherAttack extends DefaultGlobalMethodsStrategy {
                     },
                     8
                 );
-
                 if (cache_enemies.length > 0) {
-                    // console.log("units_purpose=======>>> ", cache_died, cache.units_purpose);
-                    // вопрос, когда лучше удалять этих чуваков?
-                    // if (enemie_first_archer) {
-                    //     if (this.getEnemyInField(enemie_first_archer, 2) != 0 &&
-                    //         (Math.abs(first_archer.x - curent_unit.x) < 3 ||
-                    //             Math.abs(first_archer.y - curent_unit.y) < 3)) {
-                    //         cache_enemies = this.deleteEqualEnemyFromCache(cache_enemies, cache.units_purpose);
-                    //     }
-                    // }
                     if (enemie_first_archer) {
                         if (
                             this.getEnemyInField(enemie_first_archer, 2).length > 1 &&

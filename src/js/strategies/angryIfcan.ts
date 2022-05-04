@@ -15,43 +15,9 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
         return "FightIfYouCan";
     }
     // оценка ситуации
-    assessment(cache) {
-        // FIX ME возможно стоит завести 2 поля, самый слабый по здорровью юнит или вдруг, самый отдаленный от корешей
-        // var result = 1000, enemies, damaged_person: any = {}, min_health = 200;
-        // if (this.unit.health < 30) {
-        //     result -= 400;
-        // }
-        // if (this.unit.health < 20) {
-        //     result -= 700;
-        // }
-        // if (!cache.enemies_near_3) {
-        //     enemies = this.getEnemyInField({ x: this.unit.x, y: this.unit.y }, 3);
-        //     cache.enemies_near_3 = enemies
-        // } else {
-        //     enemies = cache.enemies_near_3;
-        // }
-        // if (enemies.length == 0) {
-        //     result -= 500;
-        //     damaged_person = {};
-        // } else {
-        //     damaged_person = enemies[0];
-        //     min_health = damaged_person.person.health
-        //     result += 1000 / enemies.length;
-        // }
-        // // как вариант выбирать еще и самого дальнего
-        // enemies.forEach(elem => {
-        //     if (elem.person.health < min_health) {
-        //         damaged_person = elem;
-        //     }
-        //     result -= elem.person.health * 5;
-        // });
-        // cache.most_damaged_person_3 = damaged_person;
-        // return { total: Math.round(result), cache: cache };
-    }
+    assessment(cache) {}
     start(cache) {
         // FIX ME в оценке искать того чувака, которого необходимо бить, запихивать его в  Cashe и передавать в start()
-
-        // если с переди стоят лучники то выбирать более агрессивную стратегию
         return new Promise((resolve, reject) => {
             let nearEnemie, coord, res, attakedEnemie, checkArcherPosition;
 
@@ -174,9 +140,6 @@ export class FightIfYouCan extends DefaultMethodsStrategy {
         });
     }
     findEnemieForAtake(enemie) {
-        // !!! можно тут прописать на проверку более круттого выбора кого бить
-        // this.unit_collection.getCollection().forEach((element) => {
-        // }
         return enemie;
     }
 

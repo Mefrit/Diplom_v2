@@ -34,8 +34,6 @@ export class ViewScene {
     renderElement = (element) => {
         element.domPerson.style.left = element.getX() * 120 + "px";
         element.domPerson.style.top = element.getY() * 120 + "px";
-        // element.style.left = pos_dif_x + "px";
-        // element.style.top = pos_dif_y + "px";
     };
     changeHealth = (ctx, elem, damage = 0) => {
         let obj, img;
@@ -133,35 +131,10 @@ export class ViewScene {
         block.style.top = posY + "px";
         let random = this.randomInteger(0, 40);
         block.src = "src/images/block3.png";
-
-        // if (i == 6 && j == 3) {
-        //     block.src = "src/images/block3.png";
-        // }
-        // if (i == 7 && j == 7) {
-        //     block.src = "src/images/block1.png";
-        // }
-        // if (i == 7 && j == 6) {
-        //     block.src = "src/images/block1.png";
-        // }
-        // if (i == 7 && j == 1) {
-        //     block.src = "src/images/block4.png";
-        // }
-        // if (i == 6 && j == 3) {
-        //     block.src = "src/images/block1.png";
-        // }
         block.src = "src/images/block2.png";
         if (random < 20) {
             block.src = "src/images/block3.png";
         }
-        // if (random >= 7 && random <= 23) {
-        //     block.src = "src/images/block2.png";
-        // }
-        // if (random == 39) {
-        //     block.src = "src/images/block1.png";
-        // }
-        // if (random == 40) {
-        //     block.src = "src/images/block4.png";
-        // }
         if (i == 8 && j == 1) {
             block.src = "src/images/block1.png";
         }

@@ -58,7 +58,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
         }
     }
     got2AttackePosition(enemie) {
-        // console.log("got2AttackePosition", enemie.domPerson, this.unit.domPerson);
         if (enemie == undefined) {
             enemie = this.findNearestEnemies(this.unit);
         }
@@ -83,10 +82,7 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 return this.moveAutoStepStupid(this.unit, enemie, "archer");
             }
         }
-        // console.log("coord11111111111111", coord);
         if (coord) {
-            // return this.moveAutoStepStupid(this.unit, coord, "archer");
-            // console.log("coord2", coord);
             if (
                 this.getEnemyInField(coord, 3).length > 4 &&
                 this.getFriendsInField(coord, 3).length < 2 &&
@@ -106,10 +102,6 @@ export class AtackTheArcher extends DefaultMethodsStrategy {
                 // console.log("HERE STUPId");
                 return this.moveAutoStepStupid(this.unit, obj2go, "fighter");
             }
-            // if (this.getDistanceBetweenUnits(coord, this.unit) <= 1) {
-            //     return this.moveAutoStepStupid(this.unit, enemie, "archer");
-            // }
-            // console.log("coord", coord);
             return this.moveAutoStepStupid(this.unit, coord, "stupid");
         } else {
             return this.moveAutoStepStupid(this.unit, enemie, "archer");

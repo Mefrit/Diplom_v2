@@ -10,7 +10,7 @@ export class Downloader {
     }
     load(elemArr) {
         let obj = this;
-        elemArr.getCollection().forEach(function(elem) {
+        elemArr.getCollection().forEach(function (elem) {
             obj.loadElement(elem.person.url);
         });
     }
@@ -32,7 +32,7 @@ export class Downloader {
                 // resource.loaded = true;
                 obj.resourceCache[path] = data;
                 if (obj.isReady()) {
-                    obj.readyCallbacks.forEach(function(func) {
+                    obj.readyCallbacks.forEach(function (func) {
                         func();
                     });
                 }
@@ -45,11 +45,11 @@ export class Downloader {
             return this.resourceCache[url];
         } else {
             var img = new Image();
-            img.onload = function() {
+            img.onload = function () {
                 obj.resourceCache[url] = img;
 
                 if (obj.isReady()) {
-                    obj.readyCallbacks.forEach(function(func) {
+                    obj.readyCallbacks.forEach(function (func) {
                         func();
                     });
                 }

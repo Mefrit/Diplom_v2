@@ -35,14 +35,6 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                                     // }
                                 }
                             }
-                        } else {
-                            // best_enemie = elem;
-                            // distance_best = tmp;
-                            // if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
-                            //     // if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
-                            //     have_best_choise = true;
-                            //     // }
-                            // }
                         }
                     }
                 }
@@ -71,7 +63,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                     }
                     if ((elem.x == unit.x || elem.y == unit.y) && unit.person.class == "archer") {
                         best_enemie = elem;
-                        // if (this.getEnemyInField({ x: elem.x, y: elem.y }, 2).length <= 2) {
+
                         have_best_choise = true;
                         // }
                     } else {
@@ -84,16 +76,7 @@ export class DefaultGlobalMethodsStrategy extends DefaultMethodsStrategy {
                         }
                     }
                 } else {
-                    // console.log("< 1", Math.abs(tmp - distance_best));
                     if (Math.abs(tmp - distance_best) < 2) {
-                        // console.log("< 1");
-                        // if (elem.x == unit.x && elem.y == unit.y && this.isArchers(unit)) {
-                        //     if (best_enemie.x != unit.x || best_enemie.y != unit.y) {
-                        //         best_enemie = elem;
-                        //         have_best_choise = true;
-                        //     }
-                        // }
-
                         if (
                             (best_enemie.x == unit.x ||
                                 best_enemie.y == unit.y ||

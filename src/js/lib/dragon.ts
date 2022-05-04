@@ -257,30 +257,13 @@ export class DragonAnimationUpdate {
                 this.killUnit(this.unit);
 
                 ctx.clearRect(0, 0, 1000, 1000);
-                // img = this.loader.get("./src/images/rip.png");
-
-                // this.renderPlayer(obj.getDoomObj(), obj, img);
             } else {
                 ctx.strokeStyle = "#5db96a";
             }
         } else {
-            // ctx.strokeStyle = "red";
-            // docume   nt.getelement
             this.killUnit(this.unit);
-
-            // ctx.clearRect(0, 0, 1000, 1000);
         }
-        // if (unit.getHealth() >= 10) {
-        //     // unit.setHealth(unit.getHealth());
-        // } else {
-        //     ctx.strokeStyle = "red";
-        //     // docume   nt.getelement
 
-        //     ctx.clearRect(0, 0, 1000, 1000);
-        //     // img = this.loader.get("./src/images/rip.png");
-
-        //     // this.renderPlayer(obj.getDoomObj(), obj, img);
-        // }
         ctx.lineTo(unit.getHealth() * 10, 20);
         ctx.stroke();
     };
@@ -303,7 +286,7 @@ export class DragonAnimationUpdate {
             this.canvas.width = 1250;
             this.canvas.height = 1400;
             ctx = this.canvas.getContext("2d");
-            arrCanvas.sort(function(elem1, elem2): any {
+            arrCanvas.sort(function (elem1, elem2): any {
                 if (elem1.pos.z > elem2.pos.z) {
                     return 1;
                 } else {
@@ -313,26 +296,12 @@ export class DragonAnimationUpdate {
             ctx.clearRect(0, 0, 2000, 1000);
             this.drawHealth(ctx, this.unit);
 
-            arrCanvas.forEach(function(elem) {
+            arrCanvas.forEach(function (elem) {
                 ctx.save();
 
                 ctx.translate(elem.pos.x + 590, elem.pos.y + 840);
                 ctx.rotate((elem.pos.skX * Math.PI) / 180);
 
-                // if (elem.optimize == "sprite_manager") {
-                //     ctx.drawImage(
-                //         elem.img,
-                //         elem.config_elem.x,
-                //         elem.config_elem.y,
-                //         elem.config_elem.width,
-                //         elem.config_elem.height,
-                //         -elem.config_elem.width / 2,
-                //         -elem.config_elem.height / 2,
-                //         elem.config_elem.width,
-                //         elem.config_elem.height
-                //     );
-                // } else {
-                // ctx.scale(1, -1);
                 ctx.drawImage(elem.img, -elem.img.width / 2, -elem.img.height / 2);
                 // }
 

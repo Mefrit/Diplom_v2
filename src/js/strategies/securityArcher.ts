@@ -3,10 +3,7 @@ import { DefaultMethodsStrategy } from "../lib/defaultMethods";
 export class SecurityArcher extends DefaultMethodsStrategy {
     constructor(props: any) {
         super(props);
-        // console.log("\n angry", props);
-
         this.unit = props.unit;
-        // this.coordsEvil = { x: props.result.x, y: props.result.y };
     }
     // оценка ситуации
     // при оценке учитывать, что хотябы 1н лучник жив, чем больше лучников живо,
@@ -21,12 +18,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
             var pos_security: any = {};
             var near_enemies = [],
                 atake = false;
-            // console.log(
-            //     "getFriendsInField",
-            //     this.getFriendsInField(near_archer, 2),
-            //     near_archer,
-            //     this.getFriendsInField(near_archer, 2) >= 3
-            // );
+
             if (typeof near_enemy == "undefined") {
                 near_enemy = this.findNearestEnemies(this.unit);
             }
@@ -73,12 +65,6 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 end = false;
             if (ai_archers.length > 1) {
                 ai_archers.forEach((elem) => {
-                    // if (near_archer.person.id != elem.person.id && !end) {
-                    //     console.log("change!!!!!!", near_archer, elem);
-                    //     near_archer = elem;
-
-                    //     end = true;
-                    // }
                     if (this.getFriendsInField(elem, 2).length == 0 && !end) {
                         near_archer = elem;
                         end = true;
@@ -86,18 +72,7 @@ export class SecurityArcher extends DefaultMethodsStrategy {
                 });
             }
             near_enemies = this.getEnemyInField(near_archer, 6);
-            // if (near_enemies.length == 0) {
-            //     pos_security.x = near_archer.x - 1;
-            // } else {
-            //     let nearest_enemy = this.findNearestEnemies(near_archer);
-            //     console.log("nearest_enemy", nearest_enemy, near_archer);
-            //     if (nearest_enemy.x > near_archer.x) {
-            //         pos_security.x = near_archer.x + 1;
-            //     } else {
-            //         pos_security.x = near_archer.x - 1;
-            //         // pos_security.x = near_archer.x;
-            //     }
-            // }
+
             let nearest_enemy = this.findNearestEnemies(near_archer);
             // console.log("nearest_enemy", nearest_enemy, near_archer);
             if (nearest_enemy.x > near_archer.x) {

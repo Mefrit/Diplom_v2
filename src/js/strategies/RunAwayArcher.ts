@@ -197,12 +197,7 @@ export class RunAwayArcher extends DefaultMethodsStrategy {
             }, 520);
         });
     }
-    // go2friend(cache, friend) {
-
-    //     this.runAwayArcher(point);
-    // }
     atackeChosenUnit(cache, enemie) {
-        // console.log(enemie);
         return new Promise((resolve, reject) => {
             if (enemie.isNotDied()) {
                 enemie = this.findNearestEnemies(this.unit);
